@@ -13,8 +13,9 @@ import {
   FormGroup,
 } from '@mui/material';
 import axios from 'axios.js';
+import { faL } from '@fortawesome/free-solid-svg-icons';
 
-const UsersData = () => {
+const PartnersData = () => {
   const [data, setData] = useState();
 
   const getMuiTheme = () =>
@@ -32,14 +33,17 @@ const UsersData = () => {
 
   useEffect(() => {
     axios
-      .get('https://phyqi94vke.execute-api.ap-southeast-1.amazonaws.com/dev/v1/users/getAllUsers', {
-        headers: {
-          Authorization: `${window.localStorage.getItem('accessToken')}`,
-        },
-      })
+      .get(
+        ' https://phyqi94vke.execute-api.ap-southeast-1.amazonaws.com/dev/v1/partner/getAllPartners',
+        {
+          headers: {
+            Authorization: `${window.localStorage.getItem('accessToken')}`,
+          },
+        }
+      )
       .then((res) => {
-        console.log(res.data.data);
-        setData(res.data.data);
+        console.log(res.data);
+        setData(res.data);
       })
       .catch((error) => {
         console.error(error);
@@ -74,21 +78,10 @@ const UsersData = () => {
       .catch((err) => console.log('error:', err));
   };
 
-  const confirm = (value)=>{
-    console.log(value)
-  }
-
   const columns = [
     {
       name: 'id',
-      label: 'User Id',
-      options: {
-        filter: true,
-      },
-    },
-    {
-      name: 'cognito_id',
-      label: 'AWS ID',
+      label: 'Partner Id',
       options: {
         filter: true,
       },
@@ -101,6 +94,13 @@ const UsersData = () => {
       },
     },
     {
+      name: 'code',
+      label: 'Code',
+      options: {
+        filter: true,
+      },
+    },
+    {
       name: 'email',
       label: 'email',
       options: {
@@ -108,15 +108,22 @@ const UsersData = () => {
       },
     },
     {
-      name: 'role',
-      label: 'Role',
+      name: 'address',
+      label: 'Address',
       options: {
         display: false,
       },
     },
     {
-      name: 'status',
-      label: 'Status',
+      name: 'website',
+      label: 'Website',
+      options: {
+        display: false,
+      },
+    },
+    {
+      name: 'contact_number',
+      label: 'Contact no.',
       options: {
         display: false,
       },
@@ -162,35 +169,44 @@ const UsersData = () => {
             <TableContainer>
               <Table style={{ margin: '0 auto' }}>
                 <TableHead>
-                  <TableCell align="left">Role</TableCell>
-                  <TableCell align="left">Status</TableCell>
+                <TableCell align="left">Address</TableCell>
+                <TableCell align="left">Website</TableCell>
+                <TableCell align="left">Contact No.</TableCell>
+                <TableCell align="left">Status</TableCell>
                   <TableCell align="left">Is Deleted?</TableCell>
-                  <TableCell align="left">Submitted at</TableCell>
-                  <TableCell align="left">Approved At</TableCell>
+                  <TableCell align="left">Created At</TableCell>
                   <TableCell align="left">Actions</TableCell>
                   {/* <TableCell align="right">Color</TableCell>
                   <TableCell align="right">Size</TableCell> */}
                 </TableHead>
                 <TableBody>
                   <TableRow>
-                    <TableCell component="th" scope="row" align="left">
-                      
+                  <TableCell component="th" scope="row" align="left">
+                      {/* <strong>Is Deleted?:</strong> */}
                       {rowData[4]}
                     </TableCell>
                     <TableCell component="th" scope="row" align="left">
-                      {rowData[5] === '0' ? 'for approval' : 'Approved'}
+                      {/* <strong>Is Deleted?:</strong> */}
+                      {rowData[5]}
                     </TableCell>
                     <TableCell component="th" scope="row" align="left">
-                      {rowData[6] === '0' ? 'Active' : 'Deleted'}
+                      {/* <strong>Is Deleted?:</strong> */}
+                      {rowData[6]}
                     </TableCell>
                     <TableCell component="th" scope="row" align="left">
-                      {rowData[7]}
+                      {/* <strong>Created At:</strong>  */}
+                      {rowData[7] === '0' ? 'for approval' : 'Approved'}
                     </TableCell>
                     <TableCell component="th" scope="row" align="left">
-                      {rowData[8]}
+                      {/* <strong>Updated At:</strong>  */}
+                      {rowData[8] === '0' ? 'Active' : 'Deleted'}
                     </TableCell>
                     <TableCell component="th" scope="row" align="left">
-                      <Icon onClick={confirm(rowData[1])}> playlist_add </Icon>
+                      {/* <strong>Created At:</strong>  */}
+                      {rowData[9]}
+                    </TableCell>
+                    <TableCell component="th" scope="row" align="left">
+                      <Icon> playlist_add </Icon>
                     </TableCell>
                     {/* <TableCell align="right">{row.color}</TableCell>
                         <TableCell align="right">{row.size}</TableCell> */}
@@ -215,10 +231,10 @@ const UsersData = () => {
     <div className="App">
       <ThemeProvider theme={getMuiTheme}>
         {/* total amount of the current page: {total} */}
-        <MUIDataTable title={'App Users'} options={options} columns={columns} data={data} />
+        <MUIDataTable title={'App Partners'} options={options} columns={columns} data={data} />
       </ThemeProvider>
     </div>
   );
 };
 
-export default UsersData;
+export default PartnersData;
