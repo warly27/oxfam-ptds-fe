@@ -1,94 +1,150 @@
-import { Span } from 'app/components/Typography';
-import { ValidatorForm } from 'react-material-ui-form-validator';
-import React, { useEffect, useState } from 'react';
-import { inputFormElements } from 'app/components/FormElement';
-import { makeStyles } from '@material-ui/core/styles';
-import { Grid, TextField, Button, Card, CardContent, Typography, Icon } from '@material-ui/core';
+import React, { useEffect, useState } from "react";
+import { Span } from "app/components/Typography";
+import { ValidatorForm } from "react-material-ui-form-validator";
+import { inputFormElements } from "app/components/FormElement";
+import { makeStyles } from "@material-ui/core/styles";
+// import {
+// Grid,
+// TextField,
+// Button,
+// Card,
+// CardContent,
+// Typography,
+// Icon,
+// } from "@material-ui/core";
 
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import TextField from "@mui/material/TextField";
+import Icon from "@mui/material/Icon";
 
-const useStyles = makeStyles((theme) => ({
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: 200,
-    padding: '10px 5px',
-  },
-}));
+// const useStyles = makeStyles((theme) => ({
+//   container: {
+//     display: "flex",
+//     flexWrap: "wrap",
+//   },
+//   textField: {
+//     marginLeft: theme.spacing(1),
+//     marginRight: theme.spacing(1),
+//     width: 200,
+//     padding: "10px 5px",
+//   },
+// }));
 
-const AppUsersForms = () => {
-  const classes = useStyles();
-  const [state, setState] = useState({ date: new Date() });
-  const [fund_source, setFundSource] = useState('');
+const AppUsersForms = ({ handleCreateUser }) => {
+  const [fundSource, setFundSource] = useState("");
+  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleChange = (event) => {
-    setFundSource(event.target.value);
-    setState({ ...state, [event.target.name]: event.target.value });
+    const isUsername = event.target.name === "userName";
+    if (isUsername) {
+      setUserName(event.target.value);
+    }
+
+    const isEmail = event.target.name === "email";
+    if (isEmail) {
+      setEmail(event.target.value);
+    }
+
+    const isPassword = event.target.name === "password";
+    if (isPassword) {
+      setPassword(event.target.value);
+    }
+
+    const isFundSource = event.target.name === "fundSource";
+    if (isFundSource) {
+      setFundSource(event.target.value);
+    }
   };
 
-  const handleSubmit = (event) => {
-    // console.log("submitted");
-    console.log(event);
+  const handleSubmit = async () => {
+    handleCreateUser({
+      email,
+      userName,
+      password,
+      fundSource,
+    });
   };
 
-  const margin = { margin: '0 5px' };
+  const handleReset = () => {
+    setFundSource("");
+    setUserName("");
+    setEmail("");
+    setPassword("");
+  };
+
+  const margin = { margin: "0 5px" };
+
   return (
     <div>
       <ValidatorForm onSubmit={handleSubmit} onError={() => null}>
-        <Grid style={{ padding: '10px 5px 0 5px' }}>
-          <Card style={{ maxWidth: 600, margin: '0 auto' }}>
-            <CardContent>
-              <form>
-                <Grid container spacing={1}>
-                  {inputFormElements.slice(2, 5).map((input) => (
-                    <Grid xs={input.xs} sm={input.sm} item>
-                      <TextField {...input} />
-                    </Grid>
-                  ))}
-                </Grid>
-                {/* <Typography variant="body2" align="left" gutterBottom>
-                  Address :{' '}
-                </Typography> */}
-                <Grid container spacing={1}>
-                  <Grid xs={12} sm={12} item>
-                    <FormControl fullWidth>
-                      <InputLabel id="demo-simple-select-label">User Role</InputLabel>
-                      <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={fund_source}
-                        label="Project Fund Source"
-                        onChange={handleChange}
-                      >
-                        <MenuItem value={30}>Admin</MenuItem>
-                        <MenuItem value={20}>Partner</MenuItem>
-                        <MenuItem value={50}>Project Owner</MenuItem>
-                      </Select>
-                    </FormControl>
+        <Card>
+          <CardContent>
+            {/* <form> */}
+            <Grid container rowSpacing={2}>
+              <Grid container item spacing={2}>
+                {inputFormElements.slice(2, 5).map((input) => (
+                  <Grid xs={input.xs} sm={input.sm} item>
+                    <TextField {...input} onChange={handleChange} />
                   </Grid>
+                ))}
+              </Grid>
+
+              <Grid container item>
+                <Grid xs={12} sm={12} item>
+                  <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-label">
+                      User Role
+                    </InputLabel>
+
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={fundSource}
+                      label="Project Fund Source"
+                      onChange={handleChange}
+                      name="fundSource"
+                    >
+                      <MenuItem value={"admin"}>Admin</MenuItem>
+                      <MenuItem value={"partner"}>Partner</MenuItem>
+                      <MenuItem value={"project_owner"}>Project Owner</MenuItem>
+                    </Select>
+                  </FormControl>
                 </Grid>
-                <Grid container spacing={1}>
-                  <Grid item xs={12} align="right">
-                    <Button style={margin} type="reset" variant="outlined" color="primary">
-                      Reset
-                    </Button>
-                    <Button color="primary" variant="contained" type="submit">
-                      <Icon>send</Icon>
-                      <Span sx={{ pl: 1, textTransform: 'capitalize' }}>Submit</Span>
-                    </Button>
-                  </Grid>
+              </Grid>
+
+              <Grid container item>
+                <Grid item xs={12} align="right">
+                  <Button
+                    style={margin}
+                    type="reset"
+                    variant="outlined"
+                    color="primary"
+                    onClick={handleReset}
+                  >
+                    Reset
+                  </Button>
+
+                  <Button color="primary" variant="contained" type="submit">
+                    <Icon>send</Icon>
+                    <Span sx={{ pl: 1, textTransform: "capitalize" }}>
+                      Submit
+                    </Span>
+                  </Button>
                 </Grid>
-              </form>
-            </CardContent>
-          </Card>
-        </Grid>
+              </Grid>
+            </Grid>
+            {/* </form> */}
+          </CardContent>
+        </Card>
       </ValidatorForm>
     </div>
   );

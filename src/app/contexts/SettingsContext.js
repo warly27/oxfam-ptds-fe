@@ -1,8 +1,8 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState } from "react";
 
-import { merge } from 'lodash';
+import { merge } from "lodash";
 
-import { MatxLayoutSettings } from 'app/components/MatxLayout/settings';
+import { MatxLayoutSettings } from "app/components/MatxLayout/settings";
 
 const SettingsContext = createContext({
   settings: MatxLayoutSettings,
@@ -10,7 +10,9 @@ const SettingsContext = createContext({
 });
 
 export const SettingsProvider = ({ settings, children }) => {
-  const [currentSettings, setCurrentSettings] = useState(settings || MatxLayoutSettings);
+  const [currentSettings, setCurrentSettings] = useState(
+    settings || MatxLayoutSettings
+  );
 
   const handleUpdateSettings = (update = {}) => {
     const marged = merge({}, currentSettings, update);

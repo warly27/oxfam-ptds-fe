@@ -1,60 +1,62 @@
-import { useTheme } from '@emotion/react';
-import { LoadingButton } from '@mui/lab';
-import { Card, Checkbox, Grid, TextField, Autocomplete } from '@mui/material';
-import { Box, styled } from '@mui/system';
-import { Paragraph } from 'app/components/Typography';
-import useAuth from 'app/hooks/useAuth';
-import { Formik } from 'formik';
-import { useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
-import * as Yup from 'yup';
-import CustomizedDialogs from '../mydialogbox/customDialog';
+import { useTheme } from "@emotion/react";
+import { LoadingButton } from "@mui/lab";
+import { Card, Checkbox, Grid, TextField, Autocomplete } from "@mui/material";
+import { Box, styled } from "@mui/system";
+import { Paragraph } from "app/components/Typography";
+import useAuth from "app/hooks/useAuth";
+import { Formik } from "formik";
+import { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import * as Yup from "yup";
+import CustomizedDialogs from "../mydialogbox/customDialog";
 
-const FlexBox = styled(Box)(() => ({ display: 'flex', alignItems: 'center' }));
+const FlexBox = styled(Box)(() => ({ display: "flex", alignItems: "center" }));
 
-const JustifyBox = styled(FlexBox)(() => ({ justifyContent: 'center' }));
+const JustifyBox = styled(FlexBox)(() => ({ justifyContent: "center" }));
 
 const AutoComplete = styled(Autocomplete)(() => ({
   width: 300,
-  marginBottom: '16px',
+  marginBottom: "16px",
 }));
 
-const suggestions = [{ role: 'Admin' }, { role: 'Melsa' }, { role: 'Partner' }];
+const suggestions = [{ role: "Admin" }, { role: "Melsa" }, { role: "Partner" }];
 
 const ContentBox = styled(JustifyBox)(() => ({
-  height: '100%',
-  padding: '32px',
-  background: 'rgba(0, 0, 0, 0.01)',
+  height: "100%",
+  padding: "32px",
+  background: "rgba(0, 0, 0, 0.01)",
 }));
 
 const JWTRegister = styled(JustifyBox)(() => ({
-  background: '#196900',
-  minHeight: '100vh !important',
-  '& .card': {
+  background: "#196900",
+  minHeight: "100vh !important",
+  "& .card": {
     maxWidth: 800,
     minHeight: 400,
-    margin: '1rem',
-    display: 'flex',
+    margin: "1rem",
+    display: "flex",
     borderRadius: 12,
-    alignItems: 'center',
+    alignItems: "center",
   },
 }));
 
 // inital login credentials
 const initialValues = {
-  email: '',
-  password: '',
-  user_name: '',
-  role: '',
+  email: "",
+  password: "",
+  user_name: "",
+  role: "",
   remember: true,
 };
 
 // form field validation schema
 const validationSchema = Yup.object().shape({
   password: Yup.string()
-    .min(6, 'Password must be 6 character length')
-    .required('Password is required!'),
-  email: Yup.string().email('Invalid Email address').required('Email is required!'),
+    .min(6, "Password must be 6 character length")
+    .required("Password is required!"),
+  email: Yup.string()
+    .email("Invalid Email address")
+    .required("Email is required!"),
 });
 
 const JwtRegister = () => {
@@ -70,10 +72,14 @@ const JwtRegister = () => {
     setLoading(true);
 
     try {
-      const response = await register(values.email, values.user_name, values.password, values.role);
+      const response = await register(
+        values.email,
+        values.user_name,
+        values.password,
+        values.role
+      );
       console.log(response);
-      // alert(response);
-      // navigate('/');
+
       setModalMessage(undefined);
       setLoading(false);
       setShowModal(true);
@@ -88,16 +94,19 @@ const JwtRegister = () => {
   return (
     <JWTRegister>
       <Card className="card">
-        <CustomizedDialogs showModal={showModal} setShowModal={setShowModal} message={message} />
+        <CustomizedDialogs
+          showModal={showModal}
+          setShowModal={setShowModal}
+          message={message}
+        />
         <Grid container>
           <Grid item sm={6} xs={12}>
             <ContentBox>
-              {/* <img
+              <img
+                src="/assets/images/logos/round-oxfam-logo.png"
                 width="100%"
-                alt="Register"
-                src="/assets/images/illustrations/posting_photo.svg"
-              /> */}
-              <img src="/assets/images/logos/round-oxfam-logo.png" width="100%" alt="" />
+                alt=""
+              />
             </ContentBox>
           </Grid>
 
@@ -108,7 +117,14 @@ const JwtRegister = () => {
                 initialValues={initialValues}
                 validationSchema={validationSchema}
               >
-                {({ values, errors, touched, handleChange, handleBlur, handleSubmit }) => (
+                {({
+                  values,
+                  errors,
+                  touched,
+                  handleChange,
+                  handleBlur,
+                  handleSubmit,
+                }) => (
                   <form onSubmit={handleSubmit}>
                     <TextField
                       fullWidth
@@ -218,7 +234,10 @@ const JwtRegister = () => {
                       Already have an account?
                       <NavLink
                         to="/session/signin"
-                        style={{ color: theme.palette.primary.main, marginLeft: 5 }}
+                        style={{
+                          color: theme.palette.primary.main,
+                          marginLeft: 5,
+                        }}
                       >
                         Login
                       </NavLink>

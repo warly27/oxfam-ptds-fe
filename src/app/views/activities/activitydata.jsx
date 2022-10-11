@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { ThemeProvider, createTheme, List, ListItemText } from '@mui/material';
-import MUIDataTable from 'mui-datatables';
+import React, { useState, useEffect } from "react";
+import { ThemeProvider, createTheme, List, ListItemText } from "@mui/material";
+import MUIDataTable from "mui-datatables";
 import {
   Table,
   TableBody,
@@ -11,8 +11,8 @@ import {
   TextField,
   FormLabel,
   FormGroup,
-} from '@mui/material';
-import axios from 'axios.js';
+} from "@mui/material";
+import axios from "../../utils/axios";
 
 const Activities = () => {
   const [data, setData] = useState();
@@ -23,7 +23,7 @@ const Activities = () => {
         MUIDataTableBodyCell: {
           styleOverrides: {
             root: {
-              backgroundColor: '#e9ffdb',
+              backgroundColor: "#e9ffdb",
             },
           },
         },
@@ -32,11 +32,14 @@ const Activities = () => {
 
   useEffect(() => {
     axios
-      .get('https://phyqi94vke.execute-api.ap-southeast-1.amazonaws.com/dev/v1/users/getAllUsers', {
-        headers: {
-          Authorization: `${window.localStorage.getItem('accessToken')}`,
-        },
-      })
+      .get(
+        "https://phyqi94vke.execute-api.ap-southeast-1.amazonaws.com/dev/v1/users/getAllUsers",
+        {
+          headers: {
+            Authorization: `${window.localStorage.getItem("accessToken")}`,
+          },
+        }
+      )
       .then((res) => {
         console.log(res.data.data);
         setData(res.data.data);
@@ -62,7 +65,7 @@ const Activities = () => {
   // }, [setData]);
 
   const handleClick = (value) => {
-    console.log('value', value.id);
+    console.log("value", value.id);
     const { id } = value;
     const url = `https://jsonplaceholder.typicode.com/posts/${id}/comments`;
     const getComments = fetch(url)
@@ -71,69 +74,69 @@ const Activities = () => {
         // this.setState({ comments: data });
         console.log(data);
       })
-      .catch((err) => console.log('error:', err));
+      .catch((err) => console.log("error:", err));
   };
 
   const columns = [
     {
-      name: 'id',
-      label: 'User Id',
+      name: "id",
+      label: "User Id",
       options: {
         filter: true,
       },
     },
     {
-      name: 'cognito_id',
-      label: 'AWS ID',
+      name: "cognito_id",
+      label: "AWS ID",
       options: {
         filter: true,
       },
     },
     {
-      name: 'name',
-      label: 'Name',
+      name: "name",
+      label: "Name",
       options: {
         filter: true,
       },
     },
     {
-      name: 'email',
-      label: 'email',
+      name: "email",
+      label: "email",
       options: {
         filter: false,
       },
     },
     {
-      name: 'role',
-      label: 'Role',
+      name: "role",
+      label: "Role",
       options: {
         display: false,
       },
     },
     {
-      name: 'status',
-      label: 'Status',
+      name: "status",
+      label: "Status",
       options: {
         display: false,
       },
     },
     {
-      name: 'is_deleted',
-      label: 'Is Deleted',
+      name: "is_deleted",
+      label: "Is Deleted",
       options: {
         display: false,
       },
     },
     {
-      name: 'created_at',
-      label: 'Submitted',
+      name: "created_at",
+      label: "Submitted",
       options: {
         display: false,
       },
     },
     {
-      name: 'updated_at',
-      label: 'Approve',
+      name: "updated_at",
+      label: "Approve",
       options: {
         display: false,
       },
@@ -142,7 +145,7 @@ const Activities = () => {
 
   const options = {
     filter: true,
-    selectableRows: 'none',
+    selectableRows: "none",
     // responsive: 'scrollMaxHeight',
     expandableRows: true,
     onRowsDelete: (rowsDeleted, dataRows) => {
@@ -150,13 +153,13 @@ const Activities = () => {
       console.log(rowsDeleted.data);
     },
     renderExpandableRow: (rowData, rowMeta) => {
-      console.log('DATA: ' + rowData);
-      console.log('MDATA: ' + rowMeta);
+      console.log("DATA: " + rowData);
+      console.log("MDATA: " + rowMeta);
       return (
         <tr>
           <td colSpan={4}>
             <TableContainer>
-              <Table style={{ margin: '0 auto' }}>
+              <Table style={{ margin: "0 auto" }}>
                 <TableHead>
                   <TableCell align="left">Info</TableCell>
                   {/* <TableCell align="right">Color</TableCell>
@@ -169,10 +172,12 @@ const Activities = () => {
                       {rowData[4]}
                     </TableCell>
                     <TableCell component="th" scope="row" align="left">
-                      <strong>Status:</strong> {rowData[5] === '0' ? 'for approval' : 'Approved'}
+                      <strong>Status:</strong>{" "}
+                      {rowData[5] === "0" ? "for approval" : "Approved"}
                     </TableCell>
                     <TableCell component="th" scope="row" align="left">
-                      <strong>Is Deleted?:</strong> {rowData[6] === '0' ? 'Active' : 'Deleted'}
+                      <strong>Is Deleted?:</strong>{" "}
+                      {rowData[6] === "0" ? "Active" : "Deleted"}
                     </TableCell>
                     <TableCell component="th" scope="row" align="left">
                       <strong>Submitted:</strong> {rowData[7]}
@@ -192,11 +197,11 @@ const Activities = () => {
       );
     },
     onRowsClick: (rowData, rowMeta) => {
-      console.log('rowData', rowData);
+      console.log("rowData", rowData);
       handleClick(data[rowMeta.dataIndex]);
     },
     onRowsExpand: (curExpanded, allExpanded) => {
-      console.log('rowExpand', curExpanded, allExpanded[0]);
+      console.log("rowExpand", curExpanded, allExpanded[0]);
       handleClick(data[allExpanded[0].dataIndex]);
     },
   };
@@ -205,7 +210,7 @@ const Activities = () => {
       <ThemeProvider theme={getMuiTheme}>
         {/* total amount of the current page: {total} */}
         <MUIDataTable
-          title={'Project Activities'}
+          title={"Project Activities"}
           options={options}
           columns={columns}
           data={data}

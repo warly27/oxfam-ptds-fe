@@ -1,15 +1,14 @@
-import React, { useState, useRef, useEffect } from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import AppUsersForms from './AppUsersForms';
-import { Typography } from '@material-ui/core';
+import React, { useState, useRef, useEffect } from "react";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import AppUsersForms from "./AppUsersForms";
+import { Typography } from "@material-ui/core";
 
-const AppUserAddModal = ({ showModal, setShowModal }) => {
-  console.log(showModal + ' from the modal component');
+const AppUserAddModal = ({ showModal, setShowModal, handleCreateUser }) => {
   const handleClose = () => {
     setShowModal((prev) => !prev);
   };
@@ -38,13 +37,14 @@ const AppUserAddModal = ({ showModal, setShowModal }) => {
             Create an App User
           </Typography>
         </DialogTitle>
+
         <DialogContent dividers>
           <DialogContentText
             id="scroll-dialog-description"
             ref={descriptionElementRef}
             tabIndex={-1}
           >
-            <AppUsersForms />
+            <AppUsersForms handleCreateUser={handleCreateUser} />
           </DialogContentText>
         </DialogContent>
       </Dialog>

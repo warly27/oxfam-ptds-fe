@@ -1,118 +1,100 @@
-import React, { useState } from 'react';
-import { Grid } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
-import MUIDataTable from 'mui-datatables';
-import { Box, styled, Icon } from '@mui/material';
-import { Breadcrumb } from 'app/components';
-import Button from '@mui/material/Button';
-import PartnersAddModal from './PartnersAddModal';
+import React, { useState } from "react";
+import { Grid } from "@material-ui/core";
+import { makeStyles } from "@material-ui/styles";
+import MUIDataTable from "mui-datatables";
+import { Box, styled, Icon } from "@mui/material";
+import { Breadcrumb } from "app/components";
+import Button from "@mui/material/Button";
+import PartnersAddModal from "./PartnersAddModal";
 
 const data = [
   [
-    '123',
-    'CodeGXS',
-    'GXS 123',
-    'Makati City',
-    'gxs@gxs.ph',
-    'www.gxs.ph',
-    '8882461234',
-    '8/08/2022 08:08',
+    "123",
+    "CodeGXS",
+    "GXS 123",
+    "Makati City",
+    "gxs@gxs.ph",
+    "www.gxs.ph",
+    "8882461234",
+    "8/08/2022 08:08",
   ],
   [
-    '456',
-    'CodeGortex',
-    'GCortex Inc',
-    'MuntinlupaCity',
-    'coretex@gmail.ph',
-    'www.cortex.ph',
-    '09171234567',
-    '8/10/2022 08:08',
+    "456",
+    "CodeGortex",
+    "GCortex Inc",
+    "MuntinlupaCity",
+    "coretex@gmail.ph",
+    "www.cortex.ph",
+    "09171234567",
+    "8/10/2022 08:08",
   ],
   [
-    '789',
-    'CodeCIC',
-    '789 CIC',
-    'Paranaque City',
-    '789cics@cic.com',
-    'www.cic.ph',
-    '8902461234',
-    '8/10/2022 08:08',
+    "789",
+    "CodeCIC",
+    "789 CIC",
+    "Paranaque City",
+    "789cics@cic.com",
+    "www.cic.ph",
+    "8902461234",
+    "8/10/2022 08:08",
   ],
   [
-    '1023',
-    'CodePoorHub',
-    'Poor Fighter Hub',
-    'Mandaluyong City',
-    'fighter@poorhub.ph',
-    'www.poorfighter.ph',
-    '88824645678',
-    '8/11/2022 08:08',
+    "1023",
+    "CodePoorHub",
+    "Poor Fighter Hub",
+    "Mandaluyong City",
+    "fighter@poorhub.ph",
+    "www.poorfighter.ph",
+    "88824645678",
+    "8/11/2022 08:08",
   ],
   [
-    '143',
-    'CodePeace',
-    'Peace 143',
-    'San Juan City',
-    'Allis@love.ph',
-    'www.peacelove.ph',
-    '8881434455',
-    '8/13/2022 08:08',
+    "143",
+    "CodePeace",
+    "Peace 143",
+    "San Juan City",
+    "Allis@love.ph",
+    "www.peacelove.ph",
+    "8881434455",
+    "8/13/2022 08:08",
   ],
   [
-    '7070',
-    'CodeMahalKaNya',
-    'Mahal Kita',
-    'Santa Rosa City',
-    '220@mahalkita.ph',
-    'www.mahalkanya.ph',
-    '8882461234',
-    '8/03/2022 08:08',
+    "7070",
+    "CodeMahalKaNya",
+    "Mahal Kita",
+    "Santa Rosa City",
+    "220@mahalkita.ph",
+    "www.mahalkanya.ph",
+    "8882461234",
+    "8/03/2022 08:08",
   ],
   [
-    '1230',
-    'CodeBioMan',
-    'BIO Man',
-    'Cebu City',
-    'Bio@man.ph',
-    'www.bioman.ph',
-    '8881231234',
-    '8/20/2022 08:08',
+    "1230",
+    "CodeBioMan",
+    "BIO Man",
+    "Cebu City",
+    "Bio@man.ph",
+    "www.bioman.ph",
+    "8881231234",
+    "8/20/2022 08:08",
   ],
 ];
+
 const review = () => {
-  console.log('TEST');
+  console.log("TEST");
 };
 
 const columns = [
-  { name: 'ID' },
-  { name: 'Code' },
-  'Name',
-  'Address',
-  'Email',
-  'Website',
-  'Contact No',
-  'Create At',
-  // {
-  //   name: 'Access Status',
-  //   options: {
-  //     customBodyRender: (value, tableMeta, updateValue) => {
-  //       if (value === 'OK')
-  //         return (
-  //           <Tooltip title="OK">
-  //             <Done color="primary" />
-  //           </Tooltip>
-  //         );
-  //       else
-  //         return (
-  //           <Tooltip title="Failing">
-  //             <Error color="error" />
-  //           </Tooltip>
-  //         );
-  //     },
-  //   },
-  // },
+  { name: "ID" },
+  { name: "Code" },
+  "Name",
+  "Address",
+  "Email",
+  "Website",
+  "Contact No",
+  "Create At",
   {
-    name: 'Actions',
+    name: "Actions",
     options: {
       customBodyRender: (value, tableMeta, updateValue) => {
         return (
@@ -127,26 +109,26 @@ const columns = [
 
 const useStyles = makeStyles((theme) => ({
   tableOverflow: {
-    overflow: 'auto',
+    overflow: "auto",
   },
   addButton: {
-    position: 'absolute',
-    color: 'white',
-    size: 'medium',
-    right: '25px',
+    position: "absolute",
+    color: "white",
+    size: "medium",
+    right: "25px",
   },
 }));
 
-const Container = styled('div')(({ theme }) => ({
-  margin: '30px',
-  [theme.breakpoints.down('sm')]: { margin: '16px' },
-  '& .breadcrumb': {
-    marginBottom: '30px',
-    [theme.breakpoints.down('sm')]: { marginBottom: '16px' },
+const Container = styled("div")(({ theme }) => ({
+  margin: "30px",
+  [theme.breakpoints.down("sm")]: { margin: "16px" },
+  "& .breadcrumb": {
+    marginBottom: "30px",
+    [theme.breakpoints.down("sm")]: { marginBottom: "16px" },
   },
-  '& .addButton': {
-    marginBottom: '30px',
-    [theme.breakpoints.down('sm')]: { marginBottom: '16px' },
+  "& .addButton": {
+    marginBottom: "30px",
+    [theme.breakpoints.down("sm")]: { marginBottom: "16px" },
   },
 }));
 
@@ -160,19 +142,20 @@ const options = {
 const PartnersTable = () => {
   const classes = useStyles();
   const [showModal, setShowModal] = useState(false);
-  // const showAddParticipantsModal = () => {
 
-  console.log('Show Modal ' + showModal);
-  // };
   const openModal = () => {
     setShowModal((prev) => !prev);
   };
 
-  // onClick={handleClickOpen('paper')}
   return (
     <Container>
       <Box className="breadcrumb" display="flex">
-        <Breadcrumb routeSegments={[{ name: 'Partners', path: '/records' }, { name: 'Records' }]} />
+        <Breadcrumb
+          routeSegments={[
+            { name: "Partners", path: "/records" },
+            { name: "Records" },
+          ]}
+        />
         <Button
           variant="contained"
           color="success"
@@ -186,7 +169,12 @@ const PartnersTable = () => {
 
       <Grid container spacing={4}>
         <Grid item xs={12}>
-          <MUIDataTable title="Partners List" data={data} columns={columns} options={options} />
+          <MUIDataTable
+            title="Partners List"
+            data={data}
+            columns={columns}
+            options={options}
+          />
         </Grid>
       </Grid>
       <PartnersAddModal showModal={showModal} setShowModal={setShowModal} />

@@ -1,10 +1,13 @@
-import { CssBaseline } from '@mui/material';
-import { StyledEngineProvider } from '@mui/styled-engine';
-import 'perfect-scrollbar/css/perfect-scrollbar.css';
-import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
-import App from './app/App';
-import * as serviceWorker from './serviceWorker';
+import { CssBaseline } from "@mui/material";
+import { StyledEngineProvider } from "@mui/styled-engine";
+import ReactDOM from "react-dom";
+import { BrowserRouter } from "react-router-dom";
+import App from "./app/root/App";
+import * as serviceWorker from "./serviceWorker";
+
+import "perfect-scrollbar/css/perfect-scrollbar.css";
+
+window.process = {};
 
 ReactDOM.render(
   <StyledEngineProvider injectFirst>
@@ -13,7 +16,7 @@ ReactDOM.render(
       <App />
     </BrowserRouter>
   </StyledEngineProvider>,
-  document.getElementById('root')
+  document.getElementById("root")
 );
 
 // for IE-11 support un-comment cssVars() and it's import in this file
