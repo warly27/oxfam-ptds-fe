@@ -45,6 +45,10 @@ const UsersData = ({ userData, handleConfirmUser, handleDeleteUser }) => {
     handleDeleteUser(cognitoId, email);
   };
 
+  const confirm = (value) => {
+    console.log(value);
+  };
+
   const columns = [
     {
       name: "id",
@@ -71,7 +75,7 @@ const UsersData = ({ userData, handleConfirmUser, handleDeleteUser }) => {
       name: "email",
       label: "email",
       options: {
-        filter: false,
+        filter: true,
       },
     },
     {

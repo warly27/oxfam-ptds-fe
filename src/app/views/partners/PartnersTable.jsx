@@ -6,6 +6,8 @@ import { Box, styled, Icon } from "@mui/material";
 import { Breadcrumb } from "app/components";
 import Button from "@mui/material/Button";
 import PartnersAddModal from "./PartnersAddModal";
+import PaertnersData from "./partnersdata";
+import PartnersData from "./partnersdata";
 
 const data = [
   [
@@ -169,14 +171,11 @@ const PartnersTable = () => {
 
       <Grid container spacing={4}>
         <Grid item xs={12}>
-          <MUIDataTable
-            title="Partners List"
-            data={data}
-            columns={columns}
-            options={options}
-          />
+          {/* <MUIDataTable title="Partners List" data={data} columns={columns} options={options} /> */}
+          <PartnersData />
         </Grid>
       </Grid>
+
       <PartnersAddModal showModal={showModal} setShowModal={setShowModal} />
     </Container>
   );
