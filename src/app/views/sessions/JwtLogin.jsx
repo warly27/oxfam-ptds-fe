@@ -63,7 +63,9 @@ const JwtLogin = () => {
     setLoading(true);
     try {
       const response = await login(values.email, values.password);
-      console.log(response);
+
+      console.log("[response]", response);
+
       navigate("/");
       setModalMessage(undefined);
     } catch (e) {
@@ -81,6 +83,7 @@ const JwtLogin = () => {
           setShowModal={setShowModal}
           message={message}
         />
+
         <Grid container>
           <Grid item sm={6} xs={12}>
             <JustifyBox p={4} height="100%" sx={{ minWidth: 320 }}>
@@ -92,6 +95,7 @@ const JwtLogin = () => {
               />
             </JustifyBox>
           </Grid>
+
           <Grid item sm={6} xs={12}>
             <ContentBox>
               <Formik
@@ -172,7 +176,7 @@ const JwtLogin = () => {
                     <Paragraph>
                       Don't have an account?
                       <NavLink
-                        to="/session/signup"
+                        to="/signup"
                         style={{
                           color: theme.palette.primary.main,
                           marginLeft: 5,

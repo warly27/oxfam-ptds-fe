@@ -72,23 +72,33 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const register = async (email, user_name, password, role) => {
+  const register = async (email, user_name, password, role, partnerCode) => {
     const response = await axios.post(`${BASE_URL}/auth/registration`, {
       email,
       user_name,
       password,
       role,
+      partnerCode,
     });
 
     console.log("[response]: ", response);
+
+    return response;
   };
 
-  const adminCreateUser = async (email, user_name, password, role) => {
+  const adminCreateUser = async (
+    email,
+    user_name,
+    password,
+    role,
+    partnerCode
+  ) => {
     const response = await axios.post(`${BASE_URL}/admin/user/create`, {
       email,
       user_name,
       password,
       role,
+      partnerCode,
     });
 
     const { id } = response.data;

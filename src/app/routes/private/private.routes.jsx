@@ -1,8 +1,9 @@
 import { lazy } from "react";
 
 const DashboardModule = lazy(() => import("../../views/dashboard/Analytics"));
-const Analytics = lazy(() => import("../../views/appusers/AppUsersTable"));
+const AppUserModule = lazy(() => import("../../views/appusers/AppUsersTable"));
 const Partners = lazy(() => import("../../views/partners/PartnersTable"));
+const ProjectsModule = lazy(() => import("../../views/projects/ProjectsTable"));
 
 const privateRoutes = [
   {
@@ -14,13 +15,19 @@ const privateRoutes = [
   {
     id: "appUserModule",
     path: "appusers/records",
-    children: <Analytics />,
+    children: <AppUserModule />,
     exact: true,
   },
   {
     id: "partnerModule",
     path: "partners/records",
     children: <Partners />,
+    exact: true,
+  },
+  {
+    id: "projectsModule",
+    path: "projects/records",
+    children: <ProjectsModule />,
     exact: true,
   },
 ];

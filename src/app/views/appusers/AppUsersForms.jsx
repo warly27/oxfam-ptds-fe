@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Span } from "app/components/Typography";
 import { ValidatorForm } from "react-material-ui-form-validator";
 import { inputFormElements } from "app/components/FormElement";
-import { makeStyles } from "@material-ui/core/styles";
 // import {
 // Grid,
 // TextField,
@@ -24,24 +23,29 @@ import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Icon from "@mui/material/Icon";
 
-// const useStyles = makeStyles((theme) => ({
-//   container: {
-//     display: "flex",
-//     flexWrap: "wrap",
-//   },
-//   textField: {
-//     marginLeft: theme.spacing(1),
-//     marginRight: theme.spacing(1),
-//     width: 200,
-//     padding: "10px 5px",
-//   },
-// }));
+import axios from "../../utils/axios";
+
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const AppUsersForms = ({ handleCreateUser }) => {
   const [fundSource, setFundSource] = useState("");
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [partnerCode, setPartnerCode] = useState("");
+  const [partnerCodeLookup, setPartnerCodeLookup] = useState([]);
+
+  const fetchPartnerCodeLookup = useCallback(async () => {
+    const getPartnerCodeLookup = await axios.get(
+      `${BASE_URL}/lookup/partner/codes`
+    );
+
+    setPartnerCodeLookup(getPartnerCodeLookup?.data?.data);
+  }, []);
+
+  useEffect(() => {
+    fetchPartnerCodeLookup();
+  }, []);
 
   const handleChange = (event) => {
     const isUsername = event.target.name === "userName";
@@ -63,6 +67,11 @@ const AppUsersForms = ({ handleCreateUser }) => {
     if (isFundSource) {
       setFundSource(event.target.value);
     }
+
+    const isPartnerCode = event.target.name === "partnerCode";
+    if (isPartnerCode) {
+      setPartnerCode(event.target.value);
+    }
   };
 
   const handleSubmit = async () => {
@@ -71,6 +80,7 @@ const AppUsersForms = ({ handleCreateUser }) => {
       userName,
       password,
       fundSource,
+      partnerCode,
     });
   };
 
@@ -79,7 +89,10 @@ const AppUsersForms = ({ handleCreateUser }) => {
     setUserName("");
     setEmail("");
     setPassword("");
+    setPartnerCode("");
   };
+
+  const isPartner = fundSource === "partner";
 
   const margin = { margin: "0 5px" };
 
@@ -120,6 +133,31 @@ const AppUsersForms = ({ handleCreateUser }) => {
                   </FormControl>
                 </Grid>
               </Grid>
+
+              {isPartner && (
+                <Grid container item>
+                  <Grid xs={12} sm={12} item>
+                    <FormControl fullWidth>
+                      <InputLabel id="partner-code-select-label">
+                        Partner Code
+                      </InputLabel>
+
+                      <Select
+                        labelId="partner-code-select-label"
+                        id="partner-code-select"
+                        value={partnerCode}
+                        label="Partner Code"
+                        onChange={handleChange}
+                        name="partnerCode"
+                      >
+                        {partnerCodeLookup.map((data) => (
+                          <MenuItem value={data?.code}>{data?.name}</MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                </Grid>
+              )}
 
               <Grid container item>
                 <Grid item xs={12} align="right">

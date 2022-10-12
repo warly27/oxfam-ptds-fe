@@ -1,3 +1,5 @@
+import { useState, useCallback, useEffect } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useTheme } from "@emotion/react";
 import { LoadingButton } from "@mui/lab";
 import { Card, Checkbox, Grid, TextField, Autocomplete } from "@mui/material";
@@ -5,10 +7,11 @@ import { Box, styled } from "@mui/system";
 import { Paragraph } from "app/components/Typography";
 import useAuth from "app/hooks/useAuth";
 import { Formik } from "formik";
-import { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import CustomizedDialogs from "../mydialogbox/customDialog";
+
+import axios from "../../utils/axios";
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const FlexBox = styled(Box)(() => ({ display: "flex", alignItems: "center" }));
 
@@ -66,9 +69,23 @@ const JwtRegister = () => {
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [message, setModalMessage] = useState();
+  const [partnerCodeLookup, setPartnerCodeLookup] = useState([]);
+  const [role, setRole] = useState("");
+  const [partnerCode, setPartnerCode] = useState("");
+
+  const fetchPartnerCodeLookup = useCallback(async () => {
+    const getPartnerCodeLookup = await axios.get(
+      `${BASE_URL}/lookup/partner/codes`
+    );
+
+    setPartnerCodeLookup(getPartnerCodeLookup?.data?.data);
+  }, []);
+
+  useEffect(() => {
+    fetchPartnerCodeLookup();
+  }, []);
 
   const handleFormSubmit = async (values) => {
-    console.log(values);
     setLoading(true);
 
     try {
@@ -76,19 +93,32 @@ const JwtRegister = () => {
         values.email,
         values.user_name,
         values.password,
-        values.role
+        role,
+        partnerCode
       );
+
       console.log(response);
 
-      setModalMessage(undefined);
-      setLoading(false);
-      setShowModal(true);
+      if (response.status === 201) {
+        setModalMessage(undefined);
+        setLoading(false);
+        setShowModal(true);
+        navigate("/");
+      }
     } catch (e) {
-      console.log(e);
-      setModalMessage(e.message);
+      console.log("[e]", e);
+      setModalMessage(e?.result);
       setLoading(false);
       setShowModal(true);
     }
+  };
+
+  const handleChangeData = (_event, newValue) => {
+    setRole(newValue?.role?.toLowerCase());
+  };
+
+  const handleSelectCode = (_event, newValue) => {
+    setPartnerCode(newValue?.code);
   };
 
   return (
@@ -199,12 +229,38 @@ const JwtRegister = () => {
                           onInputChange={values.param}
                           onChange={handleChange}
                           name="role"
+                          value={values.role}
                           helperText={touched.role && errors.role}
                           error={Boolean(errors.role && touched.role)}
                           sx={{ mb: 3 }}
                         />
                       )}
+                      onChange={handleChangeData}
                     />
+
+                    {role === "partner" && (
+                      <AutoComplete
+                        options={partnerCodeLookup}
+                        getOptionLabel={(option) => option.name}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Partner Code"
+                            variant="outlined"
+                            fullWidth
+                            //value={values.params}
+                            inputValue={values.param}
+                            onInputChange={values.param}
+                            onChange={handleChange}
+                            name="partnerCode"
+                            helperText={touched.name && errors.name}
+                            error={Boolean(errors.name && touched.name)}
+                            sx={{ mb: 3 }}
+                          />
+                        )}
+                        onChange={handleSelectCode}
+                      />
+                    )}
 
                     <FlexBox gap={1} alignItems="center">
                       <Checkbox
@@ -233,7 +289,7 @@ const JwtRegister = () => {
                     <Paragraph>
                       Already have an account?
                       <NavLink
-                        to="/session/signin"
+                        to="/"
                         style={{
                           color: theme.palette.primary.main,
                           marginLeft: 5,

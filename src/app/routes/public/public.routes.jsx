@@ -6,6 +6,10 @@ const ForgotPasswordModule = lazy(() =>
 
 const LogoutModule = lazy(() => import("../../views/sessions/Logout"));
 
+const RegistrationModule = lazy(() =>
+  import("../../views/sessions/JwtRegister")
+);
+
 const publicRoutes = [
   {
     id: "loginModule",
@@ -23,6 +27,12 @@ const publicRoutes = [
     id: "forgotPassword",
     path: "/forgot-password",
     component: <ForgotPasswordModule />,
+    exact: true,
+  },
+  {
+    id: "registrationModule",
+    path: "/signup",
+    component: <RegistrationModule />,
     exact: true,
   },
   {

@@ -1,22 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { ThemeProvider, createTheme, List, ListItemText, Icon } from '@mui/material';
-import MUIDataTable from 'mui-datatables';
+import React, { useState, useEffect } from "react";
+import { ThemeProvider, createTheme, Icon } from "@mui/material";
+import MUIDataTable from "mui-datatables";
 import {
   Table,
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
   TableRow,
-  TextField,
-  FormLabel,
-  FormGroup,
-} from '@mui/material';
-import axios from 'axios.js';
-import { faL } from '@fortawesome/free-solid-svg-icons';
+} from "@mui/material";
+import Paper from "@material-ui/core/Paper";
 
-const PartnersData = () => {
-  const [data, setData] = useState();
+import Button from "app/components/controls/Button";
+import CheckIcon from "@mui/icons-material/Check";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+
+import { faL } from "@fortawesome/free-solid-svg-icons";
+
+const PartnersData = ({ partnerList, handleConfirmUser, handleDeleteUser }) => {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    setData(partnerList);
+  }, [partnerList]);
 
   const getMuiTheme = () =>
     createTheme({
@@ -24,127 +29,106 @@ const PartnersData = () => {
         MUIDataTableBodyCell: {
           styleOverrides: {
             root: {
-              backgroundColor: '#e9ffdb',
+              backgroundColor: "#e9ffdb",
             },
           },
         },
       },
     });
 
-  useEffect(() => {
-    axios
-      .get(
-        ' https://phyqi94vke.execute-api.ap-southeast-1.amazonaws.com/dev/v1/partner/getAllPartners',
-        {
-          headers: {
-            Authorization: `${window.localStorage.getItem('accessToken')}`,
-          },
-        }
-      )
-      .then((res) => {
-        console.log(res.data);
-        setData(res.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, [setData]);
+  const handleClick = () => {
+    console.log("clicked");
+  };
 
-  // useEffect(() => {
-  //   const accessToken = window.localStorage.getItem('accessToken');
-  //   console.log(accessToken);
+  const onClickConfirmUser = (email) => {
+    handleConfirmUser(email);
+  };
 
-  //   const url = 'https://jsonplaceholder.typicode.com/posts';
-
-  //   const getDatas = fetch(url)
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       // this.setState({ data: data });
-  //       setData(data);
-  //     })
-  //     .catch((err) => console.log('error:', err));
-  // }, [setData]);
-
-  const handleClick = (value) => {
-    console.log('value', value.id);
-    const { id } = value;
-    const url = `https://jsonplaceholder.typicode.com/posts/${id}/comments`;
-    const getComments = fetch(url)
-      .then((res) => res.json())
-      .then((data) => {
-        // this.setState({ comments: data });
-        console.log(data);
-      })
-      .catch((err) => console.log('error:', err));
+  const onClickDeleteUser = (cognitoId, email) => {
+    handleDeleteUser(cognitoId, email);
   };
 
   const columns = [
     {
-      name: 'id',
-      label: 'Partner Id',
+      name: "id",
+      label: "Partner Id",
       options: {
         filter: true,
       },
     },
     {
-      name: 'name',
-      label: 'Name',
+      name: "name",
+      label: "Name",
       options: {
         filter: true,
       },
     },
     {
-      name: 'code',
-      label: 'Code',
+      name: "code",
+      label: "Code",
       options: {
         filter: true,
       },
     },
     {
-      name: 'email',
-      label: 'email',
+      name: "email",
+      label: "email",
       options: {
         filter: true,
       },
     },
     {
-      name: 'address',
-      label: 'Address',
+      name: "address",
+      label: "Address",
       options: {
         display: false,
       },
     },
     {
-      name: 'website',
-      label: 'Website',
+      name: "website",
+      label: "Website",
       options: {
         display: false,
       },
     },
     {
-      name: 'contact_number',
-      label: 'Contact no.',
+      name: "contact_number",
+      label: "Contact no.",
       options: {
         display: false,
       },
     },
     {
-      name: 'is_deleted',
-      label: 'Is Deleted',
+      name: "status",
+      label: "Status",
       options: {
         display: false,
       },
     },
     {
-      name: 'created_at',
-      label: 'Submitted',
+      name: "is_deleted",
+      label: "Is Deleted",
       options: {
         display: false,
       },
     },
     {
-      name: 'updated_at',
-      label: 'Approve',
+      name: "createdAt",
+      label: "Submitted",
+      options: {
+        display: false,
+      },
+    },
+    {
+      name: "updatedAt",
+      label: "Approve",
+      options: {
+        display: false,
+      },
+    },
+    {
+      name: "cognito_id",
+      label: "Cognito ID",
       options: {
         display: false,
       },
@@ -153,7 +137,7 @@ const PartnersData = () => {
 
   const options = {
     filter: true,
-    selectableRows: 'none',
+    selectableRows: "none",
     // responsive: 'scrollMaxHeight',
     expandableRows: true,
     onRowsDelete: (rowsDeleted, dataRows) => {
@@ -161,77 +145,90 @@ const PartnersData = () => {
       console.log(rowsDeleted.data);
     },
     renderExpandableRow: (rowData, rowMeta) => {
-      console.log('DATA: ' + rowData);
-      console.log('MDATA: ' + rowMeta);
+      console.log("DATA: " + rowData);
+      console.log("MDATA: " + rowMeta);
       return (
-        <tr>
-          <td colSpan={4}>
-            <TableContainer>
-              <Table style={{ margin: '0 auto' }}>
-                <TableHead>
-                <TableCell align="left">Address</TableCell>
-                <TableCell align="left">Website</TableCell>
-                <TableCell align="left">Contact No.</TableCell>
-                <TableCell align="left">Status</TableCell>
-                  <TableCell align="left">Is Deleted?</TableCell>
-                  <TableCell align="left">Created At</TableCell>
-                  <TableCell align="left">Actions</TableCell>
-                  {/* <TableCell align="right">Color</TableCell>
-                  <TableCell align="right">Size</TableCell> */}
-                </TableHead>
-                <TableBody>
-                  <TableRow>
-                  <TableCell component="th" scope="row" align="left">
-                      {/* <strong>Is Deleted?:</strong> */}
-                      {rowData[4]}
-                    </TableCell>
-                    <TableCell component="th" scope="row" align="left">
-                      {/* <strong>Is Deleted?:</strong> */}
-                      {rowData[5]}
-                    </TableCell>
-                    <TableCell component="th" scope="row" align="left">
-                      {/* <strong>Is Deleted?:</strong> */}
-                      {rowData[6]}
-                    </TableCell>
-                    <TableCell component="th" scope="row" align="left">
-                      {/* <strong>Created At:</strong>  */}
-                      {rowData[7] === '0' ? 'for approval' : 'Approved'}
-                    </TableCell>
-                    <TableCell component="th" scope="row" align="left">
-                      {/* <strong>Updated At:</strong>  */}
-                      {rowData[8] === '0' ? 'Active' : 'Deleted'}
-                    </TableCell>
-                    <TableCell component="th" scope="row" align="left">
-                      {/* <strong>Created At:</strong>  */}
-                      {rowData[9]}
-                    </TableCell>
-                    <TableCell component="th" scope="row" align="left">
-                      <Icon> playlist_add </Icon>
-                    </TableCell>
-                    {/* <TableCell align="right">{row.color}</TableCell>
-                        <TableCell align="right">{row.size}</TableCell> */}
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </td>
-        </tr>
+        <>
+          <tr>
+            <td colSpan={6}>
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell component="th" scope="row" align="left">
+                        {/* <strong>Is Deleted?:</strong> */}
+                        <strong>Address</strong> {rowData[4]}
+                      </TableCell>
+
+                      <TableCell component="th" scope="row" align="left">
+                        <strong>Website</strong> {rowData[5]}
+                      </TableCell>
+
+                      <TableCell component="th" scope="row" align="left">
+                        <strong>Contact No.</strong> {rowData[6]}
+                      </TableCell>
+
+                      <TableCell component="th" scope="row" align="left">
+                        <strong>Status</strong>{" "}
+                        {rowData[7] === "0" ? "for approval" : "Approved"}
+                      </TableCell>
+
+                      <TableCell component="th" scope="row" align="left">
+                        <strong>Is Deleted?</strong>{" "}
+                        {rowData[8] === "0" ? "Active" : "Deleted"}
+                      </TableCell>
+
+                      <TableCell component="th" scope="row" align="left">
+                        <strong>Created At</strong> {rowData[9]}
+                      </TableCell>
+
+                      <TableCell component="th" scope="row" align="center">
+                        <Button
+                          onClick={() => onClickConfirmUser(rowData[3])}
+                          text={<CheckIcon />}
+                          size="small"
+                          disabled={rowData[7] === "1"}
+                        />
+                      </TableCell>
+
+                      <TableCell component="th" scope="row" align="center">
+                        <Button
+                          onClick={() =>
+                            onClickDeleteUser(rowData[11], rowData[3])
+                          }
+                          text={<DeleteOutlineIcon />}
+                          size="small"
+                          disabled={rowData[8] === "1"}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </td>
+          </tr>
+        </>
       );
     },
-    onRowsClick: (rowData, rowMeta) => {
-      console.log('rowData', rowData);
-      handleClick(data[rowMeta.dataIndex]);
-    },
+    // onRowsClick: (rowData, rowMeta) => {
+    //   console.log("rowData", rowData);
+    //   handleClick(data[rowMeta.dataIndex]);
+    // },
     onRowsExpand: (curExpanded, allExpanded) => {
-      console.log('rowExpand', curExpanded, allExpanded[0]);
-      handleClick(data[allExpanded[0].dataIndex]);
+      console.log("rowExpand", curExpanded, allExpanded[0]);
+      handleClick();
     },
   };
   return (
     <div className="App">
       <ThemeProvider theme={getMuiTheme}>
         {/* total amount of the current page: {total} */}
-        <MUIDataTable title={'App Partners'} options={options} columns={columns} data={data} />
+        <MUIDataTable
+          title={"App Partners"}
+          options={options}
+          columns={columns}
+          data={data}
+        />
       </ThemeProvider>
     </div>
   );

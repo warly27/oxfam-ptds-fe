@@ -81,15 +81,22 @@ const AppUsersTable = () => {
     userName,
     password,
     fundSource,
+    partnerCode,
   }) => {
     const adminCreateUserRequest = await adminCreateUser(
       email,
       userName,
       password,
-      fundSource
+      fundSource,
+      partnerCode
     );
 
     console.log("[adminCreateUserRequest]: ", adminCreateUserRequest);
+
+    if (adminCreateUserRequest?.status === 200) {
+      fetchAllUsers();
+      setShowModal(false);
+    }
   };
 
   const handleConfirmUser = async (email) => {
