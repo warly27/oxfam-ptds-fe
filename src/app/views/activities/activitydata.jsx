@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ThemeProvider, createTheme, List, ListItemText } from '@mui/material';
+import { ThemeProvider, createTheme, List, ListItemText, Icon } from '@mui/material';
 import MUIDataTable from 'mui-datatables';
 import {
   Table,
@@ -32,7 +32,7 @@ const Activities = () => {
 
   useEffect(() => {
     axios
-      .get('https://phyqi94vke.execute-api.ap-southeast-1.amazonaws.com/dev/v1/users/getAllUsers', {
+      .get(' https://phyqi94vke.execute-api.ap-southeast-1.amazonaws.com/dev/v1/activity/getAllActivities', {
         headers: {
           Authorization: `${window.localStorage.getItem('accessToken')}`,
         },
@@ -77,42 +77,49 @@ const Activities = () => {
   const columns = [
     {
       name: 'id',
-      label: 'User Id',
+      label: 'Activity Id',
       options: {
         filter: true,
       },
     },
     {
-      name: 'cognito_id',
-      label: 'AWS ID',
+      name: 'project_id',
+      label: 'Project ID',
       options: {
         filter: true,
       },
     },
     {
-      name: 'name',
-      label: 'Name',
+      name: 'indicator_id',
+      label: 'WBS',
       options: {
         filter: true,
       },
     },
     {
-      name: 'email',
-      label: 'email',
+      name: 'title',
+      label: 'Activity Title',
       options: {
         filter: false,
       },
     },
     {
-      name: 'role',
-      label: 'Role',
+      name: 'description',
+      label: 'description',
+      options: {
+        filter: false,
+      },
+    },
+    {
+      name: 'venue',
+      label: 'Venue',
       options: {
         display: false,
       },
     },
     {
-      name: 'status',
-      label: 'Status',
+      name: 'date',
+      label: 'Date',
       options: {
         display: false,
       },
@@ -125,15 +132,8 @@ const Activities = () => {
       },
     },
     {
-      name: 'created_at',
-      label: 'Submitted',
-      options: {
-        display: false,
-      },
-    },
-    {
-      name: 'updated_at',
-      label: 'Approve',
+      name: 'status',
+      label: 'Status',
       options: {
         display: false,
       },
@@ -154,31 +154,35 @@ const Activities = () => {
       console.log('MDATA: ' + rowMeta);
       return (
         <tr>
-          <td colSpan={4}>
+          <td colSpan={12}>
             <TableContainer>
               <Table style={{ margin: '0 auto' }}>
                 <TableHead>
-                  <TableCell align="left">Info</TableCell>
+                  <TableCell align="left">Activity Venue</TableCell>
+                  <TableCell align="left">Activity Date</TableCell>
+                  <TableCell align="left">Is Deleted?</TableCell>
+                  <TableCell align="left">Status</TableCell>
+                  <TableCell align="left">Actions</TableCell>
                   {/* <TableCell align="right">Color</TableCell>
                   <TableCell align="right">Size</TableCell> */}
                 </TableHead>
                 <TableBody>
                   <TableRow>
                     <TableCell component="th" scope="row" align="left">
-                      <strong>Role:</strong>
-                      {rowData[4]}
+                      {/* <strong>Role:</strong> */}
+                      {rowData[5]}
                     </TableCell>
                     <TableCell component="th" scope="row" align="left">
-                      <strong>Status:</strong> {rowData[5] === '0' ? 'for approval' : 'Approved'}
+                    {rowData[6]}
                     </TableCell>
                     <TableCell component="th" scope="row" align="left">
-                      <strong>Is Deleted?:</strong> {rowData[6] === '0' ? 'Active' : 'Deleted'}
+                    {rowData[7]}
                     </TableCell>
                     <TableCell component="th" scope="row" align="left">
-                      <strong>Submitted:</strong> {rowData[7]}
+                    {rowData[8]}
                     </TableCell>
                     <TableCell component="th" scope="row" align="left">
-                      <strong>Approved:</strong> {rowData[8]}
+                      <Icon> playlist_add </Icon>
                     </TableCell>
 
                     {/* <TableCell align="right">{row.color}</TableCell>

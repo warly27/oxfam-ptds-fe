@@ -6,6 +6,7 @@ import { Box, styled, Icon } from '@mui/material';
 import { Breadcrumb } from 'app/components';
 import Button from '@mui/material/Button';
 import ProjectsAddModal from './ProjectsAddModal';
+import ProjectsData from './projectsdata';
 
 const datatableData = [
   [
@@ -244,12 +245,13 @@ const ProjectsTable = () => {
 
       <Grid container spacing={4}>
         <Grid item xs={12}>
-          <MUIDataTable
+          {/* <MUIDataTable
             title="Project List"
             data={datatableData}
             columns={columns}
             options={options}
-          />
+          /> */}
+          <ProjectsData />
         </Grid>
       </Grid>
       <ProjectsAddModal showModal={showModal} setShowModal={setShowModal} />

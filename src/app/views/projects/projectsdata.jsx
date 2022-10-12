@@ -15,7 +15,7 @@ import {
 import axios from 'axios.js';
 // import { faL } from '@fortawesome/free-solid-svg-icons';
 
-const PartnersData = () => {
+const ProjectsData = () => {
   const [data, setData] = useState();
 
   const getMuiTheme = () =>
@@ -34,7 +34,7 @@ const PartnersData = () => {
   useEffect(() => {
     axios
       .get(
-        ' https://phyqi94vke.execute-api.ap-southeast-1.amazonaws.com/dev/v1/partner/getAllPartners',
+        'https://phyqi94vke.execute-api.ap-southeast-1.amazonaws.com/dev/v1/project/getAllProjects',
         {
           headers: {
             Authorization: `${window.localStorage.getItem('accessToken')}`,
@@ -42,8 +42,8 @@ const PartnersData = () => {
         }
       )
       .then((res) => {
-        console.log(res.data);
-        setData(res.data);
+        console.log(res.data.data);
+        setData(res.data.data);
       })
       .catch((error) => {
         console.error(error);
@@ -81,74 +81,102 @@ const PartnersData = () => {
   const columns = [
     {
       name: 'id',
-      label: 'Partner Id',
+      label: 'Project Id',
       options: {
         filter: true,
       },
     },
     {
-      name: 'name',
-      label: 'Name',
+      name: 'partner_id',
+      label: 'Partner ID',
       options: {
         filter: true,
       },
     },
     {
       name: 'code',
-      label: 'Code',
+      label: 'Project Code',
       options: {
         filter: true,
       },
     },
     {
-      name: 'email',
-      label: 'email',
+      name: 'name',
+      label: 'Project Short Name',
       options: {
         filter: true,
       },
     },
     {
-      name: 'address',
-      label: 'Address',
+      name: 'title',
+      label: 'Project Title',
+      options: {
+        filter: true,
+      },
+    },
+    {
+      name: 'description',
+      label: 'Description',
+      options: {
+        filter: true,
+      },
+    },
+    {
+      name: 'type',
+      label: 'Type',
+      options: {
+        filter: true,
+      },
+    },
+    {
+      name: 'portfolio',
+      label: 'Portfolio',
       options: {
         display: false,
       },
     },
     {
-      name: 'website',
-      label: 'Website',
+      name: 'fund_source',
+      label: 'Fund Source',
       options: {
         display: false,
       },
     },
     {
-      name: 'contact_number',
-      label: 'Contact no.',
+      name: 'budget',
+      label: 'Budget',
       options: {
         display: false,
       },
     },
     {
-      name: 'is_deleted',
-      label: 'Is Deleted',
-      options: {
-        display: false,
+        name: 'status',
+        label: 'Status',
+        options: {
+          display: false,
+        },
       },
-    },
-    {
-      name: 'created_at',
-      label: 'Submitted',
-      options: {
-        display: false,
+      {
+        name: 'is_deleted',
+        label: 'Is Deleted?',
+        options: {
+          display: false,
+        },
       },
-    },
-    {
-      name: 'updated_at',
-      label: 'Approve',
-      options: {
-        display: false,
+      {
+        name: 'start_date',
+        label: 'Start Date',
+        options: {
+          display: false,
+        },
       },
-    },
+      {
+        name: 'end_date',
+        label: 'End Date',
+        options: {
+          display: false,
+        },
+      }
   ];
 
   const options = {
@@ -169,11 +197,12 @@ const PartnersData = () => {
             <TableContainer>
               <Table style={{ margin: '0 auto' }}>
                 <TableHead>
-                <TableCell align="left">Address</TableCell>
-                <TableCell align="left">Website</TableCell>
-                <TableCell align="left">Contact No.</TableCell>
+                <TableCell align="left">Portfolio</TableCell>
+                <TableCell align="left">Fund Source</TableCell>
+                <TableCell align="left">Budget</TableCell>
                 <TableCell align="left">Status</TableCell>
                   <TableCell align="left">Is Deleted?</TableCell>
+                  <TableCell align="left">Start Date</TableCell>
                   <TableCell align="left">Created At</TableCell>
                   <TableCell align="left">Actions</TableCell>
                   {/* <TableCell align="right">Color</TableCell>
@@ -183,27 +212,35 @@ const PartnersData = () => {
                   <TableRow>
                   <TableCell component="th" scope="row" align="left">
                       {/* <strong>Is Deleted?:</strong> */}
-                      {rowData[4]}
+                      {rowData[7]}
                     </TableCell>
                     <TableCell component="th" scope="row" align="left">
                       {/* <strong>Is Deleted?:</strong> */}
-                      {rowData[5]}
+                      {rowData[8]}
                     </TableCell>
                     <TableCell component="th" scope="row" align="left">
                       {/* <strong>Is Deleted?:</strong> */}
-                      {rowData[6]}
+                      {rowData[9]}
                     </TableCell>
                     <TableCell component="th" scope="row" align="left">
                       {/* <strong>Created At:</strong>  */}
-                      {rowData[7] === '0' ? 'for approval' : 'Approved'}
+                      {rowData[10] === '0' ? 'for approval' : 'Approved'}
                     </TableCell>
                     <TableCell component="th" scope="row" align="left">
                       {/* <strong>Updated At:</strong>  */}
-                      {rowData[8] === '0' ? 'Active' : 'Deleted'}
+                      {rowData[11] === '0' ? 'Active' : 'Deleted'}
                     </TableCell>
                     <TableCell component="th" scope="row" align="left">
                       {/* <strong>Created At:</strong>  */}
-                      {rowData[9]}
+                      {rowData[12]}
+                    </TableCell>
+                    <TableCell component="th" scope="row" align="left">
+                      {/* <strong>Updated At:</strong>  */}
+                      {rowData[13] === '0' ? 'Active' : 'Deleted'}
+                    </TableCell>
+                    <TableCell component="th" scope="row" align="left">
+                      {/* <strong>Created At:</strong>  */}
+                      {rowData[14]}
                     </TableCell>
                     <TableCell component="th" scope="row" align="left">
                       <Icon> playlist_add </Icon>
@@ -237,4 +274,4 @@ const PartnersData = () => {
   );
 };
 
-export default PartnersData;
+export default ProjectsData;

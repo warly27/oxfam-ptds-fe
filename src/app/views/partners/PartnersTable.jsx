@@ -6,7 +6,6 @@ import { Box, styled, Icon } from '@mui/material';
 import { Breadcrumb } from 'app/components';
 import Button from '@mui/material/Button';
 import PartnersAddModal from './PartnersAddModal';
-import PaertnersData from './partnersdata';
 import PartnersData from './partnersdata';
 
 const data = [

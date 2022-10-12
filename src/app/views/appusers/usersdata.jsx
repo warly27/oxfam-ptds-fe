@@ -158,7 +158,7 @@ const UsersData = () => {
       console.log('MDATA: ' + rowMeta);
       return (
         <tr>
-          <td colSpan={4}>
+          <td colSpan={12}>
             <TableContainer>
               <Table style={{ margin: '0 auto' }}>
                 <TableHead>
