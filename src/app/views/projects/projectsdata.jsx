@@ -19,8 +19,9 @@ import {
   FormGroup,
 } from "@mui/material";
 import axios from "../../utils/axios";
+// import { faL } from '@fortawesome/free-solid-svg-icons';
 
-const Activities = () => {
+const ProjectsData = () => {
   const [data, setData] = useState();
 
   const getMuiTheme = () =>
@@ -39,7 +40,7 @@ const Activities = () => {
   useEffect(() => {
     axios
       .get(
-        " https://phyqi94vke.execute-api.ap-southeast-1.amazonaws.com/dev/v1/activity/getAllActivities",
+        "https://phyqi94vke.execute-api.ap-southeast-1.amazonaws.com/dev/v1/project/getAllProjects",
         {
           headers: {
             Authorization: `${window.localStorage.getItem("accessToken")}`,
@@ -86,56 +87,70 @@ const Activities = () => {
   const columns = [
     {
       name: "id",
-      label: "Activity Id",
+      label: "Project Id",
       options: {
         filter: true,
       },
     },
     {
-      name: "project_id",
-      label: "Project ID",
+      name: "partner_id",
+      label: "Partner ID",
       options: {
         filter: true,
       },
     },
     {
-      name: "indicator_id",
-      label: "WBS",
+      name: "code",
+      label: "Project Code",
+      options: {
+        filter: true,
+      },
+    },
+    {
+      name: "name",
+      label: "Project Short Name",
       options: {
         filter: true,
       },
     },
     {
       name: "title",
-      label: "Activity Title",
+      label: "Project Title",
       options: {
-        filter: false,
+        filter: true,
       },
     },
     {
       name: "description",
-      label: "description",
+      label: "Description",
       options: {
-        filter: false,
+        filter: true,
       },
     },
     {
-      name: "venue",
-      label: "Venue",
+      name: "type",
+      label: "Type",
+      options: {
+        filter: true,
+      },
+    },
+    {
+      name: "portfolio",
+      label: "Portfolio",
       options: {
         display: false,
       },
     },
     {
-      name: "date",
-      label: "Date",
+      name: "fund_source",
+      label: "Fund Source",
       options: {
         display: false,
       },
     },
     {
-      name: "is_deleted",
-      label: "Is Deleted",
+      name: "budget",
+      label: "Budget",
       options: {
         display: false,
       },
@@ -143,6 +158,27 @@ const Activities = () => {
     {
       name: "status",
       label: "Status",
+      options: {
+        display: false,
+      },
+    },
+    {
+      name: "is_deleted",
+      label: "Is Deleted?",
+      options: {
+        display: false,
+      },
+    },
+    {
+      name: "start_date",
+      label: "Start Date",
+      options: {
+        display: false,
+      },
+    },
+    {
+      name: "end_date",
+      label: "End Date",
       options: {
         display: false,
       },
@@ -167,10 +203,13 @@ const Activities = () => {
             <TableContainer>
               <Table style={{ margin: "0 auto" }}>
                 <TableHead>
-                  <TableCell align="left">Activity Venue</TableCell>
-                  <TableCell align="left">Activity Date</TableCell>
-                  <TableCell align="left">Is Deleted?</TableCell>
+                  <TableCell align="left">Portfolio</TableCell>
+                  <TableCell align="left">Fund Source</TableCell>
+                  <TableCell align="left">Budget</TableCell>
                   <TableCell align="left">Status</TableCell>
+                  <TableCell align="left">Is Deleted?</TableCell>
+                  <TableCell align="left">Start Date</TableCell>
+                  <TableCell align="left">Created At</TableCell>
                   <TableCell align="left">Actions</TableCell>
                   {/* <TableCell align="right">Color</TableCell>
                   <TableCell align="right">Size</TableCell> */}
@@ -178,22 +217,40 @@ const Activities = () => {
                 <TableBody>
                   <TableRow>
                     <TableCell component="th" scope="row" align="left">
-                      {/* <strong>Role:</strong> */}
-                      {rowData[5]}
-                    </TableCell>
-                    <TableCell component="th" scope="row" align="left">
-                      {rowData[6]}
-                    </TableCell>
-                    <TableCell component="th" scope="row" align="left">
+                      {/* <strong>Is Deleted?:</strong> */}
                       {rowData[7]}
                     </TableCell>
                     <TableCell component="th" scope="row" align="left">
+                      {/* <strong>Is Deleted?:</strong> */}
                       {rowData[8]}
+                    </TableCell>
+                    <TableCell component="th" scope="row" align="left">
+                      {/* <strong>Is Deleted?:</strong> */}
+                      {rowData[9]}
+                    </TableCell>
+                    <TableCell component="th" scope="row" align="left">
+                      {/* <strong>Created At:</strong>  */}
+                      {rowData[10] === "0" ? "for approval" : "Approved"}
+                    </TableCell>
+                    <TableCell component="th" scope="row" align="left">
+                      {/* <strong>Updated At:</strong>  */}
+                      {rowData[11] === "0" ? "Active" : "Deleted"}
+                    </TableCell>
+                    <TableCell component="th" scope="row" align="left">
+                      {/* <strong>Created At:</strong>  */}
+                      {rowData[12]}
+                    </TableCell>
+                    <TableCell component="th" scope="row" align="left">
+                      {/* <strong>Updated At:</strong>  */}
+                      {rowData[13] === "0" ? "Active" : "Deleted"}
+                    </TableCell>
+                    <TableCell component="th" scope="row" align="left">
+                      {/* <strong>Created At:</strong>  */}
+                      {rowData[14]}
                     </TableCell>
                     <TableCell component="th" scope="row" align="left">
                       <Icon> playlist_add </Icon>
                     </TableCell>
-
                     {/* <TableCell align="right">{row.color}</TableCell>
                         <TableCell align="right">{row.size}</TableCell> */}
                   </TableRow>
@@ -218,7 +275,7 @@ const Activities = () => {
       <ThemeProvider theme={getMuiTheme}>
         {/* total amount of the current page: {total} */}
         <MUIDataTable
-          title={"Project Activities"}
+          title={"App Partners"}
           options={options}
           columns={columns}
           data={data}
@@ -228,4 +285,4 @@ const Activities = () => {
   );
 };
 
-export default Activities;
+export default ProjectsData;
