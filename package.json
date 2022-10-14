@@ -24,6 +24,7 @@
     "clsx": "^1.1.1",
     "cross-fetch": "^3.1.4",
     "date-fns": "^2.26.0",
+    "dayjs": "^1.11.5",
     "echarts": "^5.2.2",
     "echarts-for-react": "^3.0.2",
     "formik": "^2.2.9",
@@ -52,7 +53,7 @@
   "scripts": {
     "preinstall": "npx npm-force-resolutions",
     "start": "react-scripts start",
-    "build": "GENERATE_SOURCEMAP=false react-scripts build",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "ghp": "react-scripts build && gh-pages -d build"

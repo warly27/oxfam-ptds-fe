@@ -92,7 +92,7 @@ const PartnersTable = () => {
 
   const handleCreatePartner = async ({
     email,
-    userName,
+    website,
     password,
     mobileNo,
     partnerCode,
@@ -100,11 +100,11 @@ const PartnersTable = () => {
     companyAddress,
   }) => {
     const payload = {
-      name: userName,
+      name: companyName,
       email,
       password,
       contact_number: mobileNo,
-      website: companyName,
+      website: website,
       address: companyAddress,
       code: partnerCode,
     };

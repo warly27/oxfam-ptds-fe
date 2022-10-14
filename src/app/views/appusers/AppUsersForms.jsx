@@ -128,7 +128,7 @@ const AppUsersForms = ({ handleCreateUser }) => {
                     >
                       <MenuItem value={"admin"}>Admin</MenuItem>
                       <MenuItem value={"partner"}>Partner</MenuItem>
-                      <MenuItem value={"project_owner"}>Project Owner</MenuItem>
+                      <MenuItem value={"melsa"}>Melsa</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>

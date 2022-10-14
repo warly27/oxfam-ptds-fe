@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  ThemeProvider,
-  createTheme,
-  List,
-  ListItemText,
-  Icon,
-} from "@mui/material";
+import { ThemeProvider, createTheme, Icon } from "@mui/material";
 import MUIDataTable from "mui-datatables";
 import {
   Table,
@@ -14,12 +8,11 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TextField,
-  FormLabel,
-  FormGroup,
 } from "@mui/material";
 import axios from "../../utils/axios";
 // import { faL } from '@fortawesome/free-solid-svg-icons';
+
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const ProjectsData = () => {
   const [data, setData] = useState();
@@ -39,14 +32,11 @@ const ProjectsData = () => {
 
   useEffect(() => {
     axios
-      .get(
-        "https://phyqi94vke.execute-api.ap-southeast-1.amazonaws.com/dev/v1/project/getAllProjects",
-        {
-          headers: {
-            Authorization: `${window.localStorage.getItem("accessToken")}`,
-          },
-        }
-      )
+      .get(`${BASE_URL}/project/getAllProjects`, {
+        headers: {
+          Authorization: `${window.localStorage.getItem("accessToken")}`,
+        },
+      })
       .then((res) => {
         console.log(res.data.data);
         setData(res.data.data);
@@ -56,32 +46,8 @@ const ProjectsData = () => {
       });
   }, [setData]);
 
-  // useEffect(() => {
-  //   const accessToken = window.localStorage.getItem('accessToken');
-  //   console.log(accessToken);
-
-  //   const url = 'https://jsonplaceholder.typicode.com/posts';
-
-  //   const getDatas = fetch(url)
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       // this.setState({ data: data });
-  //       setData(data);
-  //     })
-  //     .catch((err) => console.log('error:', err));
-  // }, [setData]);
-
-  const handleClick = (value) => {
-    console.log("value", value.id);
-    const { id } = value;
-    const url = `https://jsonplaceholder.typicode.com/posts/${id}/comments`;
-    const getComments = fetch(url)
-      .then((res) => res.json())
-      .then((data) => {
-        // this.setState({ comments: data });
-        console.log(data);
-      })
-      .catch((err) => console.log("error:", err));
+  const handleClick = () => {
+    console.log("handle Click");
   };
 
   const columns = [
@@ -261,13 +227,13 @@ const ProjectsData = () => {
         </tr>
       );
     },
-    onRowsClick: (rowData, rowMeta) => {
-      console.log("rowData", rowData);
-      handleClick(data[rowMeta.dataIndex]);
-    },
+    // onRowsClick: (rowData, rowMeta) => {
+    //   console.log("rowData", rowData);
+    //   handleClick(data[rowMeta.dataIndex]);
+    // },
     onRowsExpand: (curExpanded, allExpanded) => {
       console.log("rowExpand", curExpanded, allExpanded[0]);
-      handleClick(data[allExpanded[0].dataIndex]);
+      handleClick();
     },
   };
   return (
@@ -275,7 +241,7 @@ const ProjectsData = () => {
       <ThemeProvider theme={getMuiTheme}>
         {/* total amount of the current page: {total} */}
         <MUIDataTable
-          title={"App Partners"}
+          title={"App Projects"}
           options={options}
           columns={columns}
           data={data}

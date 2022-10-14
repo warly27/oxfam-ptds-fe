@@ -1,62 +1,98 @@
-import React, { useState } from 'react';
-import { Grid } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
-import MUIDataTable from 'mui-datatables';
-import { Box, styled, Icon } from '@mui/material';
-import { Breadcrumb } from 'app/components';
-import Button from '@mui/material/Button';
-import ParticipantsAddForms from './ParticipantsAddForms';
-import Test from './test';
+import React, { useState, useCallback, useEffect } from "react";
+import { Grid } from "@material-ui/core";
+import { makeStyles } from "@material-ui/styles";
+import { Box, styled, Icon } from "@mui/material";
+import { Breadcrumb } from "app/components";
+import Button from "@mui/material/Button";
+import ParticipantsModal from "./ParticipantsModal";
+import ParticipantsData from "./ParticipantsData";
+
+import axios from "../../utils/axios";
+
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const useStyles = makeStyles((theme) => ({
   tableOverflow: {
-    overflow: 'auto',
+    overflow: "auto",
   },
   addButton: {
-    position: 'absolute',
-    color: 'white',
-    size: 'medium',
-    right: '25px',
+    position: "absolute",
+    color: "white",
+    size: "medium",
+    right: "25px",
   },
 }));
 
-const Container = styled('div')(({ theme }) => ({
-  margin: '30px',
-  [theme.breakpoints.down('sm')]: { margin: '16px' },
-  '& .breadcrumb': {
-    marginBottom: '30px',
-    [theme.breakpoints.down('sm')]: { marginBottom: '16px' },
+const Container = styled("div")(({ theme }) => ({
+  margin: "30px",
+  [theme.breakpoints.down("sm")]: { margin: "16px" },
+  "& .breadcrumb": {
+    marginBottom: "30px",
+    [theme.breakpoints.down("sm")]: { marginBottom: "16px" },
   },
-  '& .addButton': {
-    marginBottom: '30px',
-    [theme.breakpoints.down('sm')]: { marginBottom: '16px' },
+  "& .addButton": {
+    marginBottom: "30px",
+    [theme.breakpoints.down("sm")]: { marginBottom: "16px" },
   },
 }));
-
-const options = {
-  onRowsDelete: (rowsDeleted, dataRows) => {
-    console.log(dataRows[0]);
-    console.log(rowsDeleted.data);
-  },
-};
 
 const ParticipantsTable = () => {
   const classes = useStyles();
   const [showModal, setShowModal] = useState(false);
-  // const showAddParticipantsModal = () => {
+  const [participantsData, setParticipantsData] = useState([]);
 
-  console.log('Show Modal ' + showModal);
-  // };
+  const fetchParticipantsData = useCallback(async () => {
+    const getAllUsersResult = await axios.get(`${BASE_URL}/participants`);
+
+    setParticipantsData(getAllUsersResult?.data?.data);
+  }, []);
+
+  useEffect(() => {
+    fetchParticipantsData();
+  }, []);
+
   const openModal = () => {
     setShowModal((prev) => !prev);
   };
 
-  // onClick={handleClickOpen('paper')}
+  const handleCreateParticipant = async (payload) => {
+    const createRequest = await axios.post(
+      `${BASE_URL}/participants/create`,
+      payload
+    );
+
+    console.log("[createRequest]: ", createRequest);
+
+    if (createRequest?.status === 200) {
+      fetchParticipantsData();
+      setShowModal(false);
+    }
+  };
+
+  const handleDeleteParticipant = async (cognitoId, email) => {
+    const payload = {
+      cognito_id: cognitoId,
+      email,
+    };
+
+    const deleteRequest = await axios.delete(
+      `${BASE_URL}/participants/delete`,
+      payload
+    );
+
+    if (deleteRequest?.status === 200) {
+      fetchParticipantsData();
+    }
+  };
+
   return (
     <Container>
       <Box className="breadcrumb" display="flex">
         <Breadcrumb
-          routeSegments={[{ name: 'Participants', path: '/records' }, { name: 'Records' }]}
+          routeSegments={[
+            { name: "Participants", path: "/records" },
+            { name: "Records" },
+          ]}
         />
         <Button
           variant="contained"
@@ -71,31 +107,18 @@ const ParticipantsTable = () => {
 
       <Grid container spacing={4}>
         <Grid item xs={12}>
-          {/* <MUIDataTable
-            title="Participants List"
-            data={datatableData}
-            columns={[
-              'ID',
-              'Activity ID',
-              'First Name',
-              'Last Name',
-              'Middle Name',
-              'Sex',
-              'Gender',
-              'DOB',
-              'Age',
-              'Civil Status',
-              'Province',
-              'Municipality',
-              'Barangay',
-              'PWDStatus',
-            ]}
-            options={options}
-          /> */}
-          <Test />
+          <ParticipantsData
+            participantsData={participantsData}
+            handleDeleteParticipant={handleDeleteParticipant}
+          />
         </Grid>
       </Grid>
-      <ParticipantsAddForms showModal={showModal} setShowModal={setShowModal} />
+
+      <ParticipantsModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        handleCreateParticipant={handleCreateParticipant}
+      />
     </Container>
   );
 };

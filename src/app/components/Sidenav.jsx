@@ -48,6 +48,18 @@ const Sidenav = ({ children }) => {
     });
   };
 
+  console.log('user?.role === "admin"', user?.role);
+
+  console.log(
+    user?.role === "admin"
+      ? navigations
+      : "melsa"
+      ? melsa_navigations
+      : "partner"
+      ? partners_navigations
+      : null
+  );
+
   return (
     <Fragment>
       <StyledScrollBar options={{ suppressScrollX: true }}>
@@ -56,11 +68,11 @@ const Sidenav = ({ children }) => {
           items={
             user?.role === "admin"
               ? navigations
-              : "melsa"
+              : user?.role === "melsa"
               ? melsa_navigations
-              : "partner"
+              : user?.role === "partner"
               ? partners_navigations
-              : null
+              : []
           }
         />
       </StyledScrollBar>

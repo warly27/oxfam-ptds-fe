@@ -8,149 +8,6 @@ import Button from "@mui/material/Button";
 import ProjectsAddModal from "./ProjectsAddModal";
 import ProjectsData from "./projectsdata";
 
-const datatableData = [
-  [
-    "Maid in Malacanang",
-    "MIM",
-    "MIMAMVA",
-    "AMWA",
-    "Things we must know",
-    "Justice",
-    "Humanitarian",
-    "08-03-2022",
-    "09-27-22",
-    "PROTP",
-    "10B",
-    "In-progress",
-  ],
-  [
-    "Campaign against poverty",
-    "CAP",
-    "PBSPCAP",
-    "PBSPP",
-    "Things we must know",
-    "Justice",
-    "Humanitarian",
-    "08-03-2022",
-    "09-27-22",
-    "PROTP",
-    "10B",
-    "In-progress",
-  ],
-
-  [
-    "Maid in Malacanang",
-    "MIM",
-    "MIMAMVA",
-    "AMWA",
-    "Things we must know",
-    "Justice",
-    "Humanitarian",
-    "08-03-2022",
-    "09-27-22",
-    "PROTP",
-    "10B",
-    "In-progress",
-  ],
-  [
-    "Campaign against poverty",
-    "CAP",
-    "PBSPCAP",
-    "PBSPP",
-    "Things we must know",
-    "Justice",
-    "Humanitarian",
-    "08-03-2022",
-    "09-27-22",
-    "PROTP",
-    "10B",
-    "In-progress",
-  ],
-  [
-    "Maid in Malacanang",
-    "MIM",
-    "MIMAMVA",
-    "AMWA",
-    "Things we must know",
-    "Justice",
-    "Humanitarian",
-    "08-03-2022",
-    "09-27-22",
-    "PROTP",
-    "10B",
-    "In-progress",
-  ],
-  [
-    "Campaign against poverty",
-    "CAP",
-    "PBSPCAP",
-    "PBSPP",
-    "Things we must know",
-    "Justice",
-    "Humanitarian",
-    "08-03-2022",
-    "09-27-22",
-    "PROTP",
-    "10B",
-    "In-progress",
-  ],
-  [
-    "Maid in Malacanang",
-    "MIM",
-    "MIMAMVA",
-    "AMWA",
-    "Things we must know",
-    "Justice",
-    "Humanitarian",
-    "08-03-2022",
-    "09-27-22",
-    "PROTP",
-    "10B",
-    "In-progress",
-  ],
-  [
-    "Campaign against poverty",
-    "CAP",
-    "PBSPCAP",
-    "PBSPP",
-    "Things we must know",
-    "Justice",
-    "Humanitarian",
-    "08-03-2022",
-    "09-27-22",
-    "PROTP",
-    "10B",
-    "In-progress",
-  ],
-  [
-    "Maid in Malacanang",
-    "MIM",
-    "MIMAMVA",
-    "AMWA",
-    "Things we must know",
-    "Justice",
-    "Humanitarian",
-    "08-03-2022",
-    "09-27-22",
-    "PROTP",
-    "10B",
-    "In-progress",
-  ],
-  [
-    "Campaign against poverty",
-    "CAP",
-    "PBSPCAP",
-    "PBSPP",
-    "Things we must know",
-    "Justice",
-    "Humanitarian",
-    "08-03-2022",
-    "09-27-22",
-    "PROTP",
-    "10B",
-    "In-progress",
-  ],
-];
 const review = () => {
   console.log("TEST");
 };
@@ -231,7 +88,7 @@ const ProjectsTable = () => {
       <Box className="breadcrumb" display="flex">
         <Breadcrumb
           routeSegments={[
-            { name: "Participants", path: "/participants" },
+            { name: "Projects", path: "/projects" },
             { name: "Records" },
           ]}
         />
@@ -249,15 +106,10 @@ const ProjectsTable = () => {
 
       <Grid container spacing={4}>
         <Grid item xs={12}>
-          {/* <MUIDataTable
-            title="Project List"
-            data={datatableData}
-            columns={columns}
-            options={options}
-          /> */}
           <ProjectsData />
         </Grid>
       </Grid>
+
       <ProjectsAddModal showModal={showModal} setShowModal={setShowModal} />
     </Container>
   );
