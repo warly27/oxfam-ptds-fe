@@ -47,7 +47,7 @@ const SimpleForm = () => {
   const {
     username,
     firstName,
-    creditCard,
+    // creditCard,
     mobile,
     password,
     confirmPassword,
@@ -69,7 +69,11 @@ const SimpleForm = () => {
               onChange={handleChange}
               errorMessages={["this field is required"]}
               label="Username (Min length 4, Max length 9)"
-              validators={["required", "minStringLength: 4", "maxStringLength: 9"]}
+              validators={[
+                "required",
+                "minStringLength: 4",
+                "maxStringLength: 9",
+              ]}
             />
 
             <TextField
@@ -107,7 +111,7 @@ const SimpleForm = () => {
               />
             </LocalizationProvider>
 
-            <TextField
+            {/* <TextField
               sx={{ mb: 4 }}
               type="number"
               name="creditCard"
@@ -116,7 +120,7 @@ const SimpleForm = () => {
               value={creditCard || ""}
               errorMessages={["this field is required"]}
               validators={["required", "minStringLength:16", "maxStringLength: 16"]}
-            />
+            /> */}
           </Grid>
 
           <Grid item lg={6} md={6} sm={12} xs={12} sx={{ mt: 2 }}>
@@ -145,7 +149,10 @@ const SimpleForm = () => {
               label="Confirm Password"
               value={confirmPassword || ""}
               validators={["required", "isPasswordMatch"]}
-              errorMessages={["this field is required", "password didn't match"]}
+              errorMessages={[
+                "this field is required",
+                "password didn't match",
+              ]}
             />
             <RadioGroup
               row

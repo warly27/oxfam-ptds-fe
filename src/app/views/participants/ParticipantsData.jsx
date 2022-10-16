@@ -13,12 +13,19 @@ import Button from "app/components/controls/Button";
 import CheckIcon from "@mui/icons-material/Check";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
-const UsersData = ({ userData, handleConfirmUser, handleDeleteUser }) => {
+import daysJs from "dayjs";
+
+const ParticipantsData = ({
+  participantsData,
+  handleDeleteParticipant,
+  // handleConfirmUser,
+  // handleDeleteUser,
+}) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    setData(userData);
-  }, [userData]);
+    setData(participantsData);
+  }, [participantsData]);
 
   const getMuiTheme = () =>
     createTheme({
@@ -37,12 +44,12 @@ const UsersData = ({ userData, handleConfirmUser, handleDeleteUser }) => {
     console.log("value", value?.id);
   };
 
-  const onClickConfirmUser = (email) => {
-    handleConfirmUser(email);
-  };
+  // const onClickConfirmUser = (email) => {
+  //   handleConfirmUser(email);
+  // };
 
-  const onClickDeleteUser = (cognitoId, email) => {
-    handleDeleteUser(cognitoId, email);
+  const onClickDeleteUser = (id) => {
+    handleDeleteParticipant(id);
   };
 
   const confirm = (value) => {
@@ -52,20 +59,13 @@ const UsersData = ({ userData, handleConfirmUser, handleDeleteUser }) => {
   const columns = [
     {
       name: "id",
-      label: "User Id",
+      label: "Id",
       options: {
         filter: true,
       },
     },
     {
-      name: "cognito_id",
-      label: "AWS ID",
-      options: {
-        filter: true,
-      },
-    },
-    {
-      name: "name",
+      name: "participant_name",
       label: "Name",
       options: {
         filter: true,
@@ -79,15 +79,50 @@ const UsersData = ({ userData, handleConfirmUser, handleDeleteUser }) => {
       },
     },
     {
-      name: "role",
-      label: "Role",
+      name: "contact_number",
+      label: "Mobile no.",
+      options: {
+        display: true,
+      },
+    },
+    {
+      name: "age",
+      label: "Age",
+      options: {
+        display: true,
+      },
+    },
+    {
+      name: "address",
+      label: "Address",
+      options: {
+        display: true,
+      },
+    },
+    {
+      name: "birthday",
+      label: "Birthday",
       options: {
         display: false,
       },
     },
     {
-      name: "status",
-      label: "Status",
+      name: "sex",
+      label: "Gender",
+      options: {
+        display: false,
+      },
+    },
+    {
+      name: "civil_status",
+      label: "Civil Status",
+      options: {
+        display: false,
+      },
+    },
+    {
+      name: "with_disability",
+      label: "PWD",
       options: {
         display: false,
       },
@@ -130,34 +165,36 @@ const UsersData = ({ userData, handleConfirmUser, handleDeleteUser }) => {
       return (
         <>
           <tr>
-            <td colSpan={6}>
+            <td colSpan={12}>
               <TableContainer component={Paper}>
                 <Table>
                   <TableBody>
                     <TableRow>
                       <TableCell component="th" scope="row" align="left">
-                        <strong>Role:</strong>
-                        {rowData[4]}
+                        <strong>Date of birth: </strong>
+                        {rowData[6]}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="left">
-                        <strong>Status:</strong>{" "}
-                        {rowData[5] === "0" ? "For Approval" : "Approved"}
+                        <strong>Gender:</strong> {rowData[7]}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="left">
-                        <strong>Is Deleted?:</strong>{" "}
-                        {rowData[6] === "0" ? "Active" : "Deleted"}
+                        <strong>Civil Status: </strong> {rowData[8]}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="left">
-                        <strong>Submitted:</strong> {rowData[7]}
+                        <strong>With Disability:</strong>{" "}
+                        {rowData[9] === ""
+                          ? "None"
+                          : rowData[9].replaceAll("_", " ")}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="left">
-                        <strong>Approved:</strong> {rowData[8]}
+                        <strong>Approved:</strong>{" "}
+                        {daysJs(rowData[11]).format("DD/MM/YYYY")}
                       </TableCell>
-
+                      {/* 
                       <TableCell component="th" scope="row" align="center">
                         <Button
                           onClick={() => onClickConfirmUser(rowData[3])}
@@ -165,13 +202,11 @@ const UsersData = ({ userData, handleConfirmUser, handleDeleteUser }) => {
                           size="small"
                           disabled={rowData[5] === "1"}
                         />
-                      </TableCell>
+                      </TableCell> */}
 
                       <TableCell component="th" scope="row" align="center">
                         <Button
-                          onClick={() =>
-                            onClickDeleteUser(rowData[1], rowData[3])
-                          }
+                          onClick={() => onClickDeleteUser(rowData[0])}
                           text={<DeleteOutlineIcon />}
                           size="small"
                           disabled={rowData[6] === "1"}
@@ -202,7 +237,7 @@ const UsersData = ({ userData, handleConfirmUser, handleDeleteUser }) => {
       <ThemeProvider theme={getMuiTheme}>
         {/* total amount of the current page: {total} */}
         <MUIDataTable
-          title={"App Users"}
+          title={"App Participants"}
           options={options}
           columns={columns}
           data={data}
@@ -212,4 +247,4 @@ const UsersData = ({ userData, handleConfirmUser, handleDeleteUser }) => {
   );
 };
 
-export default UsersData;
+export default ParticipantsData;

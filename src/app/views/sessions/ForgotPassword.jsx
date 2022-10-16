@@ -1,14 +1,14 @@
-import { Box, Button, Card, Grid, styled, TextField } from '@mui/material';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Box, Button, Card, Grid, styled, TextField } from "@mui/material";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const FlexBox = styled(Box)(() => ({
-  display: 'flex',
-  alignItems: 'center',
+  display: "flex",
+  alignItems: "center",
 }));
 
 const JustifyBox = styled(FlexBox)(() => ({
-  justifyContent: 'center',
+  justifyContent: "center",
 }));
 
 const ContentBox = styled(Box)(({ theme }) => ({
@@ -17,21 +17,29 @@ const ContentBox = styled(Box)(({ theme }) => ({
 }));
 
 const ForgotPasswordRoot = styled(JustifyBox)(() => ({
-  background: '#196900',
-  minHeight: '100vh !important',
-  '& .card': {
+  background: "#196900",
+  minHeight: "100vh !important",
+  "& .card": {
     maxWidth: 800,
-    margin: '1rem',
+    margin: "1rem",
     borderRadius: 12,
   },
 }));
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('warly.delacruz@oxfam.com');
+  const [email, setEmail] = useState("");
+
+  const handleChangeEmail = (event) => {
+    setEmail(event.target.value);
+  };
 
   const handleFormSubmit = () => {
     console.log(email);
+  };
+
+  const handleGoBack = () => {
+    navigate("/");
   };
 
   return (
@@ -40,37 +48,44 @@ const ForgotPassword = () => {
         <Grid container>
           <Grid item xs={12}>
             <JustifyBox p={4}>
-              {/* <img width="300" src="/assets/images/illustrations/dreamer.svg" alt="" /> */}
-              <img src="/assets/images/logos/round-oxfam-logo.png" width="100%" alt="" />
+              <img
+                src="/assets/images/logos/round-oxfam-logo.png"
+                width="100%"
+                alt=""
+              />
             </JustifyBox>
 
             <ContentBox>
-              <form onSubmit={handleFormSubmit}>
-                <TextField
-                  type="email"
-                  name="email"
-                  size="small"
-                  label="Email"
-                  value={email}
-                  variant="outlined"
-                  onChange={(e) => setEmail(e.target.value)}
-                  sx={{ mb: 3, width: '100%' }}
-                />
+              <TextField
+                type="email"
+                name="email"
+                size="small"
+                label="Email"
+                value={email}
+                variant="outlined"
+                onChange={(event) => handleChangeEmail(event)}
+                sx={{ mb: 3, width: "100%" }}
+              />
 
-                <Button fullWidth variant="contained" color="success" type="submit">
-                  Reset Password
-                </Button>
+              <Button
+                fullWidth
+                variant="contained"
+                color="success"
+                type="submit"
+                onClick={handleFormSubmit}
+              >
+                Reset Password
+              </Button>
 
-                <Button
-                  fullWidth
-                  color="primary"
-                  variant="outlined"
-                  onClick={() => navigate(-1)}
-                  sx={{ mt: 2 }}
-                >
-                  Go Back
-                </Button>
-              </form>
+              <Button
+                fullWidth
+                color="primary"
+                variant="outlined"
+                sx={{ mt: 2 }}
+                onClick={handleGoBack}
+              >
+                Go Back
+              </Button>
             </ContentBox>
           </Grid>
         </Grid>

@@ -1,15 +1,15 @@
-import React, { useState, useRef, useEffect } from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import PartnersAddForms from './PartnersAddForms';
-import { Typography } from '@material-ui/core';
+import React, { useState, useRef, useEffect } from "react";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import PartnersAddForms from "./PartnersAddForms";
+import { Typography } from "@material-ui/core";
 
-const AppUserAddModal = ({ showModal, setShowModal }) => {
-  console.log(showModal + ' from the modal component');
+const AppUserAddModal = ({ showModal, setShowModal, handleCreatePartner }) => {
+  console.log(showModal + " from the modal component");
   const handleClose = () => {
     setShowModal((prev) => !prev);
   };
@@ -44,7 +44,7 @@ const AppUserAddModal = ({ showModal, setShowModal }) => {
             ref={descriptionElementRef}
             tabIndex={-1}
           >
-            <PartnersAddForms />
+            <PartnersAddForms handleCreatePartner={handleCreatePartner} />
           </DialogContentText>
         </DialogContent>
       </Dialog>

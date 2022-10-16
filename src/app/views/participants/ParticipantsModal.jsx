@@ -1,14 +1,16 @@
-import React, { useRef, useEffect } from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import SimpleForm from '../material-kit/forms/SimpleForm';
+import React, { useRef, useEffect } from "react";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import ParticipantsAddForm from "./ParticipantsAddForm";
 
-const ParticipantsAddForms = ({ showModal, setShowModal }) => {
-  console.log(showModal + ' from the modal component');
+const ParticipantsModal = ({
+  showModal,
+  setShowModal,
+  handleCreateParticipant,
+}) => {
+  console.log(showModal + " from the modal component");
   const handleClose = () => {
     setShowModal((prev) => !prev);
   };
@@ -39,7 +41,9 @@ const ParticipantsAddForms = ({ showModal, setShowModal }) => {
             ref={descriptionElementRef}
             tabIndex={-1}
           >
-            <SimpleForm />
+            <ParticipantsAddForm
+              handleCreateParticipant={handleCreateParticipant}
+            />
           </DialogContentText>
         </DialogContent>
       </Dialog>
@@ -47,4 +51,4 @@ const ParticipantsAddForms = ({ showModal, setShowModal }) => {
   );
 };
 
-export default ParticipantsAddForms;
+export default ParticipantsModal;

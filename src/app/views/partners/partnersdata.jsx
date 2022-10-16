@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { ThemeProvider, createTheme } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { ThemeProvider, createTheme, Icon } from "@mui/material";
 import MUIDataTable from "mui-datatables";
 import {
   Table,
@@ -9,16 +9,19 @@ import {
   TableRow,
 } from "@mui/material";
 import Paper from "@material-ui/core/Paper";
+
 import Button from "app/components/controls/Button";
 import CheckIcon from "@mui/icons-material/Check";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
-const UsersData = ({ userData, handleConfirmUser, handleDeleteUser }) => {
+import { faL } from "@fortawesome/free-solid-svg-icons";
+
+const PartnersData = ({ partnerList, handleConfirmUser, handleDeleteUser }) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    setData(userData);
-  }, [userData]);
+    setData(partnerList);
+  }, [partnerList]);
 
   const getMuiTheme = () =>
     createTheme({
@@ -33,8 +36,8 @@ const UsersData = ({ userData, handleConfirmUser, handleDeleteUser }) => {
       },
     });
 
-  const handleClick = (value) => {
-    console.log("value", value?.id);
+  const handleClick = () => {
+    console.log("clicked");
   };
 
   const onClickConfirmUser = (email) => {
@@ -45,21 +48,10 @@ const UsersData = ({ userData, handleConfirmUser, handleDeleteUser }) => {
     handleDeleteUser(cognitoId, email);
   };
 
-  const confirm = (value) => {
-    console.log(value);
-  };
-
   const columns = [
     {
       name: "id",
-      label: "User Id",
-      options: {
-        filter: true,
-      },
-    },
-    {
-      name: "cognito_id",
-      label: "AWS ID",
+      label: "Partner Id",
       options: {
         filter: true,
       },
@@ -72,6 +64,13 @@ const UsersData = ({ userData, handleConfirmUser, handleDeleteUser }) => {
       },
     },
     {
+      name: "code",
+      label: "Code",
+      options: {
+        filter: true,
+      },
+    },
+    {
       name: "email",
       label: "email",
       options: {
@@ -79,8 +78,22 @@ const UsersData = ({ userData, handleConfirmUser, handleDeleteUser }) => {
       },
     },
     {
-      name: "role",
-      label: "Role",
+      name: "address",
+      label: "Address",
+      options: {
+        display: false,
+      },
+    },
+    {
+      name: "website",
+      label: "Website",
+      options: {
+        display: false,
+      },
+    },
+    {
+      name: "contact_number",
+      label: "Contact no.",
       options: {
         display: false,
       },
@@ -113,6 +126,13 @@ const UsersData = ({ userData, handleConfirmUser, handleDeleteUser }) => {
         display: false,
       },
     },
+    {
+      name: "cognito_id",
+      label: "Cognito ID",
+      options: {
+        display: false,
+      },
+    },
   ];
 
   const options = {
@@ -136,26 +156,30 @@ const UsersData = ({ userData, handleConfirmUser, handleDeleteUser }) => {
                   <TableBody>
                     <TableRow>
                       <TableCell component="th" scope="row" align="left">
-                        <strong>Role:</strong>
-                        {rowData[4]}
+                        {/* <strong>Is Deleted?:</strong> */}
+                        <strong>Address</strong> {rowData[4]}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="left">
-                        <strong>Status:</strong>{" "}
-                        {rowData[5] === "0" ? "For Approval" : "Approved"}
+                        <strong>Website</strong> {rowData[5]}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="left">
-                        <strong>Is Deleted?:</strong>{" "}
-                        {rowData[6] === "0" ? "Active" : "Deleted"}
+                        <strong>Contact No.</strong> {rowData[6]}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="left">
-                        <strong>Submitted:</strong> {rowData[7]}
+                        <strong>Status</strong>{" "}
+                        {rowData[7] === "0" ? "for approval" : "Approved"}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="left">
-                        <strong>Approved:</strong> {rowData[8]}
+                        <strong>Is Deleted?</strong>{" "}
+                        {rowData[8] === "0" ? "Active" : "Deleted"}
+                      </TableCell>
+
+                      <TableCell component="th" scope="row" align="left">
+                        <strong>Created At</strong> {rowData[9]}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="center">
@@ -163,18 +187,18 @@ const UsersData = ({ userData, handleConfirmUser, handleDeleteUser }) => {
                           onClick={() => onClickConfirmUser(rowData[3])}
                           text={<CheckIcon />}
                           size="small"
-                          disabled={rowData[5] === "1"}
+                          disabled={rowData[7] === "1"}
                         />
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="center">
                         <Button
                           onClick={() =>
-                            onClickDeleteUser(rowData[1], rowData[3])
+                            onClickDeleteUser(rowData[11], rowData[3])
                           }
                           text={<DeleteOutlineIcon />}
                           size="small"
-                          disabled={rowData[6] === "1"}
+                          disabled={rowData[8] === "1"}
                         />
                       </TableCell>
                     </TableRow>
@@ -188,12 +212,10 @@ const UsersData = ({ userData, handleConfirmUser, handleDeleteUser }) => {
     },
     // onRowsClick: (rowData, rowMeta) => {
     //   console.log("rowData", rowData);
-    //   handleClick(data[rowMeta?.dataIndex]);
+    //   handleClick(data[rowMeta.dataIndex]);
     // },
     onRowsExpand: (curExpanded, allExpanded) => {
-      console.log("[curExpanded]", curExpanded);
-      console.log("[allExpanded]", allExpanded);
-
+      console.log("rowExpand", curExpanded, allExpanded[0]);
       handleClick();
     },
   };
@@ -202,7 +224,7 @@ const UsersData = ({ userData, handleConfirmUser, handleDeleteUser }) => {
       <ThemeProvider theme={getMuiTheme}>
         {/* total amount of the current page: {total} */}
         <MUIDataTable
-          title={"App Users"}
+          title={"App Partners"}
           options={options}
           columns={columns}
           data={data}
@@ -212,4 +234,4 @@ const UsersData = ({ userData, handleConfirmUser, handleDeleteUser }) => {
   );
 };
 
-export default UsersData;
+export default PartnersData;

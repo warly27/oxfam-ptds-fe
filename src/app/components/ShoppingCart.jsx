@@ -1,77 +1,84 @@
-import { Badge, Button, Drawer, Icon, IconButton, ThemeProvider } from '@mui/material';
-import { Box, styled, useTheme } from '@mui/system';
-import useAuth from 'app/hooks/useAuth';
-import useSettings from 'app/hooks/useSettings';
+import {
+  Badge,
+  Button,
+  Drawer,
+  Icon,
+  IconButton,
+  ThemeProvider,
+} from "@mui/material";
+import { Box, styled, useTheme } from "@mui/system";
+import useAuth from "app/hooks/useAuth";
+import useSettings from "app/hooks/useSettings";
 import {
   deleteProductFromCart,
   getCartList,
   updateCartAmount,
-} from 'app/redux/actions/EcommerceActions';
-import { sideNavWidth, topBarHeight } from 'app/utils/constant';
-import { Fragment, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { themeShadows } from './MatxTheme/themeColors';
-import { H6, Small } from './Typography';
+} from "app/redux/actions/EcommerceActions";
+import { sideNavWidth, topBarHeight } from "app/utils/constant";
+import { Fragment, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { themeShadows } from "./MatxTheme/themeColors";
+import { H6, Small } from "./Typography";
 
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
-  '& span': {
+  "& span": {
     color: theme.palette.text.primary,
   },
-  '& #disable': {
+  "& #disable": {
     color: theme.palette.text.disabled,
   },
 }));
 
-const MiniCart = styled('div')(({ theme }) => ({
-  height: '100%',
-  display: 'flex',
-  flexDirection: 'column',
+const MiniCart = styled("div")(({ theme }) => ({
+  height: "100%",
+  display: "flex",
+  flexDirection: "column",
   width: sideNavWidth,
 }));
 
-const CartBox = styled('div')(() => ({
-  padding: '4px',
-  paddingLeft: '16px',
-  display: 'flex',
-  alignItems: 'center',
+const CartBox = styled("div")(() => ({
+  padding: "4px",
+  paddingLeft: "16px",
+  display: "flex",
+  alignItems: "center",
   boxShadow: themeShadows[6],
   height: topBarHeight,
-  '& h5': {
+  "& h5": {
     marginTop: 0,
     marginBottom: 0,
-    marginLeft: '16px',
-    fontWeight: '500',
+    marginLeft: "16px",
+    fontWeight: "500",
   },
 }));
 
-const ProductBox = styled('div')(() => ({
-  display: 'flex',
-  alignItems: 'center',
-  padding: '8px 8px',
-  transition: 'background 300ms ease',
-  '&:hover': {
-    background: 'rgba(0,0,0,0.01)',
+const ProductBox = styled("div")(() => ({
+  display: "flex",
+  alignItems: "center",
+  padding: "8px 8px",
+  transition: "background 300ms ease",
+  "&:hover": {
+    background: "rgba(0,0,0,0.01)",
   },
 }));
 
-const IMG = styled('img')(() => ({
+const IMG = styled("img")(() => ({
   width: 48,
 }));
 
-const ProductDetails = styled('div')(() => ({
-  marginRight: '8',
-  textAlign: 'center',
+const ProductDetails = styled("div")(() => ({
+  marginRight: "8",
+  textAlign: "center",
   flexGrow: 1,
-  display: 'flex',
-  flexDirection: 'column',
-  '& h6': {
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    display: 'block',
+  display: "flex",
+  flexDirection: "column",
+  "& h6": {
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    display: "block",
     width: 120,
-    marginBottom: '4px',
+    marginBottom: "4px",
   },
 }));
 
@@ -89,7 +96,7 @@ function ShoppingCart({ container }) {
   const secondary = theme.palette.text.secondary;
 
   if (!cartListLoaded) {
-    dispatch(getCartList(user.id));
+    dispatch(getCartList(user?.id));
     cartListLoaded = true;
   }
 
@@ -99,7 +106,7 @@ function ShoppingCart({ container }) {
 
   const handleCheckoutClick = () => {
     if (totalCost > 0) {
-      navigate('/ecommerce/checkout');
+      navigate("/ecommerce/checkout");
       setPanelOpen(false);
     }
   };
@@ -128,7 +135,7 @@ function ShoppingCart({ container }) {
         <Drawer
           container={container}
           variant="temporary"
-          anchor={'right'}
+          anchor={"right"}
           open={panelOpen}
           onClose={handleDrawerToggle}
           ModalProps={{
@@ -148,19 +155,33 @@ function ShoppingCart({ container }) {
                     <StyledIconButton
                       size="small"
                       onClick={() =>
-                        dispatch(updateCartAmount(user.id, product.id, product.amount + 1))
+                        dispatch(
+                          updateCartAmount(
+                            user.id,
+                            product.id,
+                            product.amount + 1
+                          )
+                        )
                       }
                     >
-                      <Icon sx={{ cursor: 'pinter' }}>keyboard_arrow_up</Icon>
+                      <Icon sx={{ cursor: "pinter" }}>keyboard_arrow_up</Icon>
                     </StyledIconButton>
                     <StyledIconButton
                       disabled={!(product.amount - 1)}
                       size="small"
                       onClick={() =>
-                        dispatch(updateCartAmount(user.id, product.id, product.amount - 1))
+                        dispatch(
+                          updateCartAmount(
+                            user.id,
+                            product.id,
+                            product.amount - 1
+                          )
+                        )
                       }
                     >
-                      <Icon id={!(product.amount - 1) && 'disable'}>keyboard_arrow_down</Icon>
+                      <Icon id={!(product.amount - 1) && "disable"}>
+                        keyboard_arrow_down
+                      </Icon>
                     </StyledIconButton>
                   </Box>
                   <Box mr={1}>
@@ -174,7 +195,9 @@ function ShoppingCart({ container }) {
                   </ProductDetails>
                   <StyledIconButton
                     size="small"
-                    onClick={() => dispatch(deleteProductFromCart(user.userId, product.id))}
+                    onClick={() =>
+                      dispatch(deleteProductFromCart(user.userId, product.id))
+                    }
                   >
                     <Icon fontSize="small">clear</Icon>
                   </StyledIconButton>
@@ -183,7 +206,7 @@ function ShoppingCart({ container }) {
             </Box>
 
             <Button
-              sx={{ width: '100%', borderRadius: 0 }}
+              sx={{ width: "100%", borderRadius: 0 }}
               variant="contained"
               color="primary"
               onClick={handleCheckoutClick}

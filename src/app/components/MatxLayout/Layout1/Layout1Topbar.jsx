@@ -1,83 +1,90 @@
-import { Avatar, Hidden, Icon, IconButton, MenuItem, useMediaQuery } from '@mui/material';
-import { Box, styled, useTheme } from '@mui/system';
-import { MatxMenu, MatxSearchBox } from 'app/components';
-import { themeShadows } from 'app/components/MatxTheme/themeColors';
-import { NotificationProvider } from 'app/contexts/NotificationContext';
-import useAuth from 'app/hooks/useAuth';
-import useSettings from 'app/hooks/useSettings';
-import { topBarHeight } from 'app/utils/constant';
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Span } from '../../../components/Typography';
-import NotificationBar from '../../NotificationBar/NotificationBar';
-import ShoppingCart from '../../ShoppingCart';
+import {
+  Avatar,
+  Hidden,
+  Icon,
+  IconButton,
+  MenuItem,
+  useMediaQuery,
+} from "@mui/material";
+import { Box, styled, useTheme } from "@mui/system";
+import { MatxMenu, MatxSearchBox } from "app/components";
+import { themeShadows } from "app/components/MatxTheme/themeColors";
+import { NotificationProvider } from "app/contexts/NotificationContext";
+import useAuth from "app/hooks/useAuth";
+import useSettings from "app/hooks/useSettings";
+import { topBarHeight } from "app/utils/constant";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { Span } from "../../../components/Typography";
+import NotificationBar from "../../NotificationBar/NotificationBar";
+import ShoppingCart from "../../ShoppingCart";
 
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
   color: theme.palette.text.primary,
 }));
 
-const TopbarRoot = styled('div')(({ theme }) => ({
+const TopbarRoot = styled("div")(({ theme }) => ({
   top: 0,
   zIndex: 96,
-  transition: 'all 0.3s ease',
+  transition: "all 0.3s ease",
   boxShadow: themeShadows[8],
   height: topBarHeight,
 }));
 
 const TopbarContainer = styled(Box)(({ theme }) => ({
-  padding: '8px',
+  padding: "8px",
   paddingLeft: 18,
   paddingRight: 20,
-  height: '100%',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
+  height: "100%",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
   background: theme.palette.primary.main,
-  [theme.breakpoints.down('sm')]: {
+  [theme.breakpoints.down("sm")]: {
     paddingLeft: 16,
     paddingRight: 16,
   },
-  [theme.breakpoints.down('xs')]: {
+  [theme.breakpoints.down("xs")]: {
     paddingLeft: 14,
     paddingRight: 16,
   },
 }));
 
 const UserMenu = styled(Box)(() => ({
-  display: 'flex',
-  alignItems: 'center',
-  cursor: 'pointer',
+  display: "flex",
+  alignItems: "center",
+  cursor: "pointer",
   borderRadius: 24,
   padding: 4,
-  '& span': { margin: '0 8px' },
+  "& span": { margin: "0 8px" },
 }));
 
 const StyledItem = styled(MenuItem)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
+  display: "flex",
+  alignItems: "center",
   minWidth: 185,
-  '& a': {
-    width: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    textDecoration: 'none',
+  "& a": {
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    textDecoration: "none",
   },
-  '& span': { marginRight: '10px', color: theme.palette.text.primary },
+  "& span": { marginRight: "10px", color: theme.palette.text.primary },
 }));
 
-const IconBox = styled('div')(({ theme }) => ({
-  display: 'inherit',
-  [theme.breakpoints.down('md')]: { display: 'none !important' },
+const IconBox = styled("div")(({ theme }) => ({
+  display: "inherit",
+  [theme.breakpoints.down("md")]: { display: "none !important" },
 }));
 
 const Layout1Topbar = () => {
   const theme = useTheme();
   const { settings, updateSettings } = useSettings();
   const { logout, user } = useAuth();
-  const isMdScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const isMdScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   const [today, setDate] = React.useState(new Date());
-  const locale = 'en';
+  const locale = "en";
   useEffect(() => {
     const timer = setInterval(() => {
       // Creates an interval which will update the current data every minute
@@ -89,18 +96,20 @@ const Layout1Topbar = () => {
     };
   }, []);
 
-  const day = today.toLocaleDateString(locale, { weekday: 'long' });
+  const day = today.toLocaleDateString(locale, { weekday: "long" });
   const date = `${day}, ${today.getDate()} ${today.toLocaleDateString(locale, {
-    month: 'long',
+    month: "long",
   })}\n\n`;
 
   const hour = today.getHours();
-  const wish = `Good ${(hour < 12 && 'Morning') || (hour < 17 && 'Afternoon') || 'Evening'}, `;
+  const wish = `Good ${
+    (hour < 12 && "Morning") || (hour < 17 && "Afternoon") || "Evening"
+  }, `;
 
   const time = today.toLocaleTimeString(locale, {
-    hour: 'numeric',
+    hour: "numeric",
     hour12: true,
-    minute: 'numeric',
+    minute: "numeric",
   });
 
   const updateSidebarMode = (sidebarSettings) => {
@@ -113,9 +122,9 @@ const Layout1Topbar = () => {
     let { layout1Settings } = settings;
     let mode;
     if (isMdScreen) {
-      mode = layout1Settings.leftSidebar.mode === 'close' ? 'mobile' : 'close';
+      mode = layout1Settings.leftSidebar.mode === "close" ? "mobile" : "close";
     } else {
-      mode = layout1Settings.leftSidebar.mode === 'full' ? 'close' : 'full';
+      mode = layout1Settings.leftSidebar.mode === "full" ? "close" : "full";
     }
     updateSidebarMode({ mode });
   };
@@ -161,10 +170,13 @@ const Layout1Topbar = () => {
               <UserMenu>
                 <Hidden xsDown>
                   <Span>
-                    Hi <strong>{user.name}</strong>
+                    Hi <strong>{user?.name}</strong>
                   </Span>
                 </Hidden>
-                <Avatar src="/assets/images/warmark.png" sx={{ cursor: 'pointer' }} />
+                <Avatar
+                  src="/assets/images/warmark.png"
+                  sx={{ cursor: "pointer" }}
+                />
               </UserMenu>
             }
           >
@@ -172,7 +184,7 @@ const Layout1Topbar = () => {
               <Link to="/">
                 <Span> Role: </Span>
                 <Span>
-                  <strong>{user.role}</strong>
+                  <strong>{user?.role}</strong>
                 </Span>
               </Link>
             </StyledItem>
