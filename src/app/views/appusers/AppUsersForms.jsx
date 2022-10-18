@@ -33,6 +33,10 @@ const AppUsersForms = ({ handleCreateUser }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [partnerCode, setPartnerCode] = useState("");
+  const [mobileNo, setMobileNo] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [companyAddress, setCompanyAddress] = useState("");
+  const [website, setWebsite] = useState("");
   const [partnerCodeLookup, setPartnerCodeLookup] = useState([]);
 
   const fetchPartnerCodeLookup = useCallback(async () => {
@@ -72,6 +76,26 @@ const AppUsersForms = ({ handleCreateUser }) => {
     if (isPartnerCode) {
       setPartnerCode(event.target.value);
     }
+
+    const isMobileNo = event.target.name === "phone";
+    if (isMobileNo) {
+      setMobileNo(event.target.value);
+    }
+
+    const isCompanyName = event.target.name === "company";
+    if (isCompanyName) {
+      setCompanyName(event.target.value);
+    }
+
+    const isCompanyAddress = event.target.name === "companyAddress";
+    if (isCompanyAddress) {
+      setCompanyAddress(event.target.value);
+    }
+
+    const isWebsite = event.target.name === "companyWebsite";
+    if (isWebsite) {
+      setWebsite(event.target.value);
+    }
   };
 
   const handleSubmit = async () => {
@@ -81,6 +105,10 @@ const AppUsersForms = ({ handleCreateUser }) => {
       password,
       fundSource,
       partnerCode,
+      mobileNo,
+      companyName,
+      companyAddress,
+      website,
     });
   };
 
@@ -135,7 +163,7 @@ const AppUsersForms = ({ handleCreateUser }) => {
               </Grid>
 
               {isPartner && (
-                <Grid container item>
+                <Grid container item rowSpacing={2}>
                   <Grid xs={12} sm={12} item>
                     <FormControl fullWidth>
                       <InputLabel id="partner-code-select-label">
@@ -155,6 +183,30 @@ const AppUsersForms = ({ handleCreateUser }) => {
                         ))}
                       </Select>
                     </FormControl>
+                  </Grid>
+
+                  <Grid xs={12} sm={12} item>
+                    <FormControl fullWidth>
+                      <TextField
+                        name="companyWebsite"
+                        placeholder="Enter Company website"
+                        label="Company Website"
+                        variant="outlined"
+                        fullWidth={true}
+                        required={true}
+                        xs={12}
+                        sm={6}
+                        onChange={handleChange}
+                      />
+                    </FormControl>
+                  </Grid>
+
+                  <Grid container item spacing={2}>
+                    {inputFormElements.slice(6, 8).map((input) => (
+                      <Grid xs={input.xs} sm={input.sm} item>
+                        <TextField {...input} onChange={handleChange} />
+                      </Grid>
+                    ))}
                   </Grid>
                 </Grid>
               )}

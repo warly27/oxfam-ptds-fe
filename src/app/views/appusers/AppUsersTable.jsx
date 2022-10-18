@@ -82,13 +82,21 @@ const AppUsersTable = () => {
     password,
     fundSource,
     partnerCode,
+    mobileNo,
+    companyName,
+    companyAddress,
+    website,
   }) => {
     const adminCreateUserRequest = await adminCreateUser(
       email,
       userName,
       password,
       fundSource,
-      partnerCode
+      partnerCode,
+      mobileNo,
+      companyName,
+      companyAddress,
+      website
     );
 
     console.log("[adminCreateUserRequest]: ", adminCreateUserRequest);

@@ -91,7 +91,11 @@ export const AuthProvider = ({ children }) => {
     user_name,
     password,
     role,
-    partnerCode
+    partnerCode,
+    mobileNo,
+    companyName,
+    companyAddress,
+    website
   ) => {
     const response = await axios.post(`${BASE_URL}/admin/user/create`, {
       email,
@@ -99,6 +103,10 @@ export const AuthProvider = ({ children }) => {
       password,
       role,
       partnerCode,
+      mobileNo,
+      companyName,
+      companyAddress,
+      website,
     });
 
     const { id } = response.data;

@@ -31,13 +31,14 @@ import axios from "../../utils/axios";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const PartnersAddForms = ({ handleCreatePartner }) => {
-  const [website, setWebsite] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [mobileNo, setMobileNo] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [companyAddress, setCompanyAddress] = useState("");
+  const [website, setWebsite] = useState("");
   const [partnerCode, setPartnerCode] = useState("");
+
   const [partnerCodeLookup, setPartnerCodeLookup] = useState([]);
 
   const fetchPartnerCodeLookup = useCallback(async () => {
@@ -71,11 +72,6 @@ const PartnersAddForms = ({ handleCreatePartner }) => {
   const handleChange = (event) => {
     console.log("[event.target.name]", event.target.name);
 
-    const isWebsite = event.target.name === "companyWebsite";
-    if (isWebsite) {
-      setWebsite(event.target.value);
-    }
-
     const isEmail = event.target.name === "email";
     if (isEmail) {
       setEmail(event.target.value);
@@ -104,6 +100,11 @@ const PartnersAddForms = ({ handleCreatePartner }) => {
     const isPartnerCode = event.target.name === "partnerCode";
     if (isPartnerCode) {
       setPartnerCode(event.target.value);
+    }
+
+    const isWebsite = event.target.name === "companyWebsite";
+    if (isWebsite) {
+      setWebsite(event.target.value);
     }
   };
 
@@ -146,19 +147,11 @@ const PartnersAddForms = ({ handleCreatePartner }) => {
               <Grid container item>
                 <Grid xs={12} sm={12} item>
                   <FormControl fullWidth>
-                    <TextField
-                      name="partnerCode"
-                      placeholder="Partner Code"
-                      label="Partner Code"
-                      variant="outlined"
-                      fullWidth={true}
-                      required={true}
-                      xs={12}
-                      sm={6}
-                      onChange={handleChange}
-                    />
+                    <InputLabel id="partner-code-select-label">
+                      Partner Code
+                    </InputLabel>
 
-                    {/* <Select
+                    <Select
                       labelId="partner-code-select-label"
                       id="partner-code-select"
                       value={partnerCode}
@@ -169,7 +162,7 @@ const PartnersAddForms = ({ handleCreatePartner }) => {
                       {partnerCodeLookup.map((data) => (
                         <MenuItem value={data?.code}>{data?.name}</MenuItem>
                       ))}
-                    </Select> */}
+                    </Select>
                   </FormControl>
                 </Grid>
               </Grid>
