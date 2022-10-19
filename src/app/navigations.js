@@ -12,9 +12,9 @@ export const navigations = [
   },
   { name: "Activities", path: "/activity/records", icon: "settings" },
   { label: 'Code management', type: 'label' },
-  { name: 'Indicators', path: '/participants/records', icon: 'equalizer' },
-  { name: 'Partners Code', path: '/partners/records', icon: 'code' },
-  { name: 'Projects Code', path: '/projects/records', icon: 'code' },
+  { name: 'Indicators', path: '/indicators/code', icon: 'equalizer' },
+  { name: 'Partners Code', path: '/partners/code', icon: 'code' },
+  { name: 'Projects Code', path: '/projects/code', icon: 'code' },
 ];
 
 export const melsa_navigations = [
@@ -29,9 +29,9 @@ export const melsa_navigations = [
   },
   { name: "Activities", path: "/activity/records", icon: "settings" },
   { label: 'Code management', type: 'label' },
-  { name: 'Indicators', path: '/participants/records', icon: 'equalizer' },
-  { name: 'Partners Code', path: '/partners/records', icon: 'code' },
-  { name: 'Projects Code', path: '/projects/records', icon: 'code' },
+  { name: 'Indicators', path: '/indicators/code', icon: 'equalizer' },
+  { name: 'Partners Code', path: '/partners/code', icon: 'code' },
+  { name: 'Projects Code', path: '/projects/code', icon: 'code' },
 ];
 
 export const partners_navigations = [
@@ -44,5 +44,5 @@ export const partners_navigations = [
   },
   { name: "Activities", path: "/activity/records", icon: "settings" },
   { label: 'Code management', type: 'label' },
-  { name: 'Indicators', path: '/participants/records', icon: 'equalizer' },
+  { name: 'Indicators', path: '/indicators/code', icon: 'equalizer' },
 ];

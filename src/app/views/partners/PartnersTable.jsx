@@ -79,6 +79,7 @@ const PartnersTable = () => {
     const getAllUsersResult = await axios.get(
       `${BASE_URL}/partner/getAllPartners`
     );
+    console.log(getAllUsersResult.data)
     setPartnerList(getAllUsersResult?.data?.data);
   }, []);
 
