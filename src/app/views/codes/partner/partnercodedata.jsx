@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { ThemeProvider, createTheme, Icon } from "@mui/material";
+import React, { useState, useEffect, useCallback } from "react";
+import { ThemeProvider, createTheme } from "@mui/material";
 import MUIDataTable from "mui-datatables";
 import {
   Table,
@@ -9,17 +9,16 @@ import {
   TableRow,
 } from "@mui/material";
 import Paper from "@material-ui/core/Paper";
-
 import Button from "app/components/controls/Button";
 import CheckIcon from "@mui/icons-material/Check";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
-const PartnersData = ({ partnerList, handleConfirmUser, handleDeleteUser }) => {
+const PartnersCodeData = ({ partnersCodeData, handleConfirmUser, handleDeleteUser }) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    setData(partnerList);
-  }, [partnerList]);
+    setData(partnersCodeData);
+  }, [partnersCodeData]);
 
   const getMuiTheme = () =>
     createTheme({
@@ -34,8 +33,8 @@ const PartnersData = ({ partnerList, handleConfirmUser, handleDeleteUser }) => {
       },
     });
 
-  const handleClick = () => {
-    console.log("clicked");
+  const handleClick = (value) => {
+    console.log("value", value?.id);
   };
 
   const onClickConfirmUser = (email) => {
@@ -46,161 +45,70 @@ const PartnersData = ({ partnerList, handleConfirmUser, handleDeleteUser }) => {
     handleDeleteUser(cognitoId, email);
   };
 
-  // const columns = [
-  //   {
-  //     name: "id",
-  //     label: "Partner Id",
-  //     options: {
-  //       filter: true,
-  //     },
-  //   },
-  //   {
-  //     name: "name",
-  //     label: "Name",
-  //     options: {
-  //       filter: true,
-  //     },
-  //   },
-  //   {
-  //     name: "code",
-  //     label: "Code",
-  //     options: {
-  //       filter: true,
-  //     },
-  //   },
-  //   {
-  //     name: "email",
-  //     label: "email",
-  //     options: {
-  //       filter: true,
-  //     },
-  //   },
-  //   {
-  //     name: "address",
-  //     label: "Address",
-  //     options: {
-  //       display: false,
-  //     },
-  //   },
-  //   {
-  //     name: "website",
-  //     label: "Website",
-  //     options: {
-  //       display: false,
-  //     },
-  //   },
-  //   {
-  //     name: "contact_number",
-  //     label: "Contact no.",
-  //     options: {
-  //       display: false,
-  //     },
-  //   },
-  //   {
-  //     name: "status",
-  //     label: "Status",
-  //     options: {
-  //       display: false,
-  //     },
-  //   },
-  //   {
-  //     name: "is_deleted",
-  //     label: "Is Deleted",
-  //     options: {
-  //       display: false,
-  //     },
-  //   },
-  //   {
-  //     name: "createdAt",
-  //     label: "Submitted",
-  //     options: {
-  //       display: false,
-  //     },
-  //   },
-  //   {
-  //     name: "updatedAt",
-  //     label: "Approve",
-  //     options: {
-  //       display: false,
-  //     },
-  //   },
-  //   {
-  //     name: "cognito_id",
-  //     label: "Cognito ID",
-  //     options: {
-  //       display: false,
-  //     },
-  //   },
-  // ];
-
+  const confirm = (value) => {
+    console.log(value);
+  };
 
   const columns = [
     {
-      name: 'id',
-      label: 'Partner Id',
+      name: "id",
+      label: "Code id",
       options: {
         filter: true,
       },
     },
     {
-      name: 'name',
-      label: 'Name',
+      name: "name",
+      label: "Partner Name",
       options: {
         filter: true,
       },
     },
     {
-      name: 'code',
-      label: 'Code',
+      name: "code",
+      label: "Code",
       options: {
         filter: true,
       },
     },
     {
-      name: 'email',
-      label: 'email',
+      name: "email",
+      label: "email",
       options: {
         filter: true,
       },
     },
     {
-      name: 'address',
-      label: 'Address',
+      name: "address",
+      label: "Address",
       options: {
         display: false,
       },
     },
     {
-      name: 'website',
-      label: 'Website',
+      name: "website",
+      label: "Website",
       options: {
         display: false,
       },
     },
     {
-      name: 'contact_number',
-      label: 'Contact no.',
+      name: "contact_number",
+      label: "Contact No.",
       options: {
         display: false,
       },
     },
     {
-      name: 'is_deleted',
-      label: 'Is Deleted',
+      name: "creator_id",
+      label: "Created By",
       options: {
         display: false,
       },
     },
     {
-      name: 'created_at',
-      label: 'Submitted',
-      options: {
-        display: false,
-      },
-    },
-    {
-      name: 'updated_at',
-      label: 'Approve',
+      name: "creator_role",
+      label: "Creator Role",
       options: {
         display: false,
       },
@@ -228,30 +136,22 @@ const PartnersData = ({ partnerList, handleConfirmUser, handleDeleteUser }) => {
                   <TableBody>
                     <TableRow>
                       <TableCell component="th" scope="row" align="left">
-                        {/* <strong>Is Deleted?:</strong> */}
-                        <strong>Address</strong> {rowData[4]}
+                        <strong>Website:</strong>
+                        {rowData[5]}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="left">
-                        <strong>Website</strong> {rowData[5]}
+                        <strong>Contact number:</strong>
+                        {rowData[6]}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="left">
-                        <strong>Contact No.</strong> {rowData[6]}
+                        <strong>Created By:</strong>
+                        {rowData[7]}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="left">
-                        <strong>Status</strong>{" "}
-                        {rowData[7] === "0" ? "for approval" : "Approved"}
-                      </TableCell>
-
-                      <TableCell component="th" scope="row" align="left">
-                        <strong>Is Deleted?</strong>{" "}
-                        {rowData[8] === "0" ? "Active" : "Deleted"}
-                      </TableCell>
-
-                      <TableCell component="th" scope="row" align="left">
-                        <strong>Created At</strong> {rowData[9]}
+                        <strong>Creator Role</strong> {rowData[8]}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="center">
@@ -259,18 +159,18 @@ const PartnersData = ({ partnerList, handleConfirmUser, handleDeleteUser }) => {
                           onClick={() => onClickConfirmUser(rowData[3])}
                           text={<CheckIcon />}
                           size="small"
-                          disabled={rowData[7] === "1"}
+                          disabled={rowData[5] === "1"}
                         />
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="center">
                         <Button
                           onClick={() =>
-                            onClickDeleteUser(rowData[11], rowData[3])
+                            onClickDeleteUser(rowData[1], rowData[3])
                           }
                           text={<DeleteOutlineIcon />}
                           size="small"
-                          disabled={rowData[8] === "1"}
+                          disabled={rowData[6] === "1"}
                         />
                       </TableCell>
                     </TableRow>
@@ -284,10 +184,12 @@ const PartnersData = ({ partnerList, handleConfirmUser, handleDeleteUser }) => {
     },
     // onRowsClick: (rowData, rowMeta) => {
     //   console.log("rowData", rowData);
-    //   handleClick(data[rowMeta.dataIndex]);
+    //   handleClick(data[rowMeta?.dataIndex]);
     // },
     onRowsExpand: (curExpanded, allExpanded) => {
-      console.log("rowExpand", curExpanded, allExpanded[0]);
+      console.log("[curExpanded]", curExpanded);
+      console.log("[allExpanded]", allExpanded);
+
       handleClick();
     },
   };
@@ -296,7 +198,7 @@ const PartnersData = ({ partnerList, handleConfirmUser, handleDeleteUser }) => {
       <ThemeProvider theme={getMuiTheme}>
         {/* total amount of the current page: {total} */}
         <MUIDataTable
-          title={"App Partners"}
+          title={"Partners Code"}
           options={options}
           columns={columns}
           data={data}
@@ -306,4 +208,4 @@ const PartnersData = ({ partnerList, handleConfirmUser, handleDeleteUser }) => {
   );
 };
 
-export default PartnersData;
+export default PartnersCodeData;
