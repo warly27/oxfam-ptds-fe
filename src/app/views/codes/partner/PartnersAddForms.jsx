@@ -1,21 +1,11 @@
-import React, { useCallback } from "react";
-// import {
-// Grid,
-// TextField,
-// Button,
-// Card,
-// CardContent,
-// Icon,
-// } from "@material-ui/core";
+import React, { useState } from "react";
+
 import { Span } from "app/components/Typography";
-import { useEffect, useState } from "react";
 import { ValidatorForm } from "react-material-ui-form-validator";
 import { inputFormElements } from "app/components/FormElement";
 
 import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Icon from "@mui/material/Icon";
@@ -23,54 +13,49 @@ import Button from "@mui/material/Button";
 
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
-import axios from "../../utils/axios";
 
 import LoadingButton from "@mui/lab/LoadingButton";
 
-const BASE_URL = process.env.REACT_APP_BASE_URL;
-
-const PartnersAddForms = ({ handleCreatePartner }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [mobileNo, setMobileNo] = useState("");
-  const [companyName, setCompanyName] = useState("");
-  const [companyAddress, setCompanyAddress] = useState("");
-  const [website, setWebsite] = useState("");
-  const [partnerCode, setPartnerCode] = useState("");
-
-  const [partnerCodeLookup, setPartnerCodeLookup] = useState([]);
+const PartnersAddForms = ({
+  handleCreatePartner,
+  currentData,
+  isEdit,
+  handleEditPartnerCode,
+}) => {
+  const [email, setEmail] = useState("" || currentData?.email);
+  const [mobileNo, setMobileNo] = useState("" || currentData?.phone);
+  const [companyName, setCompanyName] = useState("" || currentData?.company);
+  const [companyAddress, setCompanyAddress] = useState(
+    "" || currentData?.companyAddress
+  );
+  const [website, setWebsite] = useState("" || currentData?.companyWebsite);
+  const [partnerCode, setPartnerCode] = useState(
+    "" || currentData?.partnerCode
+  );
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const fetchPartnerCodeLookup = useCallback(async () => {
-    const getPartnerCodeLookup = await axios.get(
-      `${BASE_URL}/codes/getAllPartnerCodes`
-    );
-
-    setPartnerCodeLookup(getPartnerCodeLookup?.data);
-  }, []);
-
-  useEffect(() => {
-    fetchPartnerCodeLookup();
-  }, []);
-
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     setIsLoading(true);
-
-    handleCreatePartner({
+    const payload = {
       email,
       website,
-      password,
       mobileNo,
       partnerCode,
       companyName,
       companyAddress,
-    });
+    };
 
-    // if (confirmRequest?.status === 200) {
-    //   fetchAllUsers();
-    // }
+    if (isEdit) {
+      handleEditPartnerCode({ ...payload, id: currentData?.id });
+
+      return;
+    }
+
+    handleCreatePartner(payload);
   };
+
+  console.log("[currentData]", currentData);
 
   const handleChange = (event) => {
     console.log("[event.target.name]", event.target.name);
@@ -78,11 +63,6 @@ const PartnersAddForms = ({ handleCreatePartner }) => {
     const isEmail = event.target.name === "email";
     if (isEmail) {
       setEmail(event.target.value);
-    }
-
-    const isPassword = event.target.name === "password";
-    if (isPassword) {
-      setPassword(event.target.value);
     }
 
     const isMobileNo = event.target.name === "phone";
@@ -120,9 +100,23 @@ const PartnersAddForms = ({ handleCreatePartner }) => {
           <CardContent>
             <Grid container rowSpacing={2}>
               <Grid container item spacing={2}>
-                {inputFormElements.slice(3, 8).map((input) => (
+                {inputFormElements.slice(3, 4).map((input) => (
                   <Grid xs={input.xs} sm={input.sm} item>
-                    <TextField {...input} onChange={handleChange} />
+                    <TextField
+                      {...input}
+                      defaultValue={currentData[`${input?.name}`]}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                ))}
+
+                {inputFormElements.slice(5, 8).map((input) => (
+                  <Grid xs={input.xs} sm={input.sm} item>
+                    <TextField
+                      {...input}
+                      defaultValue={currentData[`${input?.name}`]}
+                      onChange={handleChange}
+                    />
                   </Grid>
                 ))}
               </Grid>
@@ -139,6 +133,7 @@ const PartnersAddForms = ({ handleCreatePartner }) => {
                       required={true}
                       xs={12}
                       sm={6}
+                      defaultValue={currentData["companyWebsite"]}
                       onChange={handleChange}
                     />
                   </FormControl>
@@ -148,28 +143,21 @@ const PartnersAddForms = ({ handleCreatePartner }) => {
               <Grid container item>
                 <Grid xs={12} sm={12} item>
                   <FormControl fullWidth>
-                    <InputLabel id="partner-code-select-label">
-                      Partner Code
-                    </InputLabel>
-
-                    <Select
-                      labelId="partner-code-select-label"
-                      id="partner-code-select"
-                      value={partnerCode}
-                      label="Partner Code"
-                      onChange={handleChange}
+                    <TextField
                       name="partnerCode"
-                    >
-                      {partnerCodeLookup.map((data) => (
-                        <MenuItem value={data?.code}>{data?.code}</MenuItem>
-                      ))}
-                    </Select>
+                      placeholder="Enter Partner code"
+                      label="Partner Code"
+                      variant="outlined"
+                      fullWidth={true}
+                      required={true}
+                      xs={12}
+                      sm={6}
+                      defaultValue={currentData["partnerCode"]}
+                      onChange={handleChange}
+                    />
                   </FormControl>
                 </Grid>
               </Grid>
-              {/* <Typography variant="body2" align="left" gutterBottom>
-                  Address :{' '}
-                </Typography> */}
 
               <Grid container item spacing={2}>
                 <Grid item xs={12} align="right">

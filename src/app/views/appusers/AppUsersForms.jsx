@@ -19,6 +19,7 @@ import Select from "@mui/material/Select";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
+import LoadingButton from "@mui/lab/LoadingButton";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Icon from "@mui/material/Icon";
@@ -39,12 +40,14 @@ const AppUsersForms = ({ handleCreateUser }) => {
   const [website, setWebsite] = useState("");
   const [partnerCodeLookup, setPartnerCodeLookup] = useState([]);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const fetchPartnerCodeLookup = useCallback(async () => {
     const getPartnerCodeLookup = await axios.get(
-      `${BASE_URL}/lookup/partner/codes`
+      `${BASE_URL}/codes/getAllPartnerCodes`
     );
 
-    setPartnerCodeLookup(getPartnerCodeLookup?.data?.data);
+    setPartnerCodeLookup(getPartnerCodeLookup?.data);
   }, []);
 
   useEffect(() => {
@@ -98,7 +101,8 @@ const AppUsersForms = ({ handleCreateUser }) => {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
+    setIsLoading(true);
     handleCreateUser({
       email,
       userName,
@@ -179,7 +183,7 @@ const AppUsersForms = ({ handleCreateUser }) => {
                         name="partnerCode"
                       >
                         {partnerCodeLookup.map((data) => (
-                          <MenuItem value={data?.code}>{data?.name}</MenuItem>
+                          <MenuItem value={data?.code}>{data?.code}</MenuItem>
                         ))}
                       </Select>
                     </FormControl>
@@ -223,12 +227,17 @@ const AppUsersForms = ({ handleCreateUser }) => {
                     Reset
                   </Button>
 
-                  <Button color="primary" variant="contained" type="submit">
+                  <LoadingButton
+                    color="primary"
+                    variant="contained"
+                    type="submit"
+                    loading={isLoading}
+                  >
                     <Icon>send</Icon>
                     <Span sx={{ pl: 1, textTransform: "capitalize" }}>
                       Submit
                     </Span>
-                  </Button>
+                  </LoadingButton>
                 </Grid>
               </Grid>
             </Grid>

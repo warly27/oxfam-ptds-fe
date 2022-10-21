@@ -10,10 +10,16 @@ import {
 } from "@mui/material";
 import Paper from "@material-ui/core/Paper";
 import Button from "app/components/controls/Button";
-import CheckIcon from "@mui/icons-material/Check";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
 
-const PartnersCodeData = ({ partnersCodeData, handleConfirmUser, handleDeleteUser }) => {
+const PartnersCodeData = ({
+  partnersCodeData,
+  handleDeletePartnerCode,
+  setCurrentData,
+  setShowModal,
+  setIsEdit,
+}) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -37,16 +43,26 @@ const PartnersCodeData = ({ partnersCodeData, handleConfirmUser, handleDeleteUse
     console.log("value", value?.id);
   };
 
-  const onClickConfirmUser = (email) => {
-    handleConfirmUser(email);
+  const onClickDeleteUser = (id) => {
+    handleDeletePartnerCode(id);
   };
 
-  const onClickDeleteUser = (cognitoId, email) => {
-    handleDeleteUser(cognitoId, email);
-  };
+  const onClickEdit = (data) => {
+    console.log("[data]: ", data);
 
-  const confirm = (value) => {
-    console.log(value);
+    const currentData = {
+      email: data[3],
+      companyWebsite: data[5],
+      phone: data[6],
+      partnerCode: data[2],
+      company: data[1],
+      companyAddress: data[4],
+      id: data[0],
+    };
+
+    setIsEdit(true);
+    setCurrentData(currentData);
+    setShowModal(true);
   };
 
   const columns = [
@@ -126,7 +142,7 @@ const PartnersCodeData = ({ partnersCodeData, handleConfirmUser, handleDeleteUse
     },
     renderExpandableRow: (rowData, rowMeta) => {
       console.log("DATA: " + rowData);
-      console.log("MDATA: " + rowMeta);
+      console.log("MDATA: ", rowMeta);
       return (
         <>
           <tr>
@@ -136,38 +152,35 @@ const PartnersCodeData = ({ partnersCodeData, handleConfirmUser, handleDeleteUse
                   <TableBody>
                     <TableRow>
                       <TableCell component="th" scope="row" align="left">
-                        <strong>Website:</strong>
+                        <strong>Website: </strong>
                         {rowData[5]}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="left">
-                        <strong>Contact number:</strong>
+                        <strong>Contact number: </strong>
                         {rowData[6]}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="left">
-                        <strong>Created By:</strong>
+                        <strong>Created By: </strong>
                         {rowData[7]}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="left">
-                        <strong>Creator Role</strong> {rowData[8]}
+                        <strong>Creator Role: </strong> {rowData[8]}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="center">
                         <Button
-                          onClick={() => onClickConfirmUser(rowData[3])}
-                          text={<CheckIcon />}
+                          onClick={() => onClickEdit(rowData)}
+                          text={<ModeEditIcon />}
                           size="small"
-                          disabled={rowData[5] === "1"}
+                          disabled={rowData[6] === "1"}
                         />
                       </TableCell>
-
                       <TableCell component="th" scope="row" align="center">
                         <Button
-                          onClick={() =>
-                            onClickDeleteUser(rowData[1], rowData[3])
-                          }
+                          onClick={() => onClickDeleteUser(rowData[0])}
                           text={<DeleteOutlineIcon />}
                           size="small"
                           disabled={rowData[6] === "1"}

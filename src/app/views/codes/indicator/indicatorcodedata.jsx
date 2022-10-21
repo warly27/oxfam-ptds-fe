@@ -10,10 +10,11 @@ import {
 } from "@mui/material";
 import Paper from "@material-ui/core/Paper";
 import Button from "app/components/controls/Button";
-import CheckIcon from "@mui/icons-material/Check";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
-const IndicatorsCodeData = ({ indicatorsCodeData, handleConfirmUser, handleDeleteUser }) => {
+import dayjs from "dayjs";
+
+const IndicatorsCodeData = ({ indicatorsCodeData, handleDeleteUser }) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -37,12 +38,8 @@ const IndicatorsCodeData = ({ indicatorsCodeData, handleConfirmUser, handleDelet
     console.log("value", value?.id);
   };
 
-  const onClickConfirmUser = (email) => {
-    handleConfirmUser(email);
-  };
-
-  const onClickDeleteUser = (cognitoId, email) => {
-    handleDeleteUser(cognitoId, email);
+  const onClickDeleteUser = (id) => {
+    handleDeleteUser(id);
   };
 
   const confirm = (value) => {
@@ -52,14 +49,14 @@ const IndicatorsCodeData = ({ indicatorsCodeData, handleConfirmUser, handleDelet
   const columns = [
     {
       name: "id",
-      label: "Code id",
+      label: "Code ID",
       options: {
         filter: true,
       },
     },
     {
       name: "name",
-      label: "Partner Name",
+      label: "Indicator Name",
       options: {
         filter: true,
       },
@@ -86,33 +83,33 @@ const IndicatorsCodeData = ({ indicatorsCodeData, handleConfirmUser, handleDelet
       },
     },
     {
-        name: "status",
-        label: "Status",
-        options: {
-          display: false,
-        },
+      name: "status",
+      label: "Status",
+      options: {
+        display: false,
       },
-      {
-        name: "is_deleted",
-        label: "Is deleted?",
-        options: {
-            display: false,
-        },
+    },
+    {
+      name: "is_deleted",
+      label: "Is deleted?",
+      options: {
+        display: false,
       },
-      {
-        name: "created_at",
-        label: "Created At",
-        options: {
-            display: false,
-        },
+    },
+    {
+      name: "createdAt",
+      label: "Created At",
+      options: {
+        display: false,
       },
-      {
-        name: "updated_at",
-        label: "Updated At",
-        options: {
-            display: false,
-        },
+    },
+    {
+      name: "updatedAt",
+      label: "Updated At",
+      options: {
+        display: false,
       },
+    },
   ];
 
   const options = {
@@ -137,37 +134,36 @@ const IndicatorsCodeData = ({ indicatorsCodeData, handleConfirmUser, handleDelet
                     <TableRow>
                       <TableCell component="th" scope="row" align="left">
                         <strong>Status:</strong>
-                        {rowData[5]  === "0" ? "Assigned" : "Unassigned"}
+                        {rowData[5] === "0" ? "Assigned" : "Unassigned"}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="left">
-                        <strong>Is Deleted?:</strong>
-                        {rowData[6]  === "0" ? "Active" : "Deleted"}
+                        <strong>Is Deleted?: </strong>
+                        {rowData[6] === "0" ? "Active" : "Deleted"}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="left">
-                        <strong>Created At:</strong>
-                        {rowData[7]}
+                        <strong>Created At: </strong>
+                        {dayjs(rowData[7]).format("MM/DD/YYYY")}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="left">
-                        <strong>Updated At</strong> {rowData[8]}
+                        <strong>Updated At: </strong>{" "}
+                        {dayjs(rowData[8]).format("MM/DD/YYYY")}
                       </TableCell>
 
-                      <TableCell component="th" scope="row" align="center">
+                      {/* <TableCell component="th" scope="row" align="center">
                         <Button
                           onClick={() => onClickConfirmUser(rowData[3])}
                           text={<CheckIcon />}
                           size="small"
                           disabled={rowData[5] === "1"}
                         />
-                      </TableCell>
+                      </TableCell> */}
 
                       <TableCell component="th" scope="row" align="center">
                         <Button
-                          onClick={() =>
-                            onClickDeleteUser(rowData[1], rowData[3])
-                          }
+                          onClick={() => onClickDeleteUser(rowData[0])}
                           text={<DeleteOutlineIcon />}
                           size="small"
                           disabled={rowData[6] === "1"}
@@ -198,7 +194,7 @@ const IndicatorsCodeData = ({ indicatorsCodeData, handleConfirmUser, handleDelet
       <ThemeProvider theme={getMuiTheme}>
         {/* total amount of the current page: {total} */}
         <MUIDataTable
-          title={"Partners Code"}
+          title={"Indicator Code"}
           options={options}
           columns={columns}
           data={data}

@@ -5,12 +5,10 @@ import { Box, styled, Icon } from "@mui/material";
 import { Breadcrumb } from "app/components";
 import Button from "@mui/material/Button";
 // import { OxFamLogo } from "app/components";
-// import AppUserAddModal from "./AppUserAddModal";
+import IndicatorModal from "./IndicatorAddModal";
 
 import IndicatorsCodeData from "./indicatorcodedata";
 import axios from "../../../utils/axios";
-
-import useAuth from "../../../hooks/useAuth";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -48,20 +46,21 @@ const Container = styled("div")(({ theme }) => ({
 
 const IndicatorCodeTable = () => {
   const classes = useStyles();
-  const { adminCreateUser } = useAuth();
   const [showModal, setShowModal] = useState(false);
   const [indicatorsCodeData, setIndicatorsCodeData] = useState([]);
 
   const descriptionElementRef = useRef(null);
 
-  const fetchAllUsers = useCallback(async () => {
-    const indicatorsCodeResult = await axios.get(`${BASE_URL}/codes/getAllIndicators`);
+  const fetchAllIndicator = useCallback(async () => {
+    const indicatorsCodeResult = await axios.get(
+      `${BASE_URL}/codes/getAllIndicators`
+    );
     setIndicatorsCodeData(indicatorsCodeResult?.data);
   }, []);
 
   useEffect(() => {
-    fetchAllUsers();
-  }, [fetchAllUsers]);
+    fetchAllIndicator();
+  }, [fetchAllIndicator]);
 
   useEffect(() => {
     if (showModal) {
@@ -76,57 +75,46 @@ const IndicatorCodeTable = () => {
     setShowModal((prev) => !prev);
   };
 
-  const handleCreateUser = async ({
-    email,
-    userName,
-    password,
-    fundSource,
-    partnerCode,
-  }) => {
-    const adminCreateUserRequest = await adminCreateUser(
-      email,
-      userName,
-      password,
-      fundSource,
-      partnerCode
+  const handleCreatePartner = async (payload) => {
+    const createRequest = await axios.post(
+      `${BASE_URL}/codes/createIndicator`,
+      payload
     );
 
-    console.log("[adminCreateUserRequest]: ", adminCreateUserRequest);
+    console.log("[createRequest]", createRequest);
 
-    if (adminCreateUserRequest?.status === 200) {
-      fetchAllUsers();
+    if (createRequest?.status === 200) {
+      fetchAllIndicator();
       setShowModal(false);
     }
   };
 
-  const handleConfirmUser = async (email) => {
+  // const handleConfirmUser = async (email) => {
+  //   const payload = {
+  //     email,
+  //   };
+
+  //   const confirmRequest = await axios.post(
+  //     `${BASE_URL}/auth/confirmation`,
+  //     payload
+  //   );
+
+  //   if (confirmRequest?.status === 200) {
+  //     fetchAllIndicator();
+  //   }
+  // };
+
+  const handleDeleteUser = async (id) => {
     const payload = {
-      email,
+      id,
     };
 
-    const confirmRequest = await axios.post(
-      `${BASE_URL}/auth/confirmation`,
-      payload
-    );
-
-    if (confirmRequest?.status === 200) {
-      fetchAllUsers();
-    }
-  };
-
-  const handleDeleteUser = async (cognitoId, email) => {
-    const payload = {
-      cognito_id: cognitoId,
-      email,
-    };
-
-    const deleteRequest = await axios.post(
-      `${BASE_URL}/users/deleteUser`,
-      payload
-    );
+    const deleteRequest = await axios.delete(`${BASE_URL}/codes/indicator`, {
+      data: payload,
+    });
 
     if (deleteRequest?.status === 200) {
-      fetchAllUsers();
+      fetchAllIndicator();
     }
   };
 
@@ -135,8 +123,8 @@ const IndicatorCodeTable = () => {
       <Box className="breadcrumb" display="flex">
         <Breadcrumb
           routeSegments={[
-            { name: "Indicators Code", path: "/indicators_code" },
-            { name: "Codes" },
+            { name: "Indicators Code", path: "/indicators/code" },
+            { name: "Codes", path: "/indicators/code" },
           ]}
         />
         <Button
@@ -154,17 +142,16 @@ const IndicatorCodeTable = () => {
         <Grid item xs={12}>
           <IndicatorsCodeData
             indicatorsCodeData={indicatorsCodeData}
-            handleConfirmUser={handleConfirmUser}
             handleDeleteUser={handleDeleteUser}
           />
         </Grid>
       </Grid>
 
-      {/* <AppUserAddModal
+      <IndicatorModal
         showModal={showModal}
         setShowModal={setShowModal}
-        handleCreateUser={handleCreateUser}
-      /> */}
+        handleCreatePartner={handleCreatePartner}
+      />
     </Container>
   );
 };

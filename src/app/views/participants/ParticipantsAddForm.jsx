@@ -1,7 +1,7 @@
 import { Button, Checkbox, Icon } from "@mui/material";
 import { Span } from "app/components/Typography";
 import { useEffect, useState } from "react";
-import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
+import { ValidatorForm } from "react-material-ui-form-validator";
 
 import Grid from "@mui/material/Grid";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -19,10 +19,10 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
+import LoadingButton from "@mui/lab/LoadingButton";
+
 import isEmpty from "lodash/isEmpty";
 import dayjs from "dayjs";
-
-import { faL } from "@fortawesome/free-solid-svg-icons";
 
 const ParticipantsAddForm = ({ handleCreateParticipant }) => {
   const [firstName, setFirstName] = useState("");
@@ -43,6 +43,7 @@ const ParticipantsAddForm = ({ handleCreateParticipant }) => {
   const [civilStatus, setCivilStatus] = useState("");
 
   const [isEqualPassword, setIsEqualPassword] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const hasPassword = !isEmpty(password);
@@ -54,7 +55,7 @@ const ParticipantsAddForm = ({ handleCreateParticipant }) => {
   }, [password, confirmPassword]);
 
   const handleSubmit = () => {
-    console.log("[age]", dayjs().diff(birthday, "year"));
+    setIsLoading(true);
 
     handleCreateParticipant({
       email,
@@ -72,7 +73,6 @@ const ParticipantsAddForm = ({ handleCreateParticipant }) => {
       pwd_status: pwdStatus,
       contact_number: mobileNumber,
     });
-    console.log("[mock submit]");
   };
 
   const handleChange = (event) => {
@@ -455,10 +455,15 @@ const ParticipantsAddForm = ({ handleCreateParticipant }) => {
             </Grid>
 
             <Grid align="right">
-              <Button color="primary" variant="contained" type="submit">
+              <LoadingButton
+                color="primary"
+                variant="contained"
+                type="submit"
+                loading={isLoading}
+              >
                 <Icon>send</Icon>
                 <Span sx={{ pl: 1, textTransform: "capitalize" }}>Submit</Span>
-              </Button>
+              </LoadingButton>
             </Grid>
           </CardContent>
         </Card>

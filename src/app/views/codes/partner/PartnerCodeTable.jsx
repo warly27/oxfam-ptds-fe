@@ -4,13 +4,10 @@ import { makeStyles } from "@material-ui/styles";
 import { Box, styled, Icon } from "@mui/material";
 import { Breadcrumb } from "app/components";
 import Button from "@mui/material/Button";
-// import { OxFamLogo } from "app/components";
-// import AppUserAddModal from "./AppUserAddModal";
+import PartnersAddModal from "./PartnersAddModal";
 
 import PartnersCodeData from "./partnercodedata";
 import axios from "../../../utils/axios";
-
-import useAuth from "../../../hooks/useAuth";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -39,29 +36,25 @@ const Container = styled("div")(({ theme }) => ({
   },
 }));
 
-// const options = {
-//   onRowsDelete: (rowsDeleted, dataRows) => {
-//     console.log(dataRows[0]);
-//     console.log(rowsDeleted.data);
-//   },
-// };
-
 const PartnerCodeTable = () => {
   const classes = useStyles();
-  const { adminCreateUser } = useAuth();
   const [showModal, setShowModal] = useState(false);
   const [partnersCodeData, setPartnersCodeData] = useState([]);
+  const [isEdit, setIsEdit] = useState(false);
+  const [currentData, setCurrentData] = useState({});
 
   const descriptionElementRef = useRef(null);
 
-  const fetchAllUsers = useCallback(async () => {
-    const getPartnersCodeResult = await axios.get(`${BASE_URL}/codes/getAllPartnerCodes`);
+  const fetchAllPartners = useCallback(async () => {
+    const getPartnersCodeResult = await axios.get(
+      `${BASE_URL}/codes/getAllPartnerCodes`
+    );
     setPartnersCodeData(getPartnersCodeResult?.data);
   }, []);
 
   useEffect(() => {
-    fetchAllUsers();
-  }, [fetchAllUsers]);
+    fetchAllPartners();
+  }, [fetchAllPartners]);
 
   useEffect(() => {
     if (showModal) {
@@ -76,57 +69,63 @@ const PartnerCodeTable = () => {
     setShowModal((prev) => !prev);
   };
 
-  const handleCreateUser = async ({
+  console.log("[showModal]: ", showModal);
+
+  const handleCreatePartner = async ({
     email,
-    userName,
-    password,
-    fundSource,
+    website,
+    mobileNo,
     partnerCode,
+    companyName,
+    companyAddress,
   }) => {
-    const adminCreateUserRequest = await adminCreateUser(
-      email,
-      userName,
-      password,
-      fundSource,
-      partnerCode
-    );
-
-    console.log("[adminCreateUserRequest]: ", adminCreateUserRequest);
-
-    if (adminCreateUserRequest?.status === 200) {
-      fetchAllUsers();
-      setShowModal(false);
-    }
-  };
-
-  const handleConfirmUser = async (email) => {
     const payload = {
+      name: companyName,
       email,
+      contact_number: mobileNo,
+      website: website,
+      address: companyAddress,
+      code: partnerCode,
     };
 
     const confirmRequest = await axios.post(
-      `${BASE_URL}/auth/confirmation`,
+      `${BASE_URL}/codes/createPartnerCode`,
       payload
     );
 
+    console.log("[confirmRequest]", confirmRequest);
+
     if (confirmRequest?.status === 200) {
-      fetchAllUsers();
+      setShowModal(false);
+      fetchAllPartners();
     }
   };
 
-  const handleDeleteUser = async (cognitoId, email) => {
+  const handleDeletePartnerCode = async (id) => {
     const payload = {
-      cognito_id: cognitoId,
-      email,
+      id,
     };
 
-    const deleteRequest = await axios.post(
-      `${BASE_URL}/users/deleteUser`,
-      payload
+    const deleteRequest = await axios.delete(
+      `${BASE_URL}/codes/partner/delete`,
+      { data: payload }
     );
 
     if (deleteRequest?.status === 200) {
-      fetchAllUsers();
+      fetchAllPartners();
+    }
+  };
+
+  const handleEditPartnerCode = async (payload) => {
+    const editRequest = await axios.patch(
+      `${BASE_URL}/codes/partner/edit`,
+      payload
+    );
+
+    if (editRequest?.status === 200) {
+      fetchAllPartners();
+      setIsEdit(false);
+      setShowModal(false);
     }
   };
 
@@ -154,17 +153,22 @@ const PartnerCodeTable = () => {
         <Grid item xs={12}>
           <PartnersCodeData
             partnersCodeData={partnersCodeData}
-            handleConfirmUser={handleConfirmUser}
-            handleDeleteUser={handleDeleteUser}
+            handleDeletePartnerCode={handleDeletePartnerCode}
+            setShowModal={setShowModal}
+            setCurrentData={setCurrentData}
+            setIsEdit={setIsEdit}
           />
         </Grid>
       </Grid>
 
-      {/* <AppUserAddModal
+      <PartnersAddModal
         showModal={showModal}
         setShowModal={setShowModal}
-        handleCreateUser={handleCreateUser}
-      /> */}
+        handleCreatePartner={handleCreatePartner}
+        isEdit={isEdit}
+        currentData={currentData}
+        handleEditPartnerCode={handleEditPartnerCode}
+      />
     </Container>
   );
 };
