@@ -1,6 +1,6 @@
+import { useEffect, useState, useCallback } from "react";
 import { Button, Checkbox, Icon } from "@mui/material";
 import { Span } from "app/components/Typography";
-import { useEffect, useState } from "react";
 import { ValidatorForm } from "react-material-ui-form-validator";
 
 import Grid from "@mui/material/Grid";
@@ -14,6 +14,7 @@ import FormLabel from "@mui/material/FormLabel";
 import Radio from "@mui/material/Radio";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
+import Autocomplete from "@mui/material/Autocomplete";
 
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -23,6 +24,9 @@ import LoadingButton from "@mui/lab/LoadingButton";
 
 import isEmpty from "lodash/isEmpty";
 import dayjs from "dayjs";
+import axios from "../../utils/axios";
+
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const ParticipantsAddForm = ({ handleCreateParticipant }) => {
   const [firstName, setFirstName] = useState("");
@@ -45,6 +49,74 @@ const ParticipantsAddForm = ({ handleCreateParticipant }) => {
   const [isEqualPassword, setIsEqualPassword] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
+  const [regionList, setRegionList] = useState([]);
+  const [provinceList, setProvinceList] = useState([]);
+  const [cityList, setCityList] = useState([]);
+  const [baranggayList, setBaramggayList] = useState([]);
+  const [region, setRegion] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
+  const [isLoadingList, setIsLoadingList] = useState(false);
+
+  const fetchRegionData = useCallback(async () => {
+    const getRegion = await axios.get(
+      `${BASE_URL}/lookup/location?type=region`
+    );
+
+    setRegionList(getRegion?.data);
+  }, []);
+
+  const fetchProvinceData = useCallback(async () => {
+    const getProvince = await axios.get(
+      `${BASE_URL}/lookup/location?type=province&region_code=${region}`
+    );
+
+    setProvinceList(getProvince?.data);
+  }, [region]);
+
+  const fetchCityData = useCallback(async () => {
+    const getCity = await axios.get(
+      `${BASE_URL}/lookup/location?type=city&region_code=${region}&province_code=${province}`
+    );
+
+    const moldData = getCity?.data.map((record) => ({
+      label: record?.name,
+      id: record?.id,
+    }));
+
+    setCityList(moldData);
+  }, [region, province]);
+
+  const fetchBaranggayData = useCallback(async () => {
+    setIsLoadingList(true);
+    const getBaranggay = await axios.get(
+      `${BASE_URL}/lookup/location?type=barangay&region_code=${region}&province_code=${province}&city_code=${selectedCity}`
+    );
+
+    const moldData = getBaranggay?.data.map((record) => ({
+      label: record?.name,
+      id: record?.id,
+    }));
+
+    setBaramggayList(moldData);
+    setIsLoadingList(false);
+  }, [region, province, selectedCity]);
+
+  useEffect(() => {
+    fetchRegionData();
+  }, []);
+
+  useEffect(() => {
+    fetchProvinceData();
+  }, [fetchProvinceData, region]);
+
+  useEffect(() => {
+    fetchCityData();
+  }, [fetchCityData, province]);
+
+  useEffect(() => {
+    fetchBaranggayData();
+  }, [fetchBaranggayData, selectedCity]);
+
   useEffect(() => {
     const hasPassword = !isEmpty(password);
     const hasConfirmPassword = !isEmpty(confirmPassword);
@@ -56,6 +128,11 @@ const ParticipantsAddForm = ({ handleCreateParticipant }) => {
 
   const handleSubmit = () => {
     setIsLoading(true);
+
+    const findRegion = regionList.find((record) => record?.id === region);
+    const findProvince = provinceList.find((record) => record?.id === province);
+
+    console.log("[findProvince]", findProvince);
 
     handleCreateParticipant({
       email,
@@ -69,7 +146,7 @@ const ParticipantsAddForm = ({ handleCreateParticipant }) => {
       civil_status: civilStatus,
       baranggay,
       municipality,
-      province,
+      province: findProvince?.name,
       pwd_status: pwdStatus,
       contact_number: mobileNumber,
     });
@@ -153,6 +230,21 @@ const ParticipantsAddForm = ({ handleCreateParticipant }) => {
     if (isCivilStatus) {
       setCivilStatus(event?.target?.value);
     }
+
+    const isRegion = event?.target?.name === "region";
+    if (isRegion) {
+      setRegion(event?.target?.value);
+    }
+  };
+
+  const handleAutoCompleteChange = (_event, value) => {
+    setSelectedCity(value?.id);
+    setMunicipality(value?.label);
+  };
+
+  const handleBaranggayChange = (_event, value) => {
+    console.log("[setBaranggay]", value?.label);
+    setBaranggay(value?.label);
   };
 
   const handleDateChange = (date) => {
@@ -275,35 +367,89 @@ const ParticipantsAddForm = ({ handleCreateParticipant }) => {
               </Grid>
 
               <Grid item xs={12}>
-                <TextField
-                  type="text"
-                  name="baranggay"
-                  onChange={handleChange}
-                  label="Baranggay"
-                  required={true}
-                  fullWidth={true}
-                />
+                <FormControl fullWidth>
+                  <FormLabel id="demo-simple-select-label">Region</FormLabel>
+
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    onChange={handleChange}
+                    name="region"
+                  >
+                    {regionList.map((record) => (
+                      <MenuItem value={record?.id} option={record}>
+                        {record?.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Grid>
 
               <Grid item xs={12}>
-                <TextField
-                  type="text"
+                <FormControl fullWidth>
+                  <FormLabel id="demo-simple-select-label">Province</FormLabel>
+
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    onChange={handleChange}
+                    name="province"
+                  >
+                    {provinceList.map((record) => (
+                      <MenuItem value={record?.id} option={record}>
+                        {record?.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12}>
+                <Autocomplete
+                  disablePortal
+                  id="municipality"
+                  options={cityList}
+                  fullWidth={true}
                   name="municipality"
-                  onChange={handleChange}
-                  label="Municipality"
-                  required={true}
-                  fullWidth={true}
+                  value={municipality}
+                  onChange={handleAutoCompleteChange}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      type="text"
+                      name="municipality"
+                      onChange={handleChange}
+                      label="Municipality"
+                      required={true}
+                      fullWidth={true}
+                    />
+                  )}
                 />
+
+                {/* <TextField /> */}
               </Grid>
 
               <Grid item xs={12}>
-                <TextField
-                  type="text"
-                  name="province"
-                  onChange={handleChange}
-                  label="Province"
-                  required={true}
+                <Autocomplete
+                  disablePortal
+                  id="combo-box-demo"
+                  options={baranggayList}
                   fullWidth={true}
+                  value={baranggay}
+                  loading={isLoadingList}
+                  loadingText={"...Loading"}
+                  onChange={handleBaranggayChange}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      type="text"
+                      name="baranggay"
+                      onChange={handleChange}
+                      label="Baranggay"
+                      required={true}
+                      fullWidth={true}
+                    />
+                  )}
                 />
               </Grid>
 

@@ -7,8 +7,8 @@ import {
   TableCell,
   TableContainer,
   TableRow,
+  Paper,
 } from "@mui/material";
-import Paper from "@material-ui/core/Paper";
 
 import Button from "app/components/controls/Button";
 import CheckIcon from "@mui/icons-material/Check";
@@ -133,74 +133,73 @@ const PartnersData = ({ partnerList, handleConfirmUser, handleDeleteUser }) => {
   //   },
   // ];
 
-
   const columns = [
     {
-      name: 'id',
-      label: 'Partner Id',
+      name: "id",
+      label: "Partner Id",
       options: {
         filter: true,
       },
     },
     {
-      name: 'name',
-      label: 'Name',
+      name: "name",
+      label: "Name",
       options: {
         filter: true,
       },
     },
     {
-      name: 'code',
-      label: 'Code',
+      name: "code",
+      label: "Code",
       options: {
         filter: true,
       },
     },
     {
-      name: 'email',
-      label: 'email',
+      name: "email",
+      label: "email",
       options: {
         filter: true,
       },
     },
     {
-      name: 'address',
-      label: 'Address',
+      name: "address",
+      label: "Address",
       options: {
         display: false,
       },
     },
     {
-      name: 'website',
-      label: 'Website',
+      name: "website",
+      label: "Website",
       options: {
         display: false,
       },
     },
     {
-      name: 'contact_number',
-      label: 'Contact no.',
+      name: "contact_number",
+      label: "Contact no.",
       options: {
         display: false,
       },
     },
     {
-      name: 'is_deleted',
-      label: 'Is Deleted',
+      name: "is_deleted",
+      label: "Is Deleted",
       options: {
         display: false,
       },
     },
     {
-      name: 'created_at',
-      label: 'Submitted',
+      name: "created_at",
+      label: "Submitted",
       options: {
         display: false,
       },
     },
     {
-      name: 'updated_at',
-      label: 'Approve',
+      name: "updated_at",
+      label: "Approve",
       options: {
         display: false,
       },

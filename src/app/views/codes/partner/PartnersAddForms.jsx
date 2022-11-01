@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 
 import { Span } from "app/components/Typography";
 import { ValidatorForm } from "react-material-ui-form-validator";
@@ -13,8 +13,15 @@ import Button from "@mui/material/Button";
 
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
+import Autocomplete from "@mui/material/Autocomplete";
 
 import LoadingButton from "@mui/lab/LoadingButton";
+
+import axios from "../../../utils/axios";
+import isEmpty from "lodash/isEmpty";
+import debounce from "lodash/debounce";
+
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const PartnersAddForms = ({
   handleCreatePartner,
@@ -33,7 +40,29 @@ const PartnersAddForms = ({
     "" || currentData?.partnerCode
   );
 
+  const [partnerNameLookup, setPartnerNameLookup] = useState([]);
+  const [currentName, setCurrentName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const fetchAutoCompleteName = useCallback(async () => {
+    const hasName = !isEmpty(currentName);
+    if (hasName) {
+      const getPartnerNameLookup = await axios.get(
+        `${BASE_URL}/partner/autocomplete?name=${currentName}&type=partner_codes`
+      );
+
+      const moldData = getPartnerNameLookup?.data?.data.map((record) => ({
+        label: record?.name,
+        id: record?.id,
+      }));
+
+      setPartnerNameLookup(moldData);
+    }
+  }, [currentName]);
+
+  useEffect(() => {
+    fetchAutoCompleteName();
+  }, [fetchAutoCompleteName, currentName]);
 
   const handleSubmit = () => {
     setIsLoading(true);
@@ -70,10 +99,10 @@ const PartnersAddForms = ({
       setMobileNo(event.target.value);
     }
 
-    const isCompanyName = event.target.name === "company";
-    if (isCompanyName) {
-      setCompanyName(event.target.value);
-    }
+    // const isCompanyName = event.target.name === "company";
+    // if (isCompanyName) {
+    //   setCompanyName(event.target.value);
+    // }
 
     const isCompanyAddress = event.target.name === "companyAddress";
     if (isCompanyAddress) {
@@ -89,6 +118,18 @@ const PartnersAddForms = ({
     if (isWebsite) {
       setWebsite(event.target.value);
     }
+  };
+
+  const handleAutoCompleteName = debounce((event) => {
+    console.log("[value]: ", event.target.value);
+    const trimName = event.target.value.trim();
+
+    setCurrentName(trimName);
+    setCompanyName(trimName);
+  }, 700);
+
+  const handleChangeAutoComplete = (_event, value) => {
+    setCompanyName(value?.label);
   };
 
   const margin = { margin: "0 5px" };
@@ -110,7 +151,40 @@ const PartnersAddForms = ({
                   </Grid>
                 ))}
 
-                {inputFormElements.slice(5, 8).map((input) => (
+                {inputFormElements.slice(5, 6).map((input) => (
+                  <Grid xs={input.xs} sm={input.sm} item>
+                    <TextField
+                      {...input}
+                      defaultValue={currentData[`${input?.name}`]}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                ))}
+
+                <Grid item xs={12}>
+                  <Autocomplete
+                    disablePortal
+                    id="company"
+                    options={partnerNameLookup}
+                    fullWidth={true}
+                    name="company"
+                    value={companyName || currentName}
+                    onChange={handleChangeAutoComplete}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        type="text"
+                        name="company"
+                        onChange={handleAutoCompleteName}
+                        label="Company name"
+                        required={true}
+                        fullWidth={true}
+                      />
+                    )}
+                  />
+                </Grid>
+
+                {inputFormElements.slice(7, 8).map((input) => (
                   <Grid xs={input.xs} sm={input.sm} item>
                     <TextField
                       {...input}

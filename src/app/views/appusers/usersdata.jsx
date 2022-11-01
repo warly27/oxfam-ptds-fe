@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { ThemeProvider, createTheme } from "@mui/material";
+
 import MUIDataTable from "mui-datatables";
 import {
+  ThemeProvider,
+  createTheme,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableRow,
+  Paper,
 } from "@mui/material";
-import Paper from "@material-ui/core/Paper";
 import Button from "app/components/controls/Button";
 import CheckIcon from "@mui/icons-material/Check";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
@@ -200,7 +202,6 @@ const UsersData = ({ userData, handleConfirmUser, handleDeleteUser }) => {
   return (
     <div className="App">
       <ThemeProvider theme={getMuiTheme}>
-        {/* total amount of the current page: {total} */}
         <MUIDataTable
           title={"App Users"}
           options={options}

@@ -20,12 +20,15 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Icon from "@mui/material/Icon";
 import Button from "@mui/material/Button";
+import Autocomplete from "@mui/material/Autocomplete";
 
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import axios from "../../utils/axios";
 
 import LoadingButton from "@mui/lab/LoadingButton";
+import debounce from "lodash/debounce";
+import isEmpty from "lodash/isEmpty";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -37,8 +40,10 @@ const PartnersAddForms = ({ handleCreatePartner }) => {
   const [companyAddress, setCompanyAddress] = useState("");
   const [website, setWebsite] = useState("");
   const [partnerCode, setPartnerCode] = useState("");
+  const [currentName, setCurrentName] = useState("");
 
   const [partnerCodeLookup, setPartnerCodeLookup] = useState([]);
+  const [partnerNameLookup, setPartnerNameLookup] = useState([]);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -50,9 +55,29 @@ const PartnersAddForms = ({ handleCreatePartner }) => {
     setPartnerCodeLookup(getPartnerCodeLookup?.data);
   }, []);
 
+  const fetchAutoCompleteName = useCallback(async () => {
+    const hasName = !isEmpty(currentName);
+    if (hasName) {
+      const getPartnerNameLookup = await axios.get(
+        `${BASE_URL}/partner/autocomplete?name=${currentName}&type=partners`
+      );
+
+      const moldData = getPartnerNameLookup?.data?.data.map((record) => ({
+        label: record?.name,
+        id: record?.id,
+      }));
+
+      setPartnerNameLookup(moldData);
+    }
+  }, [currentName]);
+
   useEffect(() => {
     fetchPartnerCodeLookup();
   }, []);
+
+  useEffect(() => {
+    fetchAutoCompleteName();
+  }, [fetchAutoCompleteName, currentName]);
 
   const handleSubmit = async () => {
     setIsLoading(true);
@@ -72,8 +97,16 @@ const PartnersAddForms = ({ handleCreatePartner }) => {
     // }
   };
 
+  const handleAutoCompleteName = debounce((event) => {
+    console.log("[value]: ", event.target.value);
+    const trimName = event.target.value.trim();
+
+    setCurrentName(trimName);
+    setCompanyName(trimName);
+  }, 700);
+
   const handleChange = (event) => {
-    console.log("[event.target.name]", event.target.name);
+    console.log("[event.target.name]", event.target.value);
 
     const isEmail = event.target.name === "email";
     if (isEmail) {
@@ -90,10 +123,10 @@ const PartnersAddForms = ({ handleCreatePartner }) => {
       setMobileNo(event.target.value);
     }
 
-    const isCompanyName = event.target.name === "company";
-    if (isCompanyName) {
-      setCompanyName(event.target.value);
-    }
+    // const isCompanyName = event.target.name === "company";
+    // if (isCompanyName) {
+    //   handleAutoCompleteName(event.target.value);
+    // }
 
     const isCompanyAddress = event.target.name === "companyAddress";
     if (isCompanyAddress) {
@@ -111,6 +144,10 @@ const PartnersAddForms = ({ handleCreatePartner }) => {
     }
   };
 
+  const handleChangeAutoComplete = (_event, value) => {
+    setCompanyName(value?.label);
+  };
+
   const margin = { margin: "0 5px" };
 
   return (
@@ -120,7 +157,40 @@ const PartnersAddForms = ({ handleCreatePartner }) => {
           <CardContent>
             <Grid container rowSpacing={2}>
               <Grid container item spacing={2}>
-                {inputFormElements.slice(3, 8).map((input) => (
+                {inputFormElements.slice(3, 6).map((input) => (
+                  <Grid xs={input.xs} sm={input.sm} item>
+                    <TextField {...input} onChange={handleChange} />
+                  </Grid>
+                ))}
+              </Grid>
+
+              <Grid item xs={12}>
+                <Autocomplete
+                  disablePortal
+                  id="company"
+                  options={partnerNameLookup}
+                  fullWidth={true}
+                  name="company"
+                  value={companyName || currentName}
+                  onChange={handleChangeAutoComplete}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      type="text"
+                      name="company"
+                      onChange={handleAutoCompleteName}
+                      label="Company"
+                      required={true}
+                      fullWidth={true}
+                    />
+                  )}
+                />
+
+                {/* <TextField /> */}
+              </Grid>
+
+              <Grid container item spacing={2}>
+                {inputFormElements.slice(7, 8).map((input) => (
                   <Grid xs={input.xs} sm={input.sm} item>
                     <TextField {...input} onChange={handleChange} />
                   </Grid>
