@@ -35,7 +35,7 @@ const AppActivityAddModal = ({ showModal, setShowModal }) => {
       >
         <DialogTitle id="scroll-dialog-title">
           <Typography variant="h4" color="primary">
-            Create an App User
+            Create an Activity
           </Typography>
         </DialogTitle>
         <DialogContent dividers>

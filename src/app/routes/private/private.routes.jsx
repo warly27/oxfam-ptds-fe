@@ -4,6 +4,7 @@ const DashboardModule = lazy(() => import("../../views/dashboard/Analytics"));
 const AppUserModule = lazy(() => import("../../views/appusers/AppUsersTable"));
 const Partners = lazy(() => import("../../views/partners/PartnersTable"));
 const ProjectsModule = lazy(() => import("../../views/projects/ProjectsTable"));
+const ActivitiesModule = lazy(() => import("../../views/activities/AppActivityTable"));
 const ParticipantsModule = lazy(() =>
   import("../../views/participants/ParticipantsTable")
 );
@@ -40,6 +41,12 @@ const privateRoutes = [
     id: "participantsModule",
     path: "participants/records",
     children: <ParticipantsModule />,
+    exact: true,
+  },
+  {
+    id: "activitiesModule",
+    path: "activity/records",
+    children: <ActivitiesModule />,
     exact: true,
   },
   {

@@ -100,7 +100,7 @@ const ProjectsTable = () => {
           onClick={openModal}
         >
           <Icon>add</Icon>
-          <span>Projects</span>
+          <span>Partners to Projects</span>
         </Button>
       </Box>
 
