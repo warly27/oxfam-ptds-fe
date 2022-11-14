@@ -49,7 +49,7 @@ const PartnerCodeTable = () => {
     const getPartnersCodeResult = await axios.get(
       `${BASE_URL}/codes/getAllPartnerCodes`
     );
-    setPartnersCodeData(getPartnersCodeResult?.data);
+    setPartnersCodeData(getPartnersCodeResult?.data?.data);
   }, []);
 
   useEffect(() => {

@@ -51,6 +51,8 @@ const AppUsersTable = () => {
   const { adminCreateUser } = useAuth();
   const [showModal, setShowModal] = useState(false);
   const [userData, setUserData] = useState([]);
+  const [isEdit, setIsEdit] = useState(false);
+  const [currentUser, setCurrentUser] = useState({});
 
   const descriptionElementRef = useRef(null);
 
@@ -82,10 +84,9 @@ const AppUsersTable = () => {
     password,
     fundSource,
     partnerCode,
-    mobileNo,
-    companyName,
-    companyAddress,
-    website,
+    firstName,
+    lastName,
+    project_id,
   }) => {
     const adminCreateUserRequest = await adminCreateUser(
       email,
@@ -93,10 +94,9 @@ const AppUsersTable = () => {
       password,
       fundSource,
       partnerCode,
-      mobileNo,
-      companyName,
-      companyAddress,
-      website
+      firstName,
+      lastName,
+      project_id
     );
 
     console.log("[adminCreateUserRequest]: ", adminCreateUserRequest);
@@ -138,6 +138,17 @@ const AppUsersTable = () => {
     }
   };
 
+  const handleEditUser = async (payload) => {
+    const patchRequest = await axios.patch(`${BASE_URL}/user/edit`, payload);
+
+    if (patchRequest?.status === 200) {
+      fetchAllUsers();
+      setShowModal(false);
+      setIsEdit(false);
+      setCurrentUser({});
+    }
+  };
+
   return (
     <Container>
       <Box className="breadcrumb" display="flex">
@@ -164,6 +175,9 @@ const AppUsersTable = () => {
             userData={userData}
             handleConfirmUser={handleConfirmUser}
             handleDeleteUser={handleDeleteUser}
+            openModal={openModal}
+            setIsEdit={setIsEdit}
+            setCurrentUser={setCurrentUser}
           />
         </Grid>
       </Grid>
@@ -172,6 +186,10 @@ const AppUsersTable = () => {
         showModal={showModal}
         setShowModal={setShowModal}
         handleCreateUser={handleCreateUser}
+        isEdit={isEdit}
+        setIsEdit={setIsEdit}
+        currentUser={currentUser}
+        handleEditUser={handleEditUser}
       />
     </Container>
   );

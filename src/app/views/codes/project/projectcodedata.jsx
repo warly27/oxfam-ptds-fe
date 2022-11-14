@@ -1,19 +1,26 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { ThemeProvider, createTheme } from "@mui/material";
+
 import MUIDataTable from "mui-datatables";
 import {
+  ThemeProvider,
+  createTheme,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableRow,
 } from "@mui/material";
-import Paper from "@material-ui/core/Paper";
+import Paper from "@mui/material/Paper";
 import Button from "app/components/controls/Button";
 import CheckIcon from "@mui/icons-material/Check";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import dayjs from "dayjs";
 
-const ProjectssCodeData = ({ projectsCodeData, handleConfirmUser, handleDeleteUser }) => {
+const ProjectssCodeData = ({
+  projectsCodeData,
+  handleConfirmUser,
+  handleDeleteProjectCode,
+}) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -41,18 +48,14 @@ const ProjectssCodeData = ({ projectsCodeData, handleConfirmUser, handleDeleteUs
     handleConfirmUser(email);
   };
 
-  const onClickDeleteUser = (cognitoId, email) => {
-    handleDeleteUser(cognitoId, email);
-  };
-
-  const confirm = (value) => {
-    console.log(value);
+  const onClickDeleteUser = (id, code) => {
+    handleDeleteProjectCode(id, code);
   };
 
   const columns = [
     {
       name: "id",
-      label: "Code id",
+      label: "ID",
       options: {
         filter: true,
       },
@@ -107,19 +110,19 @@ const ProjectssCodeData = ({ projectsCodeData, handleConfirmUser, handleDeleteUs
       },
     },
     {
-        name: "budget",
-        label: "Budget",
-        options: {
-          display: false,
-        },
+      name: "budget",
+      label: "Budget",
+      options: {
+        display: false,
       },
+    },
     {
-        name: "creator_id",
-        label: "Created By",
-        options: {
-          display: false,
-        },
+      name: "creator_id",
+      label: "Created By",
+      options: {
+        display: false,
       },
+    },
     {
       name: "creator_role",
       label: "Creator Role",
@@ -128,12 +131,12 @@ const ProjectssCodeData = ({ projectsCodeData, handleConfirmUser, handleDeleteUs
       },
     },
     {
-        name: "start_date",
-        label: "Start date",
-        options: {
-          display: false,
-        },
+      name: "start_date",
+      label: "Start date",
+      options: {
+        display: false,
       },
+    },
     {
       name: "end_date",
       label: "End date",
@@ -158,56 +161,60 @@ const ProjectssCodeData = ({ projectsCodeData, handleConfirmUser, handleDeleteUs
       return (
         <>
           <tr>
-            <td colSpan={6}>
+            <td colSpan={12}>
               <TableContainer component={Paper}>
                 <Table>
                   <TableBody>
                     <TableRow>
                       <TableCell component="th" scope="row" align="left">
-                        <strong>Portfolio:</strong>
+                        <strong>Portfolio:</strong> {""}
                         {rowData[6]}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="left">
-                        <strong>Fund source:</strong>
+                        <strong>Fund source:</strong> {""}
                         {rowData[7]}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="left">
                         <strong>Budget:</strong>
+                        {""}
                         {rowData[8]}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="left">
                         <strong>Created By:</strong>
+                        {""}
                         {rowData[9]}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="left">
-                        <strong>Creator Role</strong> {rowData[10]}
-                      </TableCell>
-
-\                      <TableCell component="th" scope="row" align="left">
-                        <strong>Start date:</strong>
-                        {rowData[11]}
+                        <strong>Creator Role:</strong> {rowData[10]}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="left">
-                        <strong>End Date</strong> {rowData[12]}
+                        <strong>Start date:</strong>
+                        {dayjs(rowData[11]).format("MM/DD/YYYY")}
                       </TableCell>
-                      <TableCell component="th" scope="row" align="center">
+
+                      <TableCell component="th" scope="row" align="left">
+                        <strong>End Date:</strong>{" "}
+                        {dayjs(rowData[12]).format("MM/DD/YYYY")}
+                      </TableCell>
+
+                      {/* <TableCell component="th" scope="row" align="center">
                         <Button
                           onClick={() => onClickConfirmUser(rowData[3])}
                           text={<CheckIcon />}
                           size="small"
                           disabled={rowData[5] === "1"}
                         />
-                      </TableCell>
+                      </TableCell> */}
 
                       <TableCell component="th" scope="row" align="center">
                         <Button
                           onClick={() =>
-                            onClickDeleteUser(rowData[1], rowData[3])
+                            onClickDeleteUser(rowData[0], rowData[2])
                           }
                           text={<DeleteOutlineIcon />}
                           size="small"

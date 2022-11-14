@@ -1,16 +1,24 @@
 import React, { useState, useRef, useEffect } from "react";
-import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import AppUsersForms from "./AppUsersForms";
+import EditUserForms from "./EditUserForms";
 import { Typography } from "@material-ui/core";
 
-const AppUserAddModal = ({ showModal, setShowModal, handleCreateUser }) => {
+const AppUserAddModal = ({
+  showModal,
+  setShowModal,
+  handleCreateUser,
+  isEdit,
+  currentUser,
+  setIsEdit,
+  handleEditUser,
+}) => {
   const handleClose = () => {
     setShowModal((prev) => !prev);
+    setIsEdit(false);
   };
 
   const descriptionElementRef = useRef(null);
@@ -23,6 +31,8 @@ const AppUserAddModal = ({ showModal, setShowModal, handleCreateUser }) => {
     }
   }, [showModal]);
 
+  console.log("[currentUser]", currentUser);
+
   return (
     <div>
       <Dialog
@@ -34,7 +44,7 @@ const AppUserAddModal = ({ showModal, setShowModal, handleCreateUser }) => {
       >
         <DialogTitle id="scroll-dialog-title">
           <Typography variant="h4" color="primary">
-            Create an App User
+            {isEdit ? "Edit" : "Create"} an App User
           </Typography>
         </DialogTitle>
 
@@ -44,7 +54,14 @@ const AppUserAddModal = ({ showModal, setShowModal, handleCreateUser }) => {
             ref={descriptionElementRef}
             tabIndex={-1}
           >
-            <AppUsersForms handleCreateUser={handleCreateUser} />
+            {isEdit ? (
+              <EditUserForms
+                currentUser={currentUser}
+                handleEditUser={handleEditUser}
+              />
+            ) : (
+              <AppUsersForms handleCreateUser={handleCreateUser} />
+            )}
           </DialogContentText>
         </DialogContent>
       </Dialog>

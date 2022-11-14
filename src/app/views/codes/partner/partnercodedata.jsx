@@ -178,6 +178,7 @@ const PartnersCodeData = ({
                           disabled={rowData[6] === "1"}
                         />
                       </TableCell>
+
                       <TableCell component="th" scope="row" align="center">
                         <Button
                           onClick={() => onClickDeleteUser(rowData[0])}

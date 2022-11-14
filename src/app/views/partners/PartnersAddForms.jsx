@@ -32,78 +32,38 @@ import isEmpty from "lodash/isEmpty";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-const PartnersAddForms = ({ handleCreatePartner }) => {
+const PartnersAddForms = ({ handleCreatePartner, partnerId }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [mobileNo, setMobileNo] = useState("");
-  const [companyName, setCompanyName] = useState("");
-  const [companyAddress, setCompanyAddress] = useState("");
-  const [website, setWebsite] = useState("");
+  const [first_name, setFirstName] = useState("");
+  const [last_name, setLastName] = useState("");
+  const [user_name, setUserName] = useState("");
   const [partnerCode, setPartnerCode] = useState("");
-  const [currentName, setCurrentName] = useState("");
+  const [projectCode, setProjectCode] = useState("");
 
-  const [partnerCodeLookup, setPartnerCodeLookup] = useState([]);
-  const [partnerNameLookup, setPartnerNameLookup] = useState([]);
+  const [projectCodeLookup, setProjectCodeLookup] = useState([]);
 
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchPartnerCodeLookup = useCallback(async () => {
-    const getPartnerCodeLookup = await axios.get(
-      `${BASE_URL}/codes/getAllPartnerCodes`
+    const getAllCodesResult = await axios.get(
+      `${BASE_URL}/project/getPartnerProject?type=partner_id&id=${partnerId}`
     );
 
-    setPartnerCodeLookup(getPartnerCodeLookup?.data);
+    setProjectCodeLookup(getAllCodesResult?.data?.data);
   }, []);
-
-  const fetchAutoCompleteName = useCallback(async () => {
-    const hasName = !isEmpty(currentName);
-    if (hasName) {
-      const getPartnerNameLookup = await axios.get(
-        `${BASE_URL}/partner/autocomplete?name=${currentName}&type=partners`
-      );
-
-      const moldData = getPartnerNameLookup?.data?.data.map((record) => ({
-        label: record?.name,
-        id: record?.id,
-      }));
-
-      setPartnerNameLookup(moldData);
-    }
-  }, [currentName]);
 
   useEffect(() => {
     fetchPartnerCodeLookup();
   }, []);
 
-  useEffect(() => {
-    fetchAutoCompleteName();
-  }, [fetchAutoCompleteName, currentName]);
-
   const handleSubmit = async () => {
     setIsLoading(true);
 
     handleCreatePartner({
-      email,
-      website,
-      password,
-      mobileNo,
-      partnerCode,
-      companyName,
-      companyAddress,
+      project_id: projectCode,
     });
-
-    // if (confirmRequest?.status === 200) {
-    //   fetchAllUsers();
-    // }
   };
-
-  const handleAutoCompleteName = debounce((event) => {
-    console.log("[value]: ", event.target.value);
-    const trimName = event.target.value.trim();
-
-    setCurrentName(trimName);
-    setCompanyName(trimName);
-  }, 700);
 
   const handleChange = (event) => {
     console.log("[event.target.name]", event.target.value);
@@ -118,19 +78,14 @@ const PartnersAddForms = ({ handleCreatePartner }) => {
       setPassword(event.target.value);
     }
 
-    const isMobileNo = event.target.name === "phone";
-    if (isMobileNo) {
-      setMobileNo(event.target.value);
+    const isFirstName = event.target.name === "firstName";
+    if (isFirstName) {
+      setFirstName(event.target.value);
     }
 
-    // const isCompanyName = event.target.name === "company";
-    // if (isCompanyName) {
-    //   handleAutoCompleteName(event.target.value);
-    // }
-
-    const isCompanyAddress = event.target.name === "companyAddress";
-    if (isCompanyAddress) {
-      setCompanyAddress(event.target.value);
+    const isLastName = event.target.name === "lastName";
+    if (isLastName) {
+      setLastName(event.target.value);
     }
 
     const isPartnerCode = event.target.name === "partnerCode";
@@ -138,14 +93,15 @@ const PartnersAddForms = ({ handleCreatePartner }) => {
       setPartnerCode(event.target.value);
     }
 
-    const isWebsite = event.target.name === "companyWebsite";
-    if (isWebsite) {
-      setWebsite(event.target.value);
+    const isUsername = event.target.name === "userName";
+    if (isUsername) {
+      setUserName(event.target.value);
     }
-  };
 
-  const handleChangeAutoComplete = (_event, value) => {
-    setCompanyName(value?.label);
+    const isProject = event.target.name === "projectCode";
+    if (isProject) {
+      setProjectCode(event.target.value);
+    }
   };
 
   const margin = { margin: "0 5px" };
@@ -153,93 +109,33 @@ const PartnersAddForms = ({ handleCreatePartner }) => {
   return (
     <div>
       <ValidatorForm onSubmit={handleSubmit} onError={() => null}>
-        <Card>
+        <Card style={{ minWidth: 400, maxWidth: 600, margin: "0 auto" }}>
           <CardContent>
             <Grid container rowSpacing={2}>
-              <Grid container item spacing={2}>
-                {inputFormElements.slice(3, 6).map((input) => (
-                  <Grid xs={input.xs} sm={input.sm} item>
-                    <TextField {...input} onChange={handleChange} />
-                  </Grid>
-                ))}
-              </Grid>
-
-              <Grid item xs={12}>
-                <Autocomplete
-                  disablePortal
-                  id="company"
-                  options={partnerNameLookup}
-                  fullWidth={true}
-                  name="company"
-                  value={companyName || currentName}
-                  onChange={handleChangeAutoComplete}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      type="text"
-                      name="company"
-                      onChange={handleAutoCompleteName}
-                      label="Company"
-                      required={true}
-                      fullWidth={true}
-                    />
-                  )}
-                />
-
-                {/* <TextField /> */}
-              </Grid>
-
-              <Grid container item spacing={2}>
-                {inputFormElements.slice(7, 8).map((input) => (
-                  <Grid xs={input.xs} sm={input.sm} item>
-                    <TextField {...input} onChange={handleChange} />
-                  </Grid>
-                ))}
-              </Grid>
-
               <Grid container item>
                 <Grid xs={12} sm={12} item>
                   <FormControl fullWidth>
-                    <TextField
-                      name="companyWebsite"
-                      placeholder="Enter Company website"
-                      label="Company Website"
-                      variant="outlined"
-                      fullWidth={true}
-                      required={true}
-                      xs={12}
-                      sm={6}
-                      onChange={handleChange}
-                    />
-                  </FormControl>
-                </Grid>
-              </Grid>
-
-              <Grid container item>
-                <Grid xs={12} sm={12} item>
-                  <FormControl fullWidth>
-                    <InputLabel id="partner-code-select-label">
-                      Partner Code
+                    <InputLabel id="project-code-select-label">
+                      Project
                     </InputLabel>
 
                     <Select
-                      labelId="partner-code-select-label"
-                      id="partner-code-select"
-                      value={partnerCode}
-                      label="Partner Code"
+                      labelId="project-code-select-label"
+                      id="project-code-select"
+                      value={projectCode}
+                      label="Project Code"
                       onChange={handleChange}
-                      name="partnerCode"
+                      name="projectCode"
                     >
-                      {partnerCodeLookup.map((data) => (
-                        <MenuItem value={data?.code}>{data?.code}</MenuItem>
+                      {projectCodeLookup.map((data) => (
+                        <MenuItem value={data?.project_id}>
+                          {data?.project_title}
+                        </MenuItem>
                       ))}
                     </Select>
                   </FormControl>
                 </Grid>
               </Grid>
-              {/* <Typography variant="body2" align="left" gutterBottom>
-                  Address :{' '}
-                </Typography> */}
 
               <Grid container item spacing={2}>
                 <Grid item xs={12} align="right">

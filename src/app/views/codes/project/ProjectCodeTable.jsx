@@ -11,6 +11,7 @@ import PartnersCodeData from "./projectcodedata";
 import axios from "../../../utils/axios";
 
 import useAuth from "../../../hooks/useAuth";
+import ProjectsAddModal from "./ProjectsAddModal";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -55,7 +56,9 @@ const ProjectCodeTable = () => {
   const descriptionElementRef = useRef(null);
 
   const fetchAllUsers = useCallback(async () => {
-    const getPartnersCodeResult = await axios.get(`${BASE_URL}/codes/getAllProjectCodes`);
+    const getPartnersCodeResult = await axios.get(
+      `${BASE_URL}/codes/getAllProjectCodes`
+    );
     setProjectsCodeData(getPartnersCodeResult?.data.data);
   }, []);
 
@@ -76,24 +79,13 @@ const ProjectCodeTable = () => {
     setShowModal((prev) => !prev);
   };
 
-  const handleCreateUser = async ({
-    email,
-    userName,
-    password,
-    fundSource,
-    partnerCode,
-  }) => {
-    const adminCreateUserRequest = await adminCreateUser(
-      email,
-      userName,
-      password,
-      fundSource,
-      partnerCode
+  const handleCreateProject = async (payload) => {
+    const createProject = await axios.post(
+      `${BASE_URL}/codes/createProjectCode`,
+      payload
     );
 
-    console.log("[adminCreateUserRequest]: ", adminCreateUserRequest);
-
-    if (adminCreateUserRequest?.status === 200) {
+    if (createProject?.status === 200) {
       fetchAllUsers();
       setShowModal(false);
     }
@@ -130,6 +122,22 @@ const ProjectCodeTable = () => {
     }
   };
 
+  const handleDeleteProjectCode = async (id, code) => {
+    const payload = {
+      id,
+      code,
+    };
+
+    const deleteRequest = await axios.delete(
+      `${BASE_URL}/project/deleteProject`,
+      { data: payload }
+    );
+
+    if (deleteRequest?.status === 200) {
+      fetchAllUsers();
+    }
+  };
+
   return (
     <Container>
       <Box className="breadcrumb" display="flex">
@@ -155,16 +163,16 @@ const ProjectCodeTable = () => {
           <PartnersCodeData
             projectsCodeData={projectsCodeData}
             handleConfirmUser={handleConfirmUser}
-            handleDeleteUser={handleDeleteUser}
+            handleDeleteProjectCode={handleDeleteProjectCode}
           />
         </Grid>
       </Grid>
 
-      {/* <AppUserAddModal
+      <ProjectsAddModal
         showModal={showModal}
         setShowModal={setShowModal}
-        handleCreateUser={handleCreateUser}
-      /> */}
+        handleCreateProject={handleCreateProject}
+      />
     </Container>
   );
 };

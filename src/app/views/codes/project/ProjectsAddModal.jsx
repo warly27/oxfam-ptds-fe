@@ -5,17 +5,10 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import PartnersAddForms from "./PartnersAddForms";
+import ProjectsAddFrom from "./ProjectsAddForm";
 import { Typography } from "@material-ui/core";
 
-const AppUserAddModal = ({
-  showModal,
-  setShowModal,
-  handleCreatePartner,
-  partnerId,
-  isEdit,
-}) => {
-  console.log(showModal + " from the modal component");
+const ProjectsAddModal = ({ showModal, setShowModal, handleCreateProject }) => {
   const handleClose = () => {
     setShowModal((prev) => !prev);
   };
@@ -41,7 +34,7 @@ const AppUserAddModal = ({
       >
         <DialogTitle id="scroll-dialog-title">
           <Typography variant="h4" color="primary">
-            {isEdit ? "Edit Record" : "Assign to Project"}
+            Create a Project
           </Typography>
         </DialogTitle>
         <DialogContent dividers>
@@ -50,10 +43,7 @@ const AppUserAddModal = ({
             ref={descriptionElementRef}
             tabIndex={-1}
           >
-            <PartnersAddForms
-              handleCreatePartner={handleCreatePartner}
-              partnerId={partnerId}
-            />
+            <ProjectsAddFrom handleCreateProject={handleCreateProject} />
           </DialogContentText>
         </DialogContent>
       </Dialog>
@@ -61,4 +51,4 @@ const AppUserAddModal = ({
   );
 };
 
-export default AppUserAddModal;
+export default ProjectsAddModal;

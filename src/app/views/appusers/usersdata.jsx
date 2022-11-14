@@ -14,8 +14,17 @@ import {
 import Button from "app/components/controls/Button";
 import CheckIcon from "@mui/icons-material/Check";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import dayjs from "dayjs";
 
-const UsersData = ({ userData, handleConfirmUser, handleDeleteUser }) => {
+const UsersData = ({
+  userData,
+  handleConfirmUser,
+  handleDeleteUser,
+  openModal,
+  setIsEdit,
+  setCurrentUser,
+}) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -54,7 +63,7 @@ const UsersData = ({ userData, handleConfirmUser, handleDeleteUser }) => {
   const columns = [
     {
       name: "id",
-      label: "User Id",
+      label: "ID",
       options: {
         filter: true,
       },
@@ -67,8 +76,15 @@ const UsersData = ({ userData, handleConfirmUser, handleDeleteUser }) => {
       },
     },
     {
-      name: "name",
+      name: "first_name",
       label: "Name",
+      options: {
+        filter: true,
+      },
+    },
+    {
+      name: "last_name",
+      label: " ",
       options: {
         filter: true,
       },
@@ -138,45 +154,64 @@ const UsersData = ({ userData, handleConfirmUser, handleDeleteUser }) => {
                   <TableBody>
                     <TableRow>
                       <TableCell component="th" scope="row" align="left">
-                        <strong>Role:</strong>
-                        {rowData[4]}
+                        <strong>Role: </strong>
+                        {rowData[5]}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="left">
                         <strong>Status:</strong>{" "}
-                        {rowData[5] === "0" ? "For Approval" : "Approved"}
+                        {rowData[6] === "0" ? "For Approval" : "Approved"}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="left">
                         <strong>Is Deleted?:</strong>{" "}
-                        {rowData[6] === "0" ? "Active" : "Deleted"}
+                        {rowData[7] === "0" ? "Active" : "Deleted"}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="left">
-                        <strong>Submitted:</strong> {rowData[7]}
+                        <strong>Submitted:</strong>{" "}
+                        {dayjs(rowData[8]).format("MM/DD/YYYY")}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="left">
-                        <strong>Approved:</strong> {rowData[8]}
+                        <strong>Approved: </strong>{" "}
+                        {dayjs(rowData[9]).format("MM/DD/YYYY")}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="center">
                         <Button
-                          onClick={() => onClickConfirmUser(rowData[3])}
+                          onClick={() => onClickConfirmUser(rowData[4])}
                           text={<CheckIcon />}
                           size="small"
-                          disabled={rowData[5] === "1"}
+                          disabled={rowData[6] === "1" || rowData[7] === "1"}
+                        />
+                      </TableCell>
+
+                      <TableCell component="th" scope="row" align="center">
+                        <Button
+                          onClick={() => {
+                            setIsEdit(true);
+                            openModal();
+                            setCurrentUser(
+                              data.find(
+                                (dataItem) => dataItem.id === rowData[0]
+                              )
+                            );
+                          }}
+                          text={<ModeEditIcon />}
+                          size="small"
+                          disabled={rowData[7] === "1"}
                         />
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="center">
                         <Button
                           onClick={() =>
-                            onClickDeleteUser(rowData[1], rowData[3])
+                            onClickDeleteUser(rowData[1], rowData[4])
                           }
                           text={<DeleteOutlineIcon />}
                           size="small"
-                          disabled={rowData[6] === "1"}
+                          disabled={rowData[7] === "1"}
                         />
                       </TableCell>
                     </TableRow>
