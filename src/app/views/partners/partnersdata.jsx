@@ -234,7 +234,7 @@ const PartnersData = ({
                       {days(rowData[6]).format("MM/DD/YYYY")}
                     </TableCell>
 
-                    <TableCell component="th" scope="row" align="center">
+                    {/* <TableCell component="th" scope="row" align="center">
                       <Button
                         onClick={() => {
                           setShowModal(true);
@@ -247,7 +247,7 @@ const PartnersData = ({
                         size="small"
                         disabled={rowData[5] === "1"}
                       />
-                    </TableCell>
+                    </TableCell> */}
 
                     <TableCell component="th" scope="row" align="center">
                       <Button

@@ -70,17 +70,17 @@ const AppUsersForms = ({ handleCreateUser }) => {
   }, [partnerId, fetchAllPartnerProject]);
 
   const handleChange = (event) => {
-    const isFirstName = event.target.name === "firstName";
+    const isFirstName = event.target.name === "first_name";
     if (isFirstName) {
       setFirstName(event.target.value);
     }
 
-    const isLastName = event.target.name === "lastName";
+    const isLastName = event.target.name === "last_name";
     if (isLastName) {
       setLastName(event.target.value);
     }
 
-    const isUsername = event.target.name === "userName";
+    const isUsername = event.target.name === "user_name";
     if (isUsername) {
       setUserName(event.target.value);
     }

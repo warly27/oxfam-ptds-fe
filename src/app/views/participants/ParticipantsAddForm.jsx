@@ -28,7 +28,61 @@ import axios from "../../utils/axios";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-const ParticipantsAddForm = ({ handleCreateParticipant }) => {
+const sectorData = [
+  {
+    value: "farmer",
+    label: "Farmer",
+  },
+  {
+    value: "fisher",
+    label: "Fisher",
+  },
+  {
+    value: "women",
+    label: "Women",
+  },
+  {
+    value: "pwd",
+    label: "PWD",
+  },
+  {
+    value: "senior_citizen",
+    label: "Senior Citizen ",
+  },
+  {
+    value: "youth",
+    label: "Youth",
+  },
+  {
+    value: "LGBTQIA+",
+    label: "LGBTQIA+",
+  },
+  {
+    value: "service_provider",
+    label: "Service Provider",
+  },
+  {
+    value: "CSOs",
+    label: "CSOs",
+  },
+  {
+    value: "private_sector",
+    label: "Private Sector",
+  },
+  {
+    value: "government",
+    label: "Government",
+  },
+  {
+    value: "others",
+    label: "Others",
+  },
+];
+
+const ParticipantsAddForm = ({
+  handleCreateParticipant,
+  setShowChildModal,
+}) => {
   const [firstName, setFirstName] = useState("");
   const [middleName, setMiddleName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -44,7 +98,13 @@ const ParticipantsAddForm = ({ handleCreateParticipant }) => {
   const [gender, setGender] = useState("");
   const [isPwd, setIsPwd] = useState(false);
   const [pwdStatus, setPwdStatus] = useState("");
-  const [civilStatus, setCivilStatus] = useState("");
+  const [civil_status, setCivilStatus] = useState("");
+  const [has_beneficiary, setHasBeneficiary] = useState(false);
+  const [sector, setSector] = useState("");
+  const [designation, setDesignation] = useState("");
+  const [organization, setOrganization] = useState("");
+  const [religion, setReligion] = useState("");
+  const [ethniciity, setEthniciity] = useState("");
 
   const [isEqualPassword, setIsEqualPassword] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -106,15 +166,21 @@ const ParticipantsAddForm = ({ handleCreateParticipant }) => {
   }, []);
 
   useEffect(() => {
-    fetchProvinceData();
+    if (!isEmpty(region)) {
+      fetchProvinceData();
+    }
   }, [fetchProvinceData, region]);
 
   useEffect(() => {
-    fetchCityData();
+    if (!isEmpty(province)) {
+      fetchCityData();
+    }
   }, [fetchCityData, province]);
 
   useEffect(() => {
-    fetchBaranggayData();
+    if (!isEmpty(selectedCity)) {
+      fetchBaranggayData();
+    }
   }, [fetchBaranggayData, selectedCity]);
 
   useEffect(() => {
@@ -134,7 +200,7 @@ const ParticipantsAddForm = ({ handleCreateParticipant }) => {
 
     console.log("[findProvince]", findProvince);
 
-    handleCreateParticipant({
+    console.log("[payload]: ", {
       email,
       first_name: firstName,
       last_name: lastName,
@@ -143,28 +209,45 @@ const ParticipantsAddForm = ({ handleCreateParticipant }) => {
       date_of_birth: birthday.format("DD/MM/YYYY"),
       age: dayjs().diff(birthday, "year"),
       address,
-      civil_status: civilStatus,
+      civil_status: civil_status,
       baranggay,
       municipality,
       province: findProvince?.name,
       pwd_status: pwdStatus,
       contact_number: mobileNumber,
     });
+
+    // handleCreateParticipant({
+    //   email,
+    //   first_name: firstName,
+    //   last_name: lastName,
+    //   middle_name: middleName,
+    //   sex: gender,
+    //   date_of_birth: birthday.format("DD/MM/YYYY"),
+    //   age: dayjs().diff(birthday, "year"),
+    //   address,
+    //   civil_status: civil_status,
+    //   baranggay,
+    //   municipality,
+    //   province: findProvince?.name,
+    //   pwd_status: pwdStatus,
+    //   contact_number: mobileNumber,
+    // });
   };
 
   const handleChange = (event) => {
     console.log("[name]", event.target.name);
     console.log("[value]", event.target.value);
 
-    const isConfirmPassword = event?.target?.name === "confirmPassword";
-    if (isConfirmPassword) {
-      setConfirmPassword(event?.target?.value);
-    }
+    // const isConfirmPassword = event?.target?.name === "confirmPassword";
+    // if (isConfirmPassword) {
+    //   setConfirmPassword(event?.target?.value);
+    // }
 
-    const isPassword = event?.target?.name === "password";
-    if (isPassword) {
-      setPassword(event?.target?.value);
-    }
+    // const isPassword = event?.target?.name === "password";
+    // if (isPassword) {
+    //   setPassword(event?.target?.value);
+    // }
 
     const isFname = event?.target?.name === "firstName";
     if (isFname) {
@@ -234,6 +317,42 @@ const ParticipantsAddForm = ({ handleCreateParticipant }) => {
     const isRegion = event?.target?.name === "region";
     if (isRegion) {
       setRegion(event?.target?.value);
+    }
+
+    const isHasBeneficiary = event?.target?.name === "has_beneficiary";
+    if (isHasBeneficiary) {
+      setHasBeneficiary(event?.target?.value);
+
+      const isYes = event?.target?.value === "true";
+
+      if (isYes) {
+        setShowChildModal(isYes);
+      }
+    }
+
+    const isSector = event?.target?.name === "sector";
+    if (isSector) {
+      setSector(event?.target?.value);
+    }
+
+    const isDesignation = event?.target?.name === "designation";
+    if (isDesignation) {
+      setDesignation(event?.target?.value);
+    }
+
+    const isOrganization = event?.target?.name === "organization";
+    if (isOrganization) {
+      setOrganization(event?.target?.value);
+    }
+
+    const isReligion = event?.target?.name === "religion";
+    if (isReligion) {
+      setReligion(event?.target?.value);
+    }
+
+    const isEthniciity = event?.target?.name === "ethniciity";
+    if (isEthniciity) {
+      setEthniciity(event?.target?.value);
     }
   };
 
@@ -332,27 +451,23 @@ const ParticipantsAddForm = ({ handleCreateParticipant }) => {
               </Grid>
 
               <Grid item xs={12}>
-                <TextField
-                  error={!isEqualPassword}
-                  name="password"
-                  type="password"
-                  label="Password"
-                  onChange={handleChange}
-                  required={true}
-                  fullWidth={true}
-                />
-              </Grid>
+                <FormControl fullWidth>
+                  <FormLabel id="demo-simple-select-label">Gender</FormLabel>
 
-              <Grid item xs={12}>
-                <TextField
-                  error={!isEqualPassword}
-                  type="password"
-                  name="confirmPassword"
-                  onChange={handleChange}
-                  label="Confirm Password"
-                  required={true}
-                  fullWidth={true}
-                />
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    onChange={handleChange}
+                    name="gender"
+                  >
+                    <MenuItem value={"male"}>Male</MenuItem>
+                    <MenuItem value={"female"}>Female</MenuItem>
+                    <MenuItem value={"lesbian"}>Lesbian</MenuItem>
+                    <MenuItem value={"bisexual"}>Bisexual</MenuItem>
+                    <MenuItem value={"gay"}>Gay</MenuItem>
+                    <MenuItem value={"transgender"}>Transgender</MenuItem>
+                  </Select>
+                </FormControl>
               </Grid>
 
               <Grid item xs={12}>
@@ -454,39 +569,103 @@ const ParticipantsAddForm = ({ handleCreateParticipant }) => {
               </Grid>
 
               <Grid item xs={12}>
-                <FormControl>
-                  <FormLabel id="demo-radio-buttons-group-label">
-                    Gender
+                <TextField
+                  type="text"
+                  name="designation"
+                  onChange={handleChange}
+                  label="Designation"
+                  required={true}
+                  fullWidth={true}
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <FormControl fullWidth>
+                  <FormLabel id="demo-simple-select-label">Sector</FormLabel>
+
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    onChange={handleChange}
+                    name="sector"
+                  >
+                    {sectorData.map((data) => (
+                      <MenuItem value={data?.value}>{data?.label}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                  type="text"
+                  name="organization"
+                  onChange={handleChange}
+                  label="Organization"
+                  required={true}
+                  fullWidth={true}
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <FormControl fullWidth>
+                  <FormLabel id="demo-simple-select-label">Religion</FormLabel>
+
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    onChange={handleChange}
+                    name="religion"
+                  >
+                    <MenuItem value={"christian"}>Christian</MenuItem>
+                    <MenuItem value={"muslim"}>Muslim</MenuItem>
+                    <MenuItem value={"Others"}>Others</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12}>
+                <FormControl fullWidth>
+                  <FormLabel id="demo-simple-select-label">
+                    Ethniciity
                   </FormLabel>
 
-                  <RadioGroup
-                    row
-                    name="gender"
-                    sx={{ mb: 2 }}
-                    // value={gender || ""}
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
                     onChange={handleChange}
+                    name="ethniciity"
                   >
-                    <FormControlLabel
-                      value="male"
-                      label="Male"
-                      labelPlacement="end"
-                      control={<Radio color="secondary" />}
-                    />
+                    <MenuItem value={"tagalog"}>Tagalog</MenuItem>
+                    <MenuItem value={"cebuano"}>Cebuano</MenuItem>
+                    <MenuItem value={"ilocano"}>Ilocano</MenuItem>
+                    <MenuItem value={"kapampangan"}>Kapampangan</MenuItem>
+                    <MenuItem value={"waray"}>Waray</MenuItem>
+                    <MenuItem value={"maguindanao"}>Maguindanao</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
 
-                    <FormControlLabel
-                      value="female"
-                      label="Female"
-                      labelPlacement="end"
-                      control={<Radio color="secondary" />}
-                    />
+              <Grid item xs={12}>
+                <FormControl fullWidth>
+                  <FormLabel id="demo-radio-buttons-group-label">
+                    Civil Status
+                  </FormLabel>
 
-                    <FormControlLabel
-                      value="others"
-                      label="Others"
-                      labelPlacement="end"
-                      control={<Radio color="secondary" />}
-                    />
-                  </RadioGroup>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    onChange={handleChange}
+                    name="civil_status"
+                  >
+                    <MenuItem value={"ingle"}>Single</MenuItem>
+                    <MenuItem value={"married"}>Married</MenuItem>
+                    <MenuItem value={"divorced"}>Divorced</MenuItem>
+                    <MenuItem value={"separated"}>Separated</MenuItem>
+                    <MenuItem value={"living_with_common_law_partner"}>
+                      Living with common-law partner
+                    </MenuItem>
+                  </Select>
                 </FormControl>
               </Grid>
 
@@ -561,32 +740,25 @@ const ParticipantsAddForm = ({ handleCreateParticipant }) => {
               <Grid item xs={12}>
                 <FormControl>
                   <FormLabel id="demo-radio-buttons-group-label">
-                    Civil Status
+                    Has Beneficiary?
                   </FormLabel>
 
                   <RadioGroup
                     row
-                    name="civilstatus"
+                    name="has_beneficiary"
                     sx={{ mb: 2 }}
                     onChange={handleChange}
                   >
                     <FormControlLabel
-                      value="single"
-                      label="Single"
+                      value={true}
+                      label="Yes"
                       labelPlacement="end"
                       control={<Radio color="secondary" />}
                     />
 
                     <FormControlLabel
-                      value="married"
-                      label="Married"
-                      labelPlacement="end"
-                      control={<Radio color="secondary" />}
-                    />
-
-                    <FormControlLabel
-                      value="widowed"
-                      label="Widowed"
+                      value={false}
+                      label="No"
                       labelPlacement="end"
                       control={<Radio color="secondary" />}
                     />

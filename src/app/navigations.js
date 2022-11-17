@@ -2,11 +2,11 @@ export const navigations = [
   { name: "Dashboard", path: "/dashboard", icon: "dashboard" },
   { label: "User management", type: "label" },
   { name: "App Users", path: "/appusers/records", icon: "people" },
-  { label: "Code management", type: "label" },
-  { name: "Indicators", path: "/indicators/code", icon: "equalizer" },
-  { name: "Partners Code", path: "/partners/code", icon: "code" },
-  { name: "Projects Code", path: "/projects/code", icon: "code" },
-  { label: "Record management", type: "label" },
+  // { label: "Record management", type: "label" },
+  // { name: "Indicators", path: "/indicators/code", icon: "equalizer" },
+  // { name: "Partners Code", path: "/partners/code", icon: "code" },
+  // { name: "Projects Code", path: "/projects/code", icon: "code" },
+  { label: "Tool management", type: "label" },
   { name: "Partners", path: "/partners/records", icon: "people" },
   { name: "Projects", path: "/projects/records", icon: "assignment" },
   {
@@ -19,7 +19,11 @@ export const navigations = [
 
 export const melsa_navigations = [
   { name: "Dashboard", path: "/dashboard", icon: "dashboard" },
-  { label: "Record management", type: "label" },
+  // { label: "Code management", type: "label" },
+  // { name: "Indicators", path: "/indicators/code", icon: "equalizer" },
+  // { name: "Partners Code", path: "/partners/code", icon: "code" },
+  // { name: "Projects Code", path: "/projects/code", icon: "code" },
+  { label: "Tool management", type: "label" },
   { name: "Partners", path: "/partners/records", icon: "people" },
   { name: "Projects", path: "/projects/records", icon: "assignment" },
   {
@@ -28,10 +32,6 @@ export const melsa_navigations = [
     icon: "people_outline",
   },
   { name: "Activities", path: "/activity/records", icon: "settings" },
-  { label: "Code management", type: "label" },
-  { name: "Indicators", path: "/indicators/code", icon: "equalizer" },
-  { name: "Partners Code", path: "/partners/code", icon: "code" },
-  { name: "Projects Code", path: "/projects/code", icon: "code" },
 ];
 
 export const partners_navigations = [
@@ -43,6 +43,4 @@ export const partners_navigations = [
     icon: "people_outline",
   },
   { name: "Activities", path: "/activity/records", icon: "settings" },
-  { label: "Code management", type: "label" },
-  { name: "Indicators", path: "/indicators/code", icon: "equalizer" },
 ];

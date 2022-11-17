@@ -1,6 +1,6 @@
 export const inputFormElements = [
   {
-    name: "firstName",
+    name: "first_name",
     placeholder: "Enter first name",
     label: "First Name",
     variant: "outlined",
@@ -10,7 +10,7 @@ export const inputFormElements = [
     sm: 6,
   },
   {
-    name: "lastName",
+    name: "last_name",
     placeholder: "Enter last name",
     label: "Last Name",
     variant: "outlined",
@@ -20,7 +20,7 @@ export const inputFormElements = [
     sm: 6,
   },
   {
-    name: "userName",
+    name: "user_name",
     placeholder: "Enter complete name",
     label: "User Name",
     variant: "outlined",

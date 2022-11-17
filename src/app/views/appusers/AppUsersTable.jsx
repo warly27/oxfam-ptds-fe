@@ -11,6 +11,7 @@ import UsersData from "./usersdata";
 import axios from "../../utils/axios";
 
 import useAuth from "../../hooks/useAuth";
+import isEmpty from "lodash/isEmpty";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -53,26 +54,41 @@ const AppUsersTable = () => {
   const [userData, setUserData] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
+  const [userDetails, setUserDetails] = useState({});
 
-  const descriptionElementRef = useRef(null);
+  // const descriptionElementRef = useRef(null);
 
   const fetchAllUsers = useCallback(async () => {
     const getAllUsersResult = await axios.get(`${BASE_URL}/users/getAllUsers`);
     setUserData(getAllUsersResult?.data?.data);
   }, []);
 
+  const fetchUserDetails = useCallback(async () => {
+    const getPartnerCodeLookup = await axios.get(
+      `${BASE_URL}/user/${currentUser?.id}/details`
+    );
+
+    setUserDetails(getPartnerCodeLookup?.data?.data);
+  }, [currentUser]);
+
   useEffect(() => {
     fetchAllUsers();
   }, [fetchAllUsers]);
 
+  // useEffect(() => {
+  //   if (showModal) {
+  //     const { current: descriptionElement } = descriptionElementRef;
+  //     if (descriptionElement !== null) {
+  //       descriptionElement.focus();
+  //     }
+  //   }
+  // }, [showModal]);
+
   useEffect(() => {
-    if (showModal) {
-      const { current: descriptionElement } = descriptionElementRef;
-      if (descriptionElement !== null) {
-        descriptionElement.focus();
-      }
+    if (!isEmpty(currentUser)) {
+      fetchUserDetails();
     }
-  }, [showModal]);
+  }, [fetchUserDetails, currentUser]);
 
   const openModal = () => {
     setShowModal((prev) => !prev);
@@ -146,8 +162,11 @@ const AppUsersTable = () => {
       setShowModal(false);
       setIsEdit(false);
       setCurrentUser({});
+      setUserDetails({});
     }
   };
+
+  console.log("[userDetails]: ", userDetails);
 
   return (
     <Container>
@@ -188,8 +207,10 @@ const AppUsersTable = () => {
         handleCreateUser={handleCreateUser}
         isEdit={isEdit}
         setIsEdit={setIsEdit}
-        currentUser={currentUser}
+        currentUser={userDetails}
         handleEditUser={handleEditUser}
+        setUserDetails={setUserDetails}
+        setCurrentUser={setCurrentUser}
       />
     </Container>
   );
