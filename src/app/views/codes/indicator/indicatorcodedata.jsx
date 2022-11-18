@@ -1,35 +1,25 @@
 import React, { useState, useEffect, useCallback } from "react";
-
+import { ThemeProvider, createTheme } from "@mui/material";
 import MUIDataTable from "mui-datatables";
 import {
-  ThemeProvider,
-  createTheme,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableRow,
-  Paper,
 } from "@mui/material";
+import Paper from "@material-ui/core/Paper";
 import Button from "app/components/controls/Button";
-import CheckIcon from "@mui/icons-material/Check";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import ModeEditIcon from "@mui/icons-material/ModeEdit";
+
 import dayjs from "dayjs";
 
-const UsersData = ({
-  userData,
-  handleConfirmUser,
-  handleDeleteUser,
-  openModal,
-  setIsEdit,
-  setCurrentUser,
-}) => {
+const IndicatorsCodeData = ({ indicatorsCodeData, handleDeleteUser }) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    setData(userData);
-  }, [userData]);
+    setData(indicatorsCodeData);
+  }, [indicatorsCodeData]);
 
   const getMuiTheme = () =>
     createTheme({
@@ -48,12 +38,8 @@ const UsersData = ({
     console.log("value", value?.id);
   };
 
-  const onClickConfirmUser = (email) => {
-    handleConfirmUser(email);
-  };
-
-  const onClickDeleteUser = (cognitoId, email) => {
-    handleDeleteUser(cognitoId, email);
+  const onClickDeleteUser = (id) => {
+    handleDeleteUser(id);
   };
 
   const confirm = (value) => {
@@ -63,44 +49,37 @@ const UsersData = ({
   const columns = [
     {
       name: "id",
-      label: "ID",
+      label: "Code ID",
       options: {
         filter: true,
       },
     },
     {
-      name: "cognito_id",
-      label: "AWS ID",
+      name: "name",
+      label: "Indicator Name",
       options: {
         filter: true,
       },
     },
     {
-      name: "first_name",
-      label: "Name",
+      name: "code",
+      label: "Code",
       options: {
         filter: true,
       },
     },
     {
-      name: "last_name",
-      label: " ",
+      name: "creator_id",
+      label: "Created By",
       options: {
         filter: true,
       },
     },
     {
-      name: "email",
-      label: "email",
+      name: "creator_role",
+      label: "Creator Role",
       options: {
         filter: true,
-      },
-    },
-    {
-      name: "role",
-      label: "Role",
-      options: {
-        display: false,
       },
     },
     {
@@ -112,21 +91,21 @@ const UsersData = ({
     },
     {
       name: "is_deleted",
-      label: "Is Deleted",
+      label: "Is deleted?",
       options: {
         display: false,
       },
     },
     {
       name: "createdAt",
-      label: "Submitted",
+      label: "Created At",
       options: {
         display: false,
       },
     },
     {
       name: "updatedAt",
-      label: "Approve",
+      label: "Updated At",
       options: {
         display: false,
       },
@@ -154,64 +133,40 @@ const UsersData = ({
                   <TableBody>
                     <TableRow>
                       <TableCell component="th" scope="row" align="left">
-                        <strong>Role: </strong>
-                        {rowData[5]}
+                        <strong>Status:</strong>
+                        {rowData[5] === "0" ? "Assigned" : "Unassigned"}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="left">
-                        <strong>Status:</strong>{" "}
-                        {rowData[6] === "0" ? "For Approval" : "Approved"}
+                        <strong>Is Deleted?: </strong>
+                        {rowData[6] === "0" ? "Active" : "Deleted"}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="left">
-                        <strong>Is Deleted?:</strong>{" "}
-                        {rowData[7] === "0" ? "Active" : "Deleted"}
+                        <strong>Created At: </strong>
+                        {dayjs(rowData[7]).format("MM/DD/YYYY")}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="left">
-                        <strong>Submitted:</strong>{" "}
+                        <strong>Updated At: </strong>{" "}
                         {dayjs(rowData[8]).format("MM/DD/YYYY")}
                       </TableCell>
 
-                      <TableCell component="th" scope="row" align="left">
-                        <strong>Approved: </strong>{" "}
-                        {dayjs(rowData[9]).format("MM/DD/YYYY")}
-                      </TableCell>
-
-                      <TableCell component="th" scope="row" align="center">
+                      {/* <TableCell component="th" scope="row" align="center">
                         <Button
-                          onClick={() => onClickConfirmUser(rowData[4])}
+                          onClick={() => onClickConfirmUser(rowData[3])}
                           text={<CheckIcon />}
                           size="small"
-                          disabled={rowData[6] === "1" || rowData[7] === "1"}
+                          disabled={rowData[5] === "1"}
                         />
-                      </TableCell>
+                      </TableCell> */}
 
                       <TableCell component="th" scope="row" align="center">
                         <Button
-                          onClick={() => {
-                            setIsEdit(true);
-                            openModal();
-                            setCurrentUser(
-                              data.find(
-                                (dataItem) => dataItem.id === rowData[0]
-                              )
-                            );
-                          }}
-                          text={<ModeEditIcon />}
-                          size="small"
-                          disabled={rowData[7] === "1"}
-                        />
-                      </TableCell>
-
-                      <TableCell component="th" scope="row" align="center">
-                        <Button
-                          onClick={() =>
-                            onClickDeleteUser(rowData[1], rowData[4])
-                          }
+                          onClick={() => onClickDeleteUser(rowData[0])}
                           text={<DeleteOutlineIcon />}
                           size="small"
-                          disabled={rowData[7] === "1"}
+                          disabled={rowData[6] === "1"}
                         />
                       </TableCell>
                     </TableRow>
@@ -237,8 +192,9 @@ const UsersData = ({
   return (
     <div className="App">
       <ThemeProvider theme={getMuiTheme}>
+        {/* total amount of the current page: {total} */}
         <MUIDataTable
-          title={"App Users"}
+          title={"Indicator Code"}
           options={options}
           columns={columns}
           data={data}
@@ -248,4 +204,4 @@ const UsersData = ({
   );
 };
 
-export default UsersData;
+export default IndicatorsCodeData;

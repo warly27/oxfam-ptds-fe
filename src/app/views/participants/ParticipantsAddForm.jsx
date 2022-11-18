@@ -1,7 +1,7 @@
+import { useEffect, useState, useCallback } from "react";
 import { Button, Checkbox, Icon } from "@mui/material";
 import { Span } from "app/components/Typography";
-import { useEffect, useState } from "react";
-import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
+import { ValidatorForm } from "react-material-ui-form-validator";
 
 import Grid from "@mui/material/Grid";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -14,17 +14,75 @@ import FormLabel from "@mui/material/FormLabel";
 import Radio from "@mui/material/Radio";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
+import Autocomplete from "@mui/material/Autocomplete";
 
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
+import LoadingButton from "@mui/lab/LoadingButton";
+
 import isEmpty from "lodash/isEmpty";
 import dayjs from "dayjs";
+import axios from "../../utils/axios";
 
-import { faL } from "@fortawesome/free-solid-svg-icons";
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-const ParticipantsAddForm = ({ handleCreateParticipant }) => {
+const sectorData = [
+  {
+    value: "farmer",
+    label: "Farmer",
+  },
+  {
+    value: "fisher",
+    label: "Fisher",
+  },
+  {
+    value: "women",
+    label: "Women",
+  },
+  {
+    value: "pwd",
+    label: "PWD",
+  },
+  {
+    value: "senior_citizen",
+    label: "Senior Citizen ",
+  },
+  {
+    value: "youth",
+    label: "Youth",
+  },
+  {
+    value: "LGBTQIA+",
+    label: "LGBTQIA+",
+  },
+  {
+    value: "service_provider",
+    label: "Service Provider",
+  },
+  {
+    value: "CSOs",
+    label: "CSOs",
+  },
+  {
+    value: "private_sector",
+    label: "Private Sector",
+  },
+  {
+    value: "government",
+    label: "Government",
+  },
+  {
+    value: "others",
+    label: "Others",
+  },
+];
+
+const ParticipantsAddForm = ({
+  handleCreateParticipant,
+  setShowChildModal,
+}) => {
   const [firstName, setFirstName] = useState("");
   const [middleName, setMiddleName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -40,9 +98,90 @@ const ParticipantsAddForm = ({ handleCreateParticipant }) => {
   const [gender, setGender] = useState("");
   const [isPwd, setIsPwd] = useState(false);
   const [pwdStatus, setPwdStatus] = useState("");
-  const [civilStatus, setCivilStatus] = useState("");
+  const [civil_status, setCivilStatus] = useState("");
+  const [has_beneficiary, setHasBeneficiary] = useState(false);
+  const [sector, setSector] = useState("");
+  const [designation, setDesignation] = useState("");
+  const [organization, setOrganization] = useState("");
+  const [religion, setReligion] = useState("");
+  const [ethniciity, setEthniciity] = useState("");
 
   const [isEqualPassword, setIsEqualPassword] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [regionList, setRegionList] = useState([]);
+  const [provinceList, setProvinceList] = useState([]);
+  const [cityList, setCityList] = useState([]);
+  const [baranggayList, setBaramggayList] = useState([]);
+  const [region, setRegion] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
+  const [isLoadingList, setIsLoadingList] = useState(false);
+
+  const fetchRegionData = useCallback(async () => {
+    const getRegion = await axios.get(
+      `${BASE_URL}/lookup/location?type=region`
+    );
+
+    setRegionList(getRegion?.data);
+  }, []);
+
+  const fetchProvinceData = useCallback(async () => {
+    const getProvince = await axios.get(
+      `${BASE_URL}/lookup/location?type=province&region_code=${region}`
+    );
+
+    setProvinceList(getProvince?.data);
+  }, [region]);
+
+  const fetchCityData = useCallback(async () => {
+    const getCity = await axios.get(
+      `${BASE_URL}/lookup/location?type=city&region_code=${region}&province_code=${province}`
+    );
+
+    const moldData = getCity?.data.map((record) => ({
+      label: record?.name,
+      id: record?.id,
+    }));
+
+    setCityList(moldData);
+  }, [region, province]);
+
+  const fetchBaranggayData = useCallback(async () => {
+    setIsLoadingList(true);
+    const getBaranggay = await axios.get(
+      `${BASE_URL}/lookup/location?type=barangay&region_code=${region}&province_code=${province}&city_code=${selectedCity}`
+    );
+
+    const moldData = getBaranggay?.data.map((record) => ({
+      label: record?.name,
+      id: record?.id,
+    }));
+
+    setBaramggayList(moldData);
+    setIsLoadingList(false);
+  }, [region, province, selectedCity]);
+
+  useEffect(() => {
+    fetchRegionData();
+  }, []);
+
+  useEffect(() => {
+    if (!isEmpty(region)) {
+      fetchProvinceData();
+    }
+  }, [fetchProvinceData, region]);
+
+  useEffect(() => {
+    if (!isEmpty(province)) {
+      fetchCityData();
+    }
+  }, [fetchCityData, province]);
+
+  useEffect(() => {
+    if (!isEmpty(selectedCity)) {
+      fetchBaranggayData();
+    }
+  }, [fetchBaranggayData, selectedCity]);
 
   useEffect(() => {
     const hasPassword = !isEmpty(password);
@@ -54,9 +193,14 @@ const ParticipantsAddForm = ({ handleCreateParticipant }) => {
   }, [password, confirmPassword]);
 
   const handleSubmit = () => {
-    console.log("[age]", dayjs().diff(birthday, "year"));
+    setIsLoading(true);
 
-    handleCreateParticipant({
+    const findRegion = regionList.find((record) => record?.id === region);
+    const findProvince = provinceList.find((record) => record?.id === province);
+
+    console.log("[findProvince]", findProvince);
+
+    console.log("[payload]: ", {
       email,
       first_name: firstName,
       last_name: lastName,
@@ -65,29 +209,45 @@ const ParticipantsAddForm = ({ handleCreateParticipant }) => {
       date_of_birth: birthday.format("DD/MM/YYYY"),
       age: dayjs().diff(birthday, "year"),
       address,
-      civil_status: civilStatus,
+      civil_status: civil_status,
       baranggay,
       municipality,
-      province,
+      province: findProvince?.name,
       pwd_status: pwdStatus,
       contact_number: mobileNumber,
     });
-    console.log("[mock submit]");
+
+    // handleCreateParticipant({
+    //   email,
+    //   first_name: firstName,
+    //   last_name: lastName,
+    //   middle_name: middleName,
+    //   sex: gender,
+    //   date_of_birth: birthday.format("DD/MM/YYYY"),
+    //   age: dayjs().diff(birthday, "year"),
+    //   address,
+    //   civil_status: civil_status,
+    //   baranggay,
+    //   municipality,
+    //   province: findProvince?.name,
+    //   pwd_status: pwdStatus,
+    //   contact_number: mobileNumber,
+    // });
   };
 
   const handleChange = (event) => {
     console.log("[name]", event.target.name);
     console.log("[value]", event.target.value);
 
-    const isConfirmPassword = event?.target?.name === "confirmPassword";
-    if (isConfirmPassword) {
-      setConfirmPassword(event?.target?.value);
-    }
+    // const isConfirmPassword = event?.target?.name === "confirmPassword";
+    // if (isConfirmPassword) {
+    //   setConfirmPassword(event?.target?.value);
+    // }
 
-    const isPassword = event?.target?.name === "password";
-    if (isPassword) {
-      setPassword(event?.target?.value);
-    }
+    // const isPassword = event?.target?.name === "password";
+    // if (isPassword) {
+    //   setPassword(event?.target?.value);
+    // }
 
     const isFname = event?.target?.name === "firstName";
     if (isFname) {
@@ -153,6 +313,57 @@ const ParticipantsAddForm = ({ handleCreateParticipant }) => {
     if (isCivilStatus) {
       setCivilStatus(event?.target?.value);
     }
+
+    const isRegion = event?.target?.name === "region";
+    if (isRegion) {
+      setRegion(event?.target?.value);
+    }
+
+    const isHasBeneficiary = event?.target?.name === "has_beneficiary";
+    if (isHasBeneficiary) {
+      setHasBeneficiary(event?.target?.value);
+
+      const isYes = event?.target?.value === "true";
+
+      if (isYes) {
+        setShowChildModal(isYes);
+      }
+    }
+
+    const isSector = event?.target?.name === "sector";
+    if (isSector) {
+      setSector(event?.target?.value);
+    }
+
+    const isDesignation = event?.target?.name === "designation";
+    if (isDesignation) {
+      setDesignation(event?.target?.value);
+    }
+
+    const isOrganization = event?.target?.name === "organization";
+    if (isOrganization) {
+      setOrganization(event?.target?.value);
+    }
+
+    const isReligion = event?.target?.name === "religion";
+    if (isReligion) {
+      setReligion(event?.target?.value);
+    }
+
+    const isEthniciity = event?.target?.name === "ethniciity";
+    if (isEthniciity) {
+      setEthniciity(event?.target?.value);
+    }
+  };
+
+  const handleAutoCompleteChange = (_event, value) => {
+    setSelectedCity(value?.id);
+    setMunicipality(value?.label);
+  };
+
+  const handleBaranggayChange = (_event, value) => {
+    console.log("[setBaranggay]", value?.label);
+    setBaranggay(value?.label);
   };
 
   const handleDateChange = (date) => {
@@ -240,27 +451,23 @@ const ParticipantsAddForm = ({ handleCreateParticipant }) => {
               </Grid>
 
               <Grid item xs={12}>
-                <TextField
-                  error={!isEqualPassword}
-                  name="password"
-                  type="password"
-                  label="Password"
-                  onChange={handleChange}
-                  required={true}
-                  fullWidth={true}
-                />
-              </Grid>
+                <FormControl fullWidth>
+                  <FormLabel id="demo-simple-select-label">Gender</FormLabel>
 
-              <Grid item xs={12}>
-                <TextField
-                  error={!isEqualPassword}
-                  type="password"
-                  name="confirmPassword"
-                  onChange={handleChange}
-                  label="Confirm Password"
-                  required={true}
-                  fullWidth={true}
-                />
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    onChange={handleChange}
+                    name="gender"
+                  >
+                    <MenuItem value={"male"}>Male</MenuItem>
+                    <MenuItem value={"female"}>Female</MenuItem>
+                    <MenuItem value={"lesbian"}>Lesbian</MenuItem>
+                    <MenuItem value={"bisexual"}>Bisexual</MenuItem>
+                    <MenuItem value={"gay"}>Gay</MenuItem>
+                    <MenuItem value={"transgender"}>Transgender</MenuItem>
+                  </Select>
+                </FormControl>
               </Grid>
 
               <Grid item xs={12}>
@@ -275,72 +482,190 @@ const ParticipantsAddForm = ({ handleCreateParticipant }) => {
               </Grid>
 
               <Grid item xs={12}>
-                <TextField
-                  type="text"
-                  name="baranggay"
-                  onChange={handleChange}
-                  label="Baranggay"
-                  required={true}
-                  fullWidth={true}
-                />
+                <FormControl fullWidth>
+                  <FormLabel id="demo-simple-select-label">Region</FormLabel>
+
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    onChange={handleChange}
+                    name="region"
+                  >
+                    {regionList.map((record) => (
+                      <MenuItem value={record?.id} option={record}>
+                        {record?.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Grid>
 
               <Grid item xs={12}>
-                <TextField
-                  type="text"
+                <FormControl fullWidth>
+                  <FormLabel id="demo-simple-select-label">Province</FormLabel>
+
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    onChange={handleChange}
+                    name="province"
+                  >
+                    {provinceList.map((record) => (
+                      <MenuItem value={record?.id} option={record}>
+                        {record?.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12}>
+                <Autocomplete
+                  disablePortal
+                  id="municipality"
+                  options={cityList}
+                  fullWidth={true}
                   name="municipality"
-                  onChange={handleChange}
-                  label="Municipality"
-                  required={true}
+                  value={municipality}
+                  onChange={handleAutoCompleteChange}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      type="text"
+                      name="municipality"
+                      onChange={handleChange}
+                      label="Municipality"
+                      required={true}
+                      fullWidth={true}
+                    />
+                  )}
+                />
+
+                {/* <TextField /> */}
+              </Grid>
+
+              <Grid item xs={12}>
+                <Autocomplete
+                  disablePortal
+                  id="combo-box-demo"
+                  options={baranggayList}
                   fullWidth={true}
+                  value={baranggay}
+                  loading={isLoadingList}
+                  loadingText={"...Loading"}
+                  onChange={handleBaranggayChange}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      type="text"
+                      name="baranggay"
+                      onChange={handleChange}
+                      label="Baranggay"
+                      required={true}
+                      fullWidth={true}
+                    />
+                  )}
                 />
               </Grid>
 
               <Grid item xs={12}>
                 <TextField
                   type="text"
-                  name="province"
+                  name="designation"
                   onChange={handleChange}
-                  label="Province"
+                  label="Designation"
                   required={true}
                   fullWidth={true}
                 />
               </Grid>
 
               <Grid item xs={12}>
-                <FormControl>
-                  <FormLabel id="demo-radio-buttons-group-label">
-                    Gender
+                <FormControl fullWidth>
+                  <FormLabel id="demo-simple-select-label">Sector</FormLabel>
+
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    onChange={handleChange}
+                    name="sector"
+                  >
+                    {sectorData.map((data) => (
+                      <MenuItem value={data?.value}>{data?.label}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                  type="text"
+                  name="organization"
+                  onChange={handleChange}
+                  label="Organization"
+                  required={true}
+                  fullWidth={true}
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <FormControl fullWidth>
+                  <FormLabel id="demo-simple-select-label">Religion</FormLabel>
+
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    onChange={handleChange}
+                    name="religion"
+                  >
+                    <MenuItem value={"christian"}>Christian</MenuItem>
+                    <MenuItem value={"muslim"}>Muslim</MenuItem>
+                    <MenuItem value={"Others"}>Others</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={12}>
+                <FormControl fullWidth>
+                  <FormLabel id="demo-simple-select-label">
+                    Ethniciity
                   </FormLabel>
 
-                  <RadioGroup
-                    row
-                    name="gender"
-                    sx={{ mb: 2 }}
-                    // value={gender || ""}
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
                     onChange={handleChange}
+                    name="ethniciity"
                   >
-                    <FormControlLabel
-                      value="male"
-                      label="Male"
-                      labelPlacement="end"
-                      control={<Radio color="secondary" />}
-                    />
+                    <MenuItem value={"tagalog"}>Tagalog</MenuItem>
+                    <MenuItem value={"cebuano"}>Cebuano</MenuItem>
+                    <MenuItem value={"ilocano"}>Ilocano</MenuItem>
+                    <MenuItem value={"kapampangan"}>Kapampangan</MenuItem>
+                    <MenuItem value={"waray"}>Waray</MenuItem>
+                    <MenuItem value={"maguindanao"}>Maguindanao</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
 
-                    <FormControlLabel
-                      value="female"
-                      label="Female"
-                      labelPlacement="end"
-                      control={<Radio color="secondary" />}
-                    />
+              <Grid item xs={12}>
+                <FormControl fullWidth>
+                  <FormLabel id="demo-radio-buttons-group-label">
+                    Civil Status
+                  </FormLabel>
 
-                    <FormControlLabel
-                      value="others"
-                      label="Others"
-                      labelPlacement="end"
-                      control={<Radio color="secondary" />}
-                    />
-                  </RadioGroup>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    onChange={handleChange}
+                    name="civil_status"
+                  >
+                    <MenuItem value={"ingle"}>Single</MenuItem>
+                    <MenuItem value={"married"}>Married</MenuItem>
+                    <MenuItem value={"divorced"}>Divorced</MenuItem>
+                    <MenuItem value={"separated"}>Separated</MenuItem>
+                    <MenuItem value={"living_with_common_law_partner"}>
+                      Living with common-law partner
+                    </MenuItem>
+                  </Select>
                 </FormControl>
               </Grid>
 
@@ -415,32 +740,25 @@ const ParticipantsAddForm = ({ handleCreateParticipant }) => {
               <Grid item xs={12}>
                 <FormControl>
                   <FormLabel id="demo-radio-buttons-group-label">
-                    Civil Status
+                    Has Beneficiary?
                   </FormLabel>
 
                   <RadioGroup
                     row
-                    name="civilstatus"
+                    name="has_beneficiary"
                     sx={{ mb: 2 }}
                     onChange={handleChange}
                   >
                     <FormControlLabel
-                      value="single"
-                      label="Single"
+                      value={true}
+                      label="Yes"
                       labelPlacement="end"
                       control={<Radio color="secondary" />}
                     />
 
                     <FormControlLabel
-                      value="married"
-                      label="Married"
-                      labelPlacement="end"
-                      control={<Radio color="secondary" />}
-                    />
-
-                    <FormControlLabel
-                      value="widowed"
-                      label="Widowed"
+                      value={false}
+                      label="No"
                       labelPlacement="end"
                       control={<Radio color="secondary" />}
                     />
@@ -455,10 +773,15 @@ const ParticipantsAddForm = ({ handleCreateParticipant }) => {
             </Grid>
 
             <Grid align="right">
-              <Button color="primary" variant="contained" type="submit">
+              <LoadingButton
+                color="primary"
+                variant="contained"
+                type="submit"
+                loading={isLoading}
+              >
                 <Icon>send</Icon>
                 <Span sx={{ pl: 1, textTransform: "capitalize" }}>Submit</Span>
-              </Button>
+              </LoadingButton>
             </Grid>
           </CardContent>
         </Card>

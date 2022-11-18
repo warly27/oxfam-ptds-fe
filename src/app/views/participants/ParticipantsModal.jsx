@@ -1,9 +1,10 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import ParticipantsAddForm from "./ParticipantsAddForm";
+import ParticipantsBeneficiaryModal from "./ParticipantsBeneficiaryModal";
 
 const ParticipantsModal = ({
   showModal,
@@ -15,6 +16,8 @@ const ParticipantsModal = ({
     setShowModal((prev) => !prev);
   };
 
+  const [showChildModal, setShowChildModal] = useState(false);
+
   const descriptionElementRef = useRef(null);
   useEffect(() => {
     if (showModal) {
@@ -24,6 +27,8 @@ const ParticipantsModal = ({
       }
     }
   }, [showModal]);
+
+  console.log("[showChildModal]", showChildModal);
 
   return (
     <div>
@@ -43,10 +48,16 @@ const ParticipantsModal = ({
           >
             <ParticipantsAddForm
               handleCreateParticipant={handleCreateParticipant}
+              setShowChildModal={setShowChildModal}
             />
           </DialogContentText>
         </DialogContent>
       </Dialog>
+
+      <ParticipantsBeneficiaryModal
+        showChildModal={showChildModal}
+        setShowChildModal={setShowChildModal}
+      />
     </div>
   );
 };

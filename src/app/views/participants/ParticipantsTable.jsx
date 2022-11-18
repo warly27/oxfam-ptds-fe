@@ -69,15 +69,14 @@ const ParticipantsTable = () => {
     }
   };
 
-  const handleDeleteParticipant = async (cognitoId, email) => {
+  const handleDeleteParticipant = async (id) => {
     const payload = {
-      cognito_id: cognitoId,
-      email,
+      id,
     };
 
     const deleteRequest = await axios.delete(
       `${BASE_URL}/participants/delete`,
-      payload
+      { data: payload }
     );
 
     if (deleteRequest?.status === 200) {

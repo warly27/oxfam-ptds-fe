@@ -1,7 +1,4 @@
 import React, { useCallback } from "react";
-import { DatePicker } from "@mui/lab";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
 // import {
 // Grid,
 // TextField,
@@ -23,29 +20,37 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Icon from "@mui/material/Icon";
 import Button from "@mui/material/Button";
+import Autocomplete from "@mui/material/Autocomplete";
 
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import axios from "../../utils/axios";
 
+import LoadingButton from "@mui/lab/LoadingButton";
+import debounce from "lodash/debounce";
+import isEmpty from "lodash/isEmpty";
+
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-const PartnersAddForms = ({ handleCreatePartner }) => {
-  const [website, setWebsite] = useState("");
+const PartnersAddForms = ({ handleCreatePartner, partnerId }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [mobileNo, setMobileNo] = useState("");
-  const [companyName, setCompanyName] = useState("");
-  const [companyAddress, setCompanyAddress] = useState("");
+  const [first_name, setFirstName] = useState("");
+  const [last_name, setLastName] = useState("");
+  const [user_name, setUserName] = useState("");
   const [partnerCode, setPartnerCode] = useState("");
-  const [partnerCodeLookup, setPartnerCodeLookup] = useState([]);
+  const [projectCode, setProjectCode] = useState("");
+
+  const [projectCodeLookup, setProjectCodeLookup] = useState([]);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchPartnerCodeLookup = useCallback(async () => {
-    const getPartnerCodeLookup = await axios.get(
-      `${BASE_URL}/lookup/partner/codes`
+    const getAllCodesResult = await axios.get(
+      `${BASE_URL}/project/getPartnerProject?type=partner_id&id=${partnerId}`
     );
 
-    setPartnerCodeLookup(getPartnerCodeLookup?.data?.data);
+    setProjectCodeLookup(getAllCodesResult?.data?.data);
   }, []);
 
   useEffect(() => {
@@ -53,28 +58,15 @@ const PartnersAddForms = ({ handleCreatePartner }) => {
   }, []);
 
   const handleSubmit = async () => {
-    handleCreatePartner({
-      email,
-      website,
-      password,
-      mobileNo,
-      partnerCode,
-      companyName,
-      companyAddress,
-    });
+    setIsLoading(true);
 
-    // if (confirmRequest?.status === 200) {
-    //   fetchAllUsers();
-    // }
+    handleCreatePartner({
+      project_id: projectCode,
+    });
   };
 
   const handleChange = (event) => {
-    console.log("[event.target.name]", event.target.name);
-
-    const isWebsite = event.target.name === "companyWebsite";
-    if (isWebsite) {
-      setWebsite(event.target.value);
-    }
+    console.log("[event.target.name]", event.target.value);
 
     const isEmail = event.target.name === "email";
     if (isEmail) {
@@ -86,96 +78,64 @@ const PartnersAddForms = ({ handleCreatePartner }) => {
       setPassword(event.target.value);
     }
 
-    const isMobileNo = event.target.name === "phone";
-    if (isMobileNo) {
-      setMobileNo(event.target.value);
+    const isFirstName = event.target.name === "firstName";
+    if (isFirstName) {
+      setFirstName(event.target.value);
     }
 
-    const isCompanyName = event.target.name === "company";
-    if (isCompanyName) {
-      setCompanyName(event.target.value);
-    }
-
-    const isCompanyAddress = event.target.name === "companyAddress";
-    if (isCompanyAddress) {
-      setCompanyAddress(event.target.value);
+    const isLastName = event.target.name === "lastName";
+    if (isLastName) {
+      setLastName(event.target.value);
     }
 
     const isPartnerCode = event.target.name === "partnerCode";
     if (isPartnerCode) {
       setPartnerCode(event.target.value);
     }
-  };
 
-  const handleDateChange = (date) => {};
+    const isUsername = event.target.name === "userName";
+    if (isUsername) {
+      setUserName(event.target.value);
+    }
+
+    const isProject = event.target.name === "projectCode";
+    if (isProject) {
+      setProjectCode(event.target.value);
+    }
+  };
 
   const margin = { margin: "0 5px" };
 
   return (
     <div>
       <ValidatorForm onSubmit={handleSubmit} onError={() => null}>
-        <Card>
+        <Card style={{ minWidth: 400, maxWidth: 600, margin: "0 auto" }}>
           <CardContent>
             <Grid container rowSpacing={2}>
-              <Grid container item spacing={2}>
-                {inputFormElements.slice(3, 8).map((input) => (
-                  <Grid xs={input.xs} sm={input.sm} item>
-                    <TextField {...input} onChange={handleChange} />
-                  </Grid>
-                ))}
-              </Grid>
-
               <Grid container item>
                 <Grid xs={12} sm={12} item>
                   <FormControl fullWidth>
-                    <TextField
-                      name="companyWebsite"
-                      placeholder="Enter Company website"
-                      label="Company Website"
-                      variant="outlined"
-                      fullWidth={true}
-                      required={true}
-                      xs={12}
-                      sm={6}
-                      onChange={handleChange}
-                    />
-                  </FormControl>
-                </Grid>
-              </Grid>
+                    <InputLabel id="project-code-select-label">
+                      Project
+                    </InputLabel>
 
-              <Grid container item>
-                <Grid xs={12} sm={12} item>
-                  <FormControl fullWidth>
-                    <TextField
-                      name="partnerCode"
-                      placeholder="Partner Code"
-                      label="Partner Code"
-                      variant="outlined"
-                      fullWidth={true}
-                      required={true}
-                      xs={12}
-                      sm={6}
+                    <Select
+                      labelId="project-code-select-label"
+                      id="project-code-select"
+                      value={projectCode}
+                      label="Project Code"
                       onChange={handleChange}
-                    />
-
-                    {/* <Select
-                      labelId="partner-code-select-label"
-                      id="partner-code-select"
-                      value={partnerCode}
-                      label="Partner Code"
-                      onChange={handleChange}
-                      name="partnerCode"
+                      name="projectCode"
                     >
-                      {partnerCodeLookup.map((data) => (
-                        <MenuItem value={data?.code}>{data?.name}</MenuItem>
+                      {projectCodeLookup.map((data) => (
+                        <MenuItem value={data?.project_id}>
+                          {data?.project_title}
+                        </MenuItem>
                       ))}
-                    </Select> */}
+                    </Select>
                   </FormControl>
                 </Grid>
               </Grid>
-              {/* <Typography variant="body2" align="left" gutterBottom>
-                  Address :{' '}
-                </Typography> */}
 
               <Grid container item spacing={2}>
                 <Grid item xs={12} align="right">
@@ -187,12 +147,18 @@ const PartnersAddForms = ({ handleCreatePartner }) => {
                   >
                     Reset
                   </Button>
-                  <Button color="primary" variant="contained" type="submit">
+
+                  <LoadingButton
+                    color="primary"
+                    variant="contained"
+                    type="submit"
+                    loading={isLoading}
+                  >
                     <Icon>send</Icon>
                     <Span sx={{ pl: 1, textTransform: "capitalize" }}>
                       Submit
                     </Span>
-                  </Button>
+                  </LoadingButton>
                 </Grid>
               </Grid>
             </Grid>

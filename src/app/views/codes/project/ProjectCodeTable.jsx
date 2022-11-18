@@ -5,13 +5,13 @@ import { Box, styled, Icon } from "@mui/material";
 import { Breadcrumb } from "app/components";
 import Button from "@mui/material/Button";
 // import { OxFamLogo } from "app/components";
-import AppUserAddModal from "./AppUserAddModal";
+// import AppUserAddModal from "./AppUserAddModal";
 
-import UsersData from "./usersdata";
-import axios from "../../utils/axios";
+import PartnersCodeData from "./projectcodedata";
+import axios from "../../../utils/axios";
 
-import useAuth from "../../hooks/useAuth";
-import isEmpty from "lodash/isEmpty";
+import useAuth from "../../../hooks/useAuth";
+import ProjectsAddModal from "./ProjectsAddModal";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -47,77 +47,45 @@ const Container = styled("div")(({ theme }) => ({
 //   },
 // };
 
-const AppUsersTable = () => {
+const ProjectCodeTable = () => {
   const classes = useStyles();
   const { adminCreateUser } = useAuth();
   const [showModal, setShowModal] = useState(false);
-  const [userData, setUserData] = useState([]);
-  const [isEdit, setIsEdit] = useState(false);
-  const [currentUser, setCurrentUser] = useState({});
-  const [userDetails, setUserDetails] = useState({});
+  const [projectsCodeData, setProjectsCodeData] = useState([]);
 
-  // const descriptionElementRef = useRef(null);
+  const descriptionElementRef = useRef(null);
 
   const fetchAllUsers = useCallback(async () => {
-    const getAllUsersResult = await axios.get(`${BASE_URL}/users/getAllUsers`);
-    setUserData(getAllUsersResult?.data?.data);
-  }, []);
-
-  const fetchUserDetails = useCallback(async () => {
-    const getPartnerCodeLookup = await axios.get(
-      `${BASE_URL}/user/${currentUser?.id}/details`
+    const getPartnersCodeResult = await axios.get(
+      `${BASE_URL}/codes/getAllProjectCodes`
     );
-
-    setUserDetails(getPartnerCodeLookup?.data?.data);
-  }, [currentUser]);
+    setProjectsCodeData(getPartnersCodeResult?.data.data);
+  }, []);
 
   useEffect(() => {
     fetchAllUsers();
   }, [fetchAllUsers]);
 
-  // useEffect(() => {
-  //   if (showModal) {
-  //     const { current: descriptionElement } = descriptionElementRef;
-  //     if (descriptionElement !== null) {
-  //       descriptionElement.focus();
-  //     }
-  //   }
-  // }, [showModal]);
-
   useEffect(() => {
-    if (!isEmpty(currentUser)) {
-      fetchUserDetails();
+    if (showModal) {
+      const { current: descriptionElement } = descriptionElementRef;
+      if (descriptionElement !== null) {
+        descriptionElement.focus();
+      }
     }
-  }, [fetchUserDetails, currentUser]);
+  }, [showModal]);
 
   const openModal = () => {
     setShowModal((prev) => !prev);
   };
 
-  const handleCreateUser = async ({
-    email,
-    userName,
-    password,
-    fundSource,
-    partnerCode,
-    firstName,
-    lastName,
-    project_id,
-  }) => {
-    const adminCreateUserRequest = await adminCreateUser(
-      email,
-      userName,
-      password,
-      fundSource,
-      partnerCode,
-      firstName,
-      lastName,
-      project_id
+  const handleCreateProject = async (payload) => {
+    const createProject = await axios.post(
+      `${BASE_URL}/codes/createProjectCode`,
+      payload
     );
 
-    console.log("[adminCreateUserRequest]: ", adminCreateUserRequest);
-
-    if (adminCreateUserRequest?.status === 200) {
+    if (createProject?.status === 200) {
       fetchAllUsers();
       setShowModal(false);
     }
@@ -154,27 +122,29 @@ const AppUsersTable = () => {
     }
   };
 
-  const handleEditUser = async (payload) => {
-    const patchRequest = await axios.patch(`${BASE_URL}/user/edit`, payload);
+  const handleDeleteProjectCode = async (id, code) => {
+    const payload = {
+      id,
+      code,
+    };
 
-    if (patchRequest?.status === 200) {
+    const deleteRequest = await axios.delete(
+      `${BASE_URL}/project/deleteProject`,
+      { data: payload }
+    );
+
+    if (deleteRequest?.status === 200) {
       fetchAllUsers();
-      setShowModal(false);
-      setIsEdit(false);
-      setCurrentUser({});
-      setUserDetails({});
     }
   };
-
-  console.log("[userDetails]: ", userDetails);
 
   return (
     <Container>
       <Box className="breadcrumb" display="flex">
         <Breadcrumb
           routeSegments={[
-            { name: "App Users", path: "/appusers" },
-            { name: "Records" },
+            { name: "Partners Code", path: "/projects_code" },
+            { name: "Codes" },
           ]}
         />
         <Button
@@ -184,35 +154,26 @@ const AppUsersTable = () => {
           onClick={openModal}
         >
           <Icon>add</Icon>
-          <span>Users</span>
+          <span>Code</span>
         </Button>
       </Box>
 
       <Grid container spacing={4}>
         <Grid item xs={12}>
-          <UsersData
-            userData={userData}
+          <PartnersCodeData
+            projectsCodeData={projectsCodeData}
             handleConfirmUser={handleConfirmUser}
-            handleDeleteUser={handleDeleteUser}
-            openModal={openModal}
-            setIsEdit={setIsEdit}
-            setCurrentUser={setCurrentUser}
+            handleDeleteProjectCode={handleDeleteProjectCode}
           />
         </Grid>
       </Grid>
 
-      <AppUserAddModal
+      <ProjectsAddModal
         showModal={showModal}
         setShowModal={setShowModal}
-        handleCreateUser={handleCreateUser}
-        isEdit={isEdit}
-        setIsEdit={setIsEdit}
-        currentUser={userDetails}
-        handleEditUser={handleEditUser}
-        setUserDetails={setUserDetails}
-        setCurrentUser={setCurrentUser}
+        handleCreateProject={handleCreateProject}
       />
     </Container>
   );
 };
-export default AppUsersTable;
+export default ProjectCodeTable;

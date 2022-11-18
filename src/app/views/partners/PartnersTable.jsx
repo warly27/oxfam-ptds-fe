@@ -1,54 +1,13 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { Grid } from "@material-ui/core";
-import { makeStyles } from "@material-ui/styles";
 import { Box, styled, Icon } from "@mui/material";
 import { Breadcrumb } from "app/components";
-import Button from "@mui/material/Button";
 import PartnersAddModal from "./PartnersAddModal";
 import PartnersData from "./partnersdata";
 
 import axios from "../../utils/axios";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
-
-const review = () => {
-  console.log("TEST");
-};
-
-const columns = [
-  { name: "ID" },
-  { name: "Code" },
-  "Name",
-  "Address",
-  "Email",
-  "Website",
-  "Contact No",
-  "Create At",
-  {
-    name: "Actions",
-    options: {
-      customBodyRender: (value, tableMeta, updateValue) => {
-        return (
-          <Button variant="outlined" color="secondary" onClick={review}>
-            {`Review`}
-          </Button>
-        );
-      },
-    },
-  },
-];
-
-const useStyles = makeStyles((theme) => ({
-  tableOverflow: {
-    overflow: "auto",
-  },
-  addButton: {
-    position: "absolute",
-    color: "white",
-    size: "medium",
-    right: "25px",
-  },
-}));
 
 const Container = styled("div")(({ theme }) => ({
   margin: "30px",
@@ -63,22 +22,17 @@ const Container = styled("div")(({ theme }) => ({
   },
 }));
 
-const options = {
-  onRowsDelete: (rowsDeleted, dataRows) => {
-    console.log(dataRows[0]);
-    console.log(rowsDeleted.data);
-  },
-};
-
 const PartnersTable = () => {
-  const classes = useStyles();
   const [showModal, setShowModal] = useState(false);
   const [partnerList, setPartnerList] = useState([]);
+  const [currentSelectedUser, setCurrentSelectedUser] = useState({});
+  const [isEdit, setIsEdit] = useState(false);
 
   const fetchAllPartners = useCallback(async () => {
     const getAllUsersResult = await axios.get(
       `${BASE_URL}/partner/getAllPartners`
     );
+    console.log(getAllUsersResult.data);
     setPartnerList(getAllUsersResult?.data?.data);
   }, []);
 
@@ -86,27 +40,10 @@ const PartnersTable = () => {
     fetchAllPartners();
   }, [fetchAllPartners]);
 
-  const openModal = () => {
-    setShowModal((prev) => !prev);
-  };
-
-  const handleCreatePartner = async ({
-    email,
-    website,
-    password,
-    mobileNo,
-    partnerCode,
-    companyName,
-    companyAddress,
-  }) => {
+  const handleCreatePartner = async ({ project_id }) => {
     const payload = {
-      name: companyName,
-      email,
-      password,
-      contact_number: mobileNo,
-      website: website,
-      address: companyAddress,
-      code: partnerCode,
+      user_id: currentSelectedUser?.id,
+      project_id,
     };
 
     const confirmRequest = await axios.post(
@@ -166,7 +103,7 @@ const PartnersTable = () => {
             { name: "Records" },
           ]}
         />
-        <Button
+        {/* <Button
           variant="contained"
           color="success"
           className={classes.addButton}
@@ -174,7 +111,7 @@ const PartnersTable = () => {
         >
           <Icon>add</Icon>
           <span>Partners</span>
-        </Button>
+        </Button> */}
       </Box>
 
       <Grid container spacing={4}>
@@ -183,6 +120,9 @@ const PartnersTable = () => {
             partnerList={partnerList}
             handleConfirmUser={handleConfirmUser}
             handleDeleteUser={handleDeleteUser}
+            setShowModal={setShowModal}
+            setCurrentSelectedUser={setCurrentSelectedUser}
+            setIsEdit={setIsEdit}
           />
         </Grid>
       </Grid>
@@ -191,6 +131,8 @@ const PartnersTable = () => {
         showModal={showModal}
         setShowModal={setShowModal}
         handleCreatePartner={handleCreatePartner}
+        partnerId={currentSelectedUser?.partner_id}
+        isEdit={isEdit}
       />
     </Container>
   );

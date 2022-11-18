@@ -6,7 +6,7 @@ import { Card, Checkbox, Grid, TextField, Autocomplete } from "@mui/material";
 import { Box, styled } from "@mui/system";
 import { Paragraph } from "app/components/Typography";
 import useAuth from "app/hooks/useAuth";
-import { Formik } from "formik";
+import { Formik, Field } from "formik";
 import * as Yup from "yup";
 import CustomizedDialogs from "../mydialogbox/customDialog";
 
@@ -18,7 +18,7 @@ const FlexBox = styled(Box)(() => ({ display: "flex", alignItems: "center" }));
 const JustifyBox = styled(FlexBox)(() => ({ justifyContent: "center" }));
 
 const AutoComplete = styled(Autocomplete)(() => ({
-  width: 300,
+  width: "100%",
   marginBottom: "16px",
 }));
 
@@ -48,7 +48,9 @@ const initialValues = {
   email: "",
   password: "",
   user_name: "",
-  role: "",
+  last_name: "",
+  first_name: "",
+  role: null,
   remember: true,
 };
 
@@ -60,6 +62,8 @@ const validationSchema = Yup.object().shape({
   email: Yup.string()
     .email("Invalid Email address")
     .required("Email is required!"),
+  first_name: Yup.string().required("First name is required!"),
+  last_name: Yup.string().required("Last name is required!"),
 });
 
 const JwtRegister = () => {
@@ -75,7 +79,7 @@ const JwtRegister = () => {
 
   const fetchPartnerCodeLookup = useCallback(async () => {
     const getPartnerCodeLookup = await axios.get(
-      `${BASE_URL}/lookup/partner/codes`
+      `${BASE_URL}/codes/getAllPartnerCodes`
     );
 
     setPartnerCodeLookup(getPartnerCodeLookup?.data?.data);
@@ -86,15 +90,18 @@ const JwtRegister = () => {
   }, []);
 
   const handleFormSubmit = async (values) => {
+    console.log("[values]", values);
     setLoading(true);
 
     try {
       const response = await register(
         values.email,
-        values.user_name,
+        values.first_name,
+        values.last_name,
         values.password,
         role,
-        partnerCode
+        partnerCode,
+        values?.user_name
       );
 
       console.log(response);
@@ -160,17 +167,30 @@ const JwtRegister = () => {
                       fullWidth
                       size="small"
                       type="text"
-                      name="user_name"
-                      label="Username"
+                      name="first_name"
+                      label="First name"
                       variant="outlined"
                       onBlur={handleBlur}
-                      value={values.user_name}
+                      value={values.first_name}
                       onChange={handleChange}
-                      helperText={touched.user_name && errors.user_name}
-                      error={Boolean(errors.user_name && touched.user_name)}
+                      helperText={touched.first_name && errors.first_name}
+                      error={Boolean(errors.first_name && touched.first_name)}
                       sx={{ mb: 3 }}
                     />
-
+                    <TextField
+                      fullWidth
+                      size="small"
+                      type="text"
+                      name="last_name"
+                      label="Last name"
+                      variant="outlined"
+                      onBlur={handleBlur}
+                      value={values.last_name}
+                      onChange={handleChange}
+                      helperText={touched.last_name && errors.last_name}
+                      error={Boolean(errors.last_name && touched.last_name)}
+                      sx={{ mb: 3 }}
+                    />
                     <TextField
                       fullWidth
                       size="small"
@@ -199,7 +219,6 @@ const JwtRegister = () => {
                       error={Boolean(errors.password && touched.password)}
                       sx={{ mb: 2 }}
                     />
-
                     {/* <TextField
                       fullWidth
                       size="small"
@@ -241,14 +260,13 @@ const JwtRegister = () => {
                     {role === "partner" && (
                       <AutoComplete
                         options={partnerCodeLookup}
-                        getOptionLabel={(option) => option.name}
+                        getOptionLabel={(option) => option.code}
                         renderInput={(params) => (
                           <TextField
                             {...params}
                             label="Partner Code"
                             variant="outlined"
                             fullWidth
-                            //value={values.params}
                             inputValue={values.param}
                             onInputChange={values.param}
                             onChange={handleChange}
@@ -261,7 +279,22 @@ const JwtRegister = () => {
                         onChange={handleSelectCode}
                       />
                     )}
-
+                    {role === "partner" && (
+                      <TextField
+                        fullWidth
+                        size="small"
+                        type="text"
+                        name="user_name"
+                        label="Username"
+                        variant="outlined"
+                        onBlur={handleBlur}
+                        value={values.user_name}
+                        onChange={handleChange}
+                        helperText={touched.user_name && errors.user_name}
+                        error={Boolean(errors.user_name && touched.user_name)}
+                        sx={{ mb: 3 }}
+                      />
+                    )}
                     <FlexBox gap={1} alignItems="center">
                       <Checkbox
                         size="small"
@@ -275,7 +308,6 @@ const JwtRegister = () => {
                         I have read and agree to the terms of service.
                       </Paragraph>
                     </FlexBox>
-
                     <LoadingButton
                       type="submit"
                       color="success"
@@ -285,7 +317,6 @@ const JwtRegister = () => {
                     >
                       Regiser
                     </LoadingButton>
-
                     <Paragraph>
                       Already have an account?
                       <NavLink

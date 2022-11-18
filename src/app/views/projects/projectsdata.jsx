@@ -6,17 +6,11 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
   TableRow,
 } from "@mui/material";
-import axios from "../../utils/axios";
-// import { faL } from '@fortawesome/free-solid-svg-icons';
+import dayjs from "dayjs";
 
-const BASE_URL = process.env.REACT_APP_BASE_URL;
-
-const ProjectsData = () => {
-  const [data, setData] = useState();
-
+const ProjectsData = ({ partnerProjectList }) => {
   const getMuiTheme = () =>
     createTheme({
       components: {
@@ -29,22 +23,6 @@ const ProjectsData = () => {
         },
       },
     });
-
-  useEffect(() => {
-    axios
-      .get(`${BASE_URL}/project/getAllProjects`, {
-        headers: {
-          Authorization: `${window.localStorage.getItem("accessToken")}`,
-        },
-      })
-      .then((res) => {
-        console.log(res.data.data);
-        setData(res.data.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, [setData]);
 
   const handleClick = () => {
     console.log("handle Click");
@@ -66,38 +44,38 @@ const ProjectsData = () => {
       },
     },
     {
-      name: "code",
+      name: "project_code",
       label: "Project Code",
       options: {
         filter: true,
       },
     },
     {
-      name: "name",
+      name: "project_name",
       label: "Project Short Name",
       options: {
         filter: true,
       },
     },
     {
-      name: "title",
+      name: "project_title",
       label: "Project Title",
       options: {
         filter: true,
       },
     },
     {
-      name: "description",
-      label: "Description",
+      name: "partner_code",
+      label: "Partner Code",
       options: {
         filter: true,
       },
     },
     {
-      name: "type",
+      name: "project_type",
       label: "Type",
       options: {
-        filter: true,
+        display: false,
       },
     },
     {
@@ -122,7 +100,7 @@ const ProjectsData = () => {
       },
     },
     {
-      name: "status",
+      name: "project_status",
       label: "Status",
       options: {
         display: false,
@@ -136,14 +114,14 @@ const ProjectsData = () => {
       },
     },
     {
-      name: "start_date",
+      name: "project_start_date",
       label: "Start Date",
       options: {
         display: false,
       },
     },
     {
-      name: "end_date",
+      name: "project_end_date",
       label: "End Date",
       options: {
         display: false,
@@ -167,58 +145,28 @@ const ProjectsData = () => {
         <tr>
           <td colSpan={12}>
             <TableContainer>
-              <Table style={{ margin: "0 auto" }}>
-                <TableHead>
-                  <TableCell align="left">Portfolio</TableCell>
-                  <TableCell align="left">Fund Source</TableCell>
-                  <TableCell align="left">Budget</TableCell>
-                  <TableCell align="left">Status</TableCell>
-                  <TableCell align="left">Is Deleted?</TableCell>
-                  <TableCell align="left">Start Date</TableCell>
-                  <TableCell align="left">Created At</TableCell>
-                  <TableCell align="left">Actions</TableCell>
-                  {/* <TableCell align="right">Color</TableCell>
-                  <TableCell align="right">Size</TableCell> */}
-                </TableHead>
+              <Table>
                 <TableBody>
                   <TableRow>
                     <TableCell component="th" scope="row" align="left">
-                      {/* <strong>Is Deleted?:</strong> */}
-                      {rowData[7]}
+                      <strong>Project Type: </strong>
+                      {rowData[6]}
                     </TableCell>
+
                     <TableCell component="th" scope="row" align="left">
-                      {/* <strong>Is Deleted?:</strong> */}
-                      {rowData[8]}
+                      <strong>Status: </strong>
+                      {rowData[10]}
                     </TableCell>
+
                     <TableCell component="th" scope="row" align="left">
-                      {/* <strong>Is Deleted?:</strong> */}
-                      {rowData[9]}
+                      <strong>Start Date: </strong>
+                      {dayjs(rowData[12]).format("MM/DD/YYYY")}
                     </TableCell>
+
                     <TableCell component="th" scope="row" align="left">
-                      {/* <strong>Created At:</strong>  */}
-                      {rowData[10] === "0" ? "for approval" : "Approved"}
+                      <strong>End Date: </strong>
+                      {dayjs(rowData[13]).format("MM/DD/YYYY")}
                     </TableCell>
-                    <TableCell component="th" scope="row" align="left">
-                      {/* <strong>Updated At:</strong>  */}
-                      {rowData[11] === "0" ? "Active" : "Deleted"}
-                    </TableCell>
-                    <TableCell component="th" scope="row" align="left">
-                      {/* <strong>Created At:</strong>  */}
-                      {rowData[12]}
-                    </TableCell>
-                    <TableCell component="th" scope="row" align="left">
-                      {/* <strong>Updated At:</strong>  */}
-                      {rowData[13] === "0" ? "Active" : "Deleted"}
-                    </TableCell>
-                    <TableCell component="th" scope="row" align="left">
-                      {/* <strong>Created At:</strong>  */}
-                      {rowData[14]}
-                    </TableCell>
-                    <TableCell component="th" scope="row" align="left">
-                      <Icon> playlist_add </Icon>
-                    </TableCell>
-                    {/* <TableCell align="right">{row.color}</TableCell>
-                        <TableCell align="right">{row.size}</TableCell> */}
                   </TableRow>
                 </TableBody>
               </Table>
@@ -241,10 +189,10 @@ const ProjectsData = () => {
       <ThemeProvider theme={getMuiTheme}>
         {/* total amount of the current page: {total} */}
         <MUIDataTable
-          title={"App Projects"}
+          title={"Projects"}
           options={options}
           columns={columns}
-          data={data}
+          data={partnerProjectList}
         />
       </ThemeProvider>
     </div>

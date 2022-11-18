@@ -9,14 +9,21 @@ const MatxLayout = lazy(() =>
 );
 const DashboardModule = lazy(() => import("../../views/dashboard/Analytics"));
 
+const ProjectsModule = lazy(() => import("../../views/projects/ProjectsTable"));
+
 const privateRoutes = [...privateRoutesList];
 
-const PrivateRoutes = () => {
+const PrivateRoutes = ({ user }) => {
+  console.log("[user]: ", user);
   return (
     <Fragment>
       <Routes>
         <Route path="/" element={<MatxLayout />}>
-          <Route index element={<DashboardModule />} />
+          {user?.role === "partner" ? (
+            <Route index element={<ProjectsModule />} />
+          ) : (
+            <Route index element={<DashboardModule />} />
+          )}
           {privateRoutes.map((r) => {
             return (
               <Route

@@ -72,9 +72,19 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const register = async (email, user_name, password, role, partnerCode) => {
+  const register = async (
+    email,
+    first_name,
+    last_name,
+    password,
+    role,
+    partnerCode,
+    user_name
+  ) => {
     const response = await axios.post(`${BASE_URL}/auth/registration`, {
       email,
+      first_name,
+      last_name,
       user_name,
       password,
       role,
@@ -91,7 +101,10 @@ export const AuthProvider = ({ children }) => {
     user_name,
     password,
     role,
-    partnerCode
+    partnerCode,
+    firstName,
+    lastName,
+    project_id
   ) => {
     const response = await axios.post(`${BASE_URL}/admin/user/create`, {
       email,
@@ -99,6 +112,9 @@ export const AuthProvider = ({ children }) => {
       password,
       role,
       partnerCode,
+      first_name: firstName,
+      last_name: lastName,
+      project_id,
     });
 
     const { id } = response.data;

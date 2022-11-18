@@ -1,15 +1,21 @@
-import React, { useState, useRef, useEffect } from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import ProjectsAddFrom from './ProjectsAddForm';
-import { Typography } from '@material-ui/core';
+import React, { useState, useRef, useEffect } from "react";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import ProjectsAddFrom from "./ProjectsAddForm";
+import { Typography } from "@material-ui/core";
 
-const ProjectsAddModal = ({ showModal, setShowModal }) => {
-  console.log(showModal + ' from the modal component');
+const ProjectsAddModal = ({
+  showModal,
+  setShowModal,
+  partnerList,
+  projectList,
+  handleLinkPartnerProject,
+}) => {
+  console.log(showModal + " from the modal component");
   const handleClose = () => {
     setShowModal((prev) => !prev);
   };
@@ -35,7 +41,7 @@ const ProjectsAddModal = ({ showModal, setShowModal }) => {
       >
         <DialogTitle id="scroll-dialog-title">
           <Typography variant="h4" color="primary">
-            Create a Project
+            Link Partner Project
           </Typography>
         </DialogTitle>
         <DialogContent dividers>
@@ -44,7 +50,11 @@ const ProjectsAddModal = ({ showModal, setShowModal }) => {
             ref={descriptionElementRef}
             tabIndex={-1}
           >
-            <ProjectsAddFrom />
+            <ProjectsAddFrom
+              partnerList={partnerList}
+              projectList={projectList}
+              handleLinkPartnerProject={handleLinkPartnerProject}
+            />
           </DialogContentText>
         </DialogContent>
       </Dialog>
