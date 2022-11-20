@@ -16,10 +16,14 @@ import CheckIcon from "@mui/icons-material/Check";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import dayjs from "dayjs";
 
+import AddIcon from "@mui/icons-material/Add";
+
 const ProjectssCodeData = ({
   projectsCodeData,
   handleConfirmUser,
   handleDeleteProjectCode,
+  setCurrentId,
+  setShowAddModal,
 }) => {
   const [data, setData] = useState([]);
 
@@ -42,6 +46,9 @@ const ProjectssCodeData = ({
 
   const handleClick = (value) => {
     console.log("value", value?.id);
+
+    setCurrentId(value);
+    setShowAddModal(true);
   };
 
   const onClickConfirmUser = (email) => {
@@ -61,8 +68,8 @@ const ProjectssCodeData = ({
       },
     },
     {
-      name: "indicator",
-      label: "Indicator",
+      name: "name",
+      label: "Name",
       options: {
         filter: true,
       },
@@ -202,14 +209,14 @@ const ProjectssCodeData = ({
                         {dayjs(rowData[12]).format("MM/DD/YYYY")}
                       </TableCell>
 
-                      {/* <TableCell component="th" scope="row" align="center">
+                      <TableCell component="th" scope="row" align="center">
                         <Button
-                          onClick={() => onClickConfirmUser(rowData[3])}
-                          text={<CheckIcon />}
+                          onClick={() => handleClick(rowData[0])}
+                          text={<AddIcon />}
                           size="small"
                           disabled={rowData[5] === "1"}
                         />
-                      </TableCell> */}
+                      </TableCell>
 
                       <TableCell component="th" scope="row" align="center">
                         <Button
@@ -237,8 +244,6 @@ const ProjectssCodeData = ({
     onRowsExpand: (curExpanded, allExpanded) => {
       console.log("[curExpanded]", curExpanded);
       console.log("[allExpanded]", allExpanded);
-
-      handleClick();
     },
   };
   return (

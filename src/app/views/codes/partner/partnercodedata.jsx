@@ -92,6 +92,7 @@ const PartnersCodeData = ({
       label: "email",
       options: {
         filter: true,
+        display: false,
       },
     },
     {
@@ -151,15 +152,15 @@ const PartnersCodeData = ({
                 <Table>
                   <TableBody>
                     <TableRow>
-                      <TableCell component="th" scope="row" align="left">
+                      {/* <TableCell component="th" scope="row" align="left">
                         <strong>Website: </strong>
                         {rowData[5]}
-                      </TableCell>
+                      </TableCell> */}
 
-                      <TableCell component="th" scope="row" align="left">
+                      {/* <TableCell component="th" scope="row" align="left">
                         <strong>Contact number: </strong>
                         {rowData[6]}
-                      </TableCell>
+                      </TableCell> */}
 
                       <TableCell component="th" scope="row" align="left">
                         <strong>Created By: </strong>

@@ -1,8 +1,7 @@
 import { Span } from "app/components/Typography";
-import { useEffect, useState } from "react";
-import { ValidatorForm } from "react-material-ui-form-validator";
-import * as React from "react";
+import { useState } from "react";
 
+import { ValidatorForm } from "react-material-ui-form-validator";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";

@@ -11,12 +11,9 @@ const ParticipantsModal = ({
   setShowModal,
   handleCreateParticipant,
 }) => {
-  console.log(showModal + " from the modal component");
-  const handleClose = () => {
-    setShowModal((prev) => !prev);
-  };
-
   const [showChildModal, setShowChildModal] = useState(false);
+  const [numberOfBeneficiary, setNumberOfBeneficiary] = useState(0);
+  const [beneficiariesData, setBeneficiariesData] = useState([]);
 
   const descriptionElementRef = useRef(null);
   useEffect(() => {
@@ -27,6 +24,10 @@ const ParticipantsModal = ({
       }
     }
   }, [showModal]);
+
+  const handleClose = () => {
+    setShowModal((prev) => !prev);
+  };
 
   console.log("[showChildModal]", showChildModal);
 
@@ -49,6 +50,8 @@ const ParticipantsModal = ({
             <ParticipantsAddForm
               handleCreateParticipant={handleCreateParticipant}
               setShowChildModal={setShowChildModal}
+              setNumberOfBeneficiary={setNumberOfBeneficiary}
+              beneficiariesData={beneficiariesData}
             />
           </DialogContentText>
         </DialogContent>
@@ -57,6 +60,8 @@ const ParticipantsModal = ({
       <ParticipantsBeneficiaryModal
         showChildModal={showChildModal}
         setShowChildModal={setShowChildModal}
+        numberOfBeneficiary={numberOfBeneficiary}
+        setBeneficiariesData={setBeneficiariesData}
       />
     </div>
   );

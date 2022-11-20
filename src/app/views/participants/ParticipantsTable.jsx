@@ -8,6 +8,7 @@ import ParticipantsModal from "./ParticipantsModal";
 import ParticipantsData from "./ParticipantsData";
 
 import axios from "../../utils/axios";
+import BeneficiaryModal from "./BeneficiaryModal";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -39,7 +40,9 @@ const Container = styled("div")(({ theme }) => ({
 const ParticipantsTable = () => {
   const classes = useStyles();
   const [showModal, setShowModal] = useState(false);
+  const [showBeneficiaryModal, setShowBeneficiaryModal] = useState(false);
   const [participantsData, setParticipantsData] = useState([]);
+  const [currentUser, setCurrentUser] = useState("");
 
   const fetchParticipantsData = useCallback(async () => {
     const getAllUsersResult = await axios.get(`${BASE_URL}/participants`);
@@ -84,6 +87,8 @@ const ParticipantsTable = () => {
     }
   };
 
+  console.log("setShowBeneficiaryModal", setShowBeneficiaryModal);
+
   return (
     <Container>
       <Box className="breadcrumb" display="flex">
@@ -109,6 +114,8 @@ const ParticipantsTable = () => {
           <ParticipantsData
             participantsData={participantsData}
             handleDeleteParticipant={handleDeleteParticipant}
+            setShowBeneficiaryModal={setShowBeneficiaryModal}
+            setCurrentUser={setCurrentUser}
           />
         </Grid>
       </Grid>
@@ -117,6 +124,12 @@ const ParticipantsTable = () => {
         showModal={showModal}
         setShowModal={setShowModal}
         handleCreateParticipant={handleCreateParticipant}
+      />
+
+      <BeneficiaryModal
+        showBeneficiaryModal={showBeneficiaryModal}
+        setShowBeneficiaryModal={setShowBeneficiaryModal}
+        currentUser={currentUser}
       />
     </Container>
   );

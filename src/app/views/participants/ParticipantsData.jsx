@@ -10,16 +10,16 @@ import {
 } from "@mui/material";
 import Paper from "@material-ui/core/Paper";
 import Button from "app/components/controls/Button";
-import CheckIcon from "@mui/icons-material/Check";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 import daysJs from "dayjs";
 
 const ParticipantsData = ({
   participantsData,
   handleDeleteParticipant,
-  // handleConfirmUser,
-  // handleDeleteUser,
+  setShowBeneficiaryModal,
+  setCurrentUser,
 }) => {
   const [data, setData] = useState([]);
 
@@ -52,8 +52,9 @@ const ParticipantsData = ({
     handleDeleteParticipant(id);
   };
 
-  const confirm = (value) => {
-    console.log(value);
+  const confirm = (id) => {
+    setShowBeneficiaryModal(true);
+    setCurrentUser(id);
   };
 
   const columns = [
@@ -65,7 +66,7 @@ const ParticipantsData = ({
       },
     },
     {
-      name: "participant_name",
+      name: "first_name",
       label: "Name",
       options: {
         filter: true,
@@ -100,14 +101,14 @@ const ParticipantsData = ({
       },
     },
     {
-      name: "birthday",
+      name: "dob",
       label: "Birthday",
       options: {
         display: false,
       },
     },
     {
-      name: "sex",
+      name: "gender",
       label: "Gender",
       options: {
         display: false,
@@ -121,7 +122,7 @@ const ParticipantsData = ({
       },
     },
     {
-      name: "with_disability",
+      name: "pwd_status",
       label: "PWD",
       options: {
         display: false,
@@ -194,15 +195,15 @@ const ParticipantsData = ({
                         <strong>Approved:</strong>{" "}
                         {daysJs(rowData[11]).format("DD/MM/YYYY")}
                       </TableCell>
-                      {/* 
+
                       <TableCell component="th" scope="row" align="center">
                         <Button
-                          onClick={() => onClickConfirmUser(rowData[3])}
-                          text={<CheckIcon />}
+                          onClick={() => confirm(rowData[0])}
+                          text={<VisibilityIcon />}
                           size="small"
                           disabled={rowData[5] === "1"}
                         />
-                      </TableCell> */}
+                      </TableCell>
 
                       <TableCell component="th" scope="row" align="center">
                         <Button

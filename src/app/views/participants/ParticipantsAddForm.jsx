@@ -25,6 +25,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import isEmpty from "lodash/isEmpty";
 import dayjs from "dayjs";
 import axios from "../../utils/axios";
+import { isNumber } from "lodash";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -82,6 +83,8 @@ const sectorData = [
 const ParticipantsAddForm = ({
   handleCreateParticipant,
   setShowChildModal,
+  setNumberOfBeneficiary,
+  beneficiariesData,
 }) => {
   const [firstName, setFirstName] = useState("");
   const [middleName, setMiddleName] = useState("");
@@ -106,7 +109,6 @@ const ParticipantsAddForm = ({
   const [religion, setReligion] = useState("");
   const [ethniciity, setEthniciity] = useState("");
 
-  const [isEqualPassword, setIsEqualPassword] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
   const [regionList, setRegionList] = useState([]);
@@ -116,6 +118,8 @@ const ParticipantsAddForm = ({
   const [region, setRegion] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
   const [isLoadingList, setIsLoadingList] = useState(false);
+  const [showNumberBeneficiary, setShowNumberBeneficiary] = useState(false);
+  const [number_of_beneficiary, setNumberBeneficiary] = useState(0);
 
   const fetchRegionData = useCallback(async () => {
     const getRegion = await axios.get(
@@ -183,17 +187,17 @@ const ParticipantsAddForm = ({
     }
   }, [fetchBaranggayData, selectedCity]);
 
-  useEffect(() => {
-    const hasPassword = !isEmpty(password);
-    const hasConfirmPassword = !isEmpty(confirmPassword);
+  // useEffect(() => {
+  //   const hasPassword = !isEmpty(password);
+  //   const hasConfirmPassword = !isEmpty(confirmPassword);
 
-    if (hasPassword && hasConfirmPassword) {
-      setIsEqualPassword(password === confirmPassword);
-    }
-  }, [password, confirmPassword]);
+  //   if (hasPassword && hasConfirmPassword) {
+  //     setIsEqualPassword(password === confirmPassword);
+  //   }
+  // }, [password, confirmPassword]);
 
   const handleSubmit = () => {
-    setIsLoading(true);
+    // setIsLoading(true);
 
     const findRegion = regionList.find((record) => record?.id === region);
     const findProvince = provinceList.find((record) => record?.id === province);
@@ -215,39 +219,49 @@ const ParticipantsAddForm = ({
       province: findProvince?.name,
       pwd_status: pwdStatus,
       contact_number: mobileNumber,
+      number_of_beneficiary,
+      has_beneficiary,
+      sector,
+      designation,
+      organization,
+      religion,
+      ethniciity,
+      beneficiaries: beneficiariesData,
     });
 
-    // handleCreateParticipant({
-    //   email,
-    //   first_name: firstName,
-    //   last_name: lastName,
-    //   middle_name: middleName,
-    //   sex: gender,
-    //   date_of_birth: birthday.format("DD/MM/YYYY"),
-    //   age: dayjs().diff(birthday, "year"),
-    //   address,
-    //   civil_status: civil_status,
-    //   baranggay,
-    //   municipality,
-    //   province: findProvince?.name,
-    //   pwd_status: pwdStatus,
-    //   contact_number: mobileNumber,
-    // });
+    console.log("[beneficiariesData]", beneficiariesData);
+
+    handleCreateParticipant({
+      email,
+      first_name: firstName,
+      last_name: lastName,
+      middle_name: middleName,
+      sex: gender,
+      gender,
+      date_of_birth: birthday.format("DD/MM/YYYY"),
+      age: dayjs().diff(birthday, "year"),
+      house_number: address,
+      civil_status,
+      barangay: baranggay,
+      municipality,
+      // province: findProvince?.name,
+      province: "test",
+      pwd_status: pwdStatus,
+      contact_number: mobileNumber,
+      number_of_beneficiary,
+      has_beneficiary: has_beneficiary ? "yes" : "no",
+      sector,
+      designation,
+      organization,
+      religion,
+      ethniciity,
+      beneficiaries: beneficiariesData,
+    });
   };
 
   const handleChange = (event) => {
     console.log("[name]", event.target.name);
     console.log("[value]", event.target.value);
-
-    // const isConfirmPassword = event?.target?.name === "confirmPassword";
-    // if (isConfirmPassword) {
-    //   setConfirmPassword(event?.target?.value);
-    // }
-
-    // const isPassword = event?.target?.name === "password";
-    // if (isPassword) {
-    //   setPassword(event?.target?.value);
-    // }
 
     const isFname = event?.target?.name === "firstName";
     if (isFname) {
@@ -309,7 +323,7 @@ const ParticipantsAddForm = ({
       setPwdStatus(event?.target?.value);
     }
 
-    const isCivilStatus = event?.target?.name === "civilstatus";
+    const isCivilStatus = event?.target?.name === "civil_status";
     if (isCivilStatus) {
       setCivilStatus(event?.target?.value);
     }
@@ -326,7 +340,19 @@ const ParticipantsAddForm = ({
       const isYes = event?.target?.value === "true";
 
       if (isYes) {
-        setShowChildModal(isYes);
+        setShowNumberBeneficiary(isYes);
+      }
+    }
+
+    const isNumberBeneficiary = event?.target?.name === "no_of_beneficiary";
+    if (isNumberBeneficiary) {
+      const value = parseInt(event?.target?.value, 10);
+      const hasNumber = isNumber(value) && !isNaN(value);
+
+      if (hasNumber) {
+        setShowChildModal(true);
+        setNumberOfBeneficiary(value);
+        setNumberBeneficiary(value);
       }
     }
 
@@ -362,7 +388,6 @@ const ParticipantsAddForm = ({
   };
 
   const handleBaranggayChange = (_event, value) => {
-    console.log("[setBaranggay]", value?.label);
     setBaranggay(value?.label);
   };
 
@@ -535,7 +560,7 @@ const ParticipantsAddForm = ({
                       name="municipality"
                       onChange={handleChange}
                       label="Municipality"
-                      required={true}
+                      // required={true}
                       fullWidth={true}
                     />
                   )}
@@ -561,7 +586,7 @@ const ParticipantsAddForm = ({
                       name="baranggay"
                       onChange={handleChange}
                       label="Baranggay"
-                      required={true}
+                      // required={true}
                       fullWidth={true}
                     />
                   )}
@@ -765,6 +790,19 @@ const ParticipantsAddForm = ({
                   </RadioGroup>
                 </FormControl>
               </Grid>
+
+              {showNumberBeneficiary && (
+                <Grid item xs={12}>
+                  <TextField
+                    type="text"
+                    name="no_of_beneficiary"
+                    onChange={handleChange}
+                    label="NO. of beneficiary"
+                    required={true}
+                    fullWidth={true}
+                  />
+                </Grid>
+              )}
 
               <FormControlLabel
                 control={<Checkbox />}

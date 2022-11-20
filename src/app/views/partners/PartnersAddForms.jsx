@@ -51,11 +51,11 @@ const PartnersAddForms = ({ handleCreatePartner, partnerId }) => {
     );
 
     setProjectCodeLookup(getAllCodesResult?.data?.data);
-  }, []);
+  }, [partnerId]);
 
   useEffect(() => {
     fetchPartnerCodeLookup();
-  }, []);
+  }, [fetchPartnerCodeLookup]);
 
   const handleSubmit = async () => {
     setIsLoading(true);

@@ -29,20 +29,30 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import isEmpty from "lodash/isEmpty";
 import dayjs from "dayjs";
 
-const ParticipantBeneficiaryModal = ({ showChildModal, setShowChildModal }) => {
+const ParticipantBeneficiaryModal = ({
+  showChildModal,
+  setShowChildModal,
+  numberOfBeneficiary,
+  setBeneficiariesData,
+}) => {
   const [firstName, setFirstName] = useState("");
   const [middleName, setMiddleName] = useState("");
   const [lastName, setLastName] = useState("");
   const [birthday, setBirthday] = useState(null);
-  const [email, setEmail] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [gender, setGender] = useState("");
-  const [isPwd, setIsPwd] = useState(false);
-  const [pwdStatus, setPwdStatus] = useState("");
   const [civil_status, setCivilStatus] = useState("");
+
+  const [relationship, setRelationship] = useState("");
+  const [source_of_income, setSourceOfIncome] = useState("");
+  const [nature_of_work, setNatureOfWork] = useState("");
+  const [vulnerability, setVulnerability] = useState("");
+  const [primary_id, setPrimaryId] = useState("");
+  const [id_number, setIdNumber] = useState("");
+
   const [isLoading, setIsLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [beneficiaries, setBeneficiaries] = useState([]);
 
   const handleClose = () => {
     setShowChildModal((prev) => !prev);
@@ -77,11 +87,6 @@ const ParticipantBeneficiaryModal = ({ showChildModal, setShowChildModal }) => {
       setLastName(event?.target?.value);
     }
 
-    const isEmail = event?.target?.name === "email";
-    if (isEmail) {
-      setEmail(event?.target?.value);
-    }
-
     const isMobile = event?.target?.name === "mobile";
     if (isMobile) {
       setMobileNumber(event?.target?.value);
@@ -92,47 +97,73 @@ const ParticipantBeneficiaryModal = ({ showChildModal, setShowChildModal }) => {
       setGender(event?.target?.value);
     }
 
-    const isPwd = event?.target?.name === "isPwd";
-    if (isPwd) {
-      setIsPwd(event?.target?.value === "true");
-    }
-
-    const isPwdStatus = event?.target?.name === "pwdStatus";
-    if (isPwdStatus) {
-      setPwdStatus(event?.target?.value);
-    }
-
-    const isCivilStatus = event?.target?.name === "civilstatus";
+    const isCivilStatus = event?.target?.name === "civil_status";
     if (isCivilStatus) {
       setCivilStatus(event?.target?.value);
+    }
+
+    const isRelationship = event?.target?.name === "relationship";
+    if (isRelationship) {
+      setRelationship(event?.target?.value);
+    }
+
+    const isNatureOfWork = event?.target?.name === "nature_of_work";
+    if (isNatureOfWork) {
+      setNatureOfWork(event?.target?.value);
+    }
+
+    const isVulnerability = event?.target?.name === "vulnerability";
+    if (isVulnerability) {
+      setVulnerability(event?.target?.value);
+    }
+
+    const isPrimaryId = event?.target?.name === "primary_id";
+    if (isPrimaryId) {
+      setPrimaryId(event?.target?.value);
+    }
+
+    const isIdNumber = event?.target?.name === "id_number";
+    if (isIdNumber) {
+      setIdNumber(event?.target?.value);
+    }
+
+    const isSourceOfIncome = event?.target?.name === "source_of_income";
+    if (isSourceOfIncome) {
+      setSourceOfIncome(event?.target?.value);
     }
   };
 
   const handleSubmit = () => {
-    // setIsLoading(true);
-    // const findRegion = regionList.find((record) => record?.id === region);
-    // const findProvince = provinceList.find((record) => record?.id === province);
-    // console.log("[findProvince]", findProvince);
-    // console.log("[payload]: ", {
-    //   email,
-    //   first_name: firstName,
-    //   last_name: lastName,
-    //   middle_name: middleName,
-    //   sex: gender,
-    //   date_of_birth: birthday.format("DD/MM/YYYY"),
-    //   age: dayjs().diff(birthday, "year"),
-    //   address,
-    //   civil_status: civilStatus,
-    //   baranggay,
-    //   municipality,
-    //   province: findProvince?.name,
-    //   pwd_status: pwdStatus,
-    //   contact_number: mobileNumber,
-    // });
+    console.log("[beneficiaries]:", beneficiaries);
+    setBeneficiariesData(beneficiaries);
+    setShowChildModal(false);
   };
 
   const handleDateChange = (date) => {
     setBirthday(date);
+  };
+
+  const handleNext = () => {
+    setBeneficiaries((benficiary) => [
+      {
+        first_name: firstName,
+        last_name: lastName,
+        middle_name: middleName,
+        gender,
+        date_of_birth: birthday.format("DD/MM/YYYY"),
+        age: dayjs().diff(birthday, "year"),
+        civil_status,
+        relationship,
+        source_of_income,
+        nature_of_work,
+        vulnerability,
+        mobile_wallet: mobileNumber,
+        primary_id,
+        id_number,
+        id_img_location: "",
+      },
+      ...benficiary,
+    ]);
   };
 
   return (
@@ -160,7 +191,7 @@ const ParticipantBeneficiaryModal = ({ showChildModal, setShowChildModal }) => {
                         <TextField
                           sm={12}
                           type="text"
-                          name="firstName"
+                          name="first_name"
                           label="First Name"
                           onChange={handleChange}
                           required={true}
@@ -172,7 +203,7 @@ const ParticipantBeneficiaryModal = ({ showChildModal, setShowChildModal }) => {
                         <TextField
                           sm={12}
                           type="text"
-                          name="middleName"
+                          name="middle_name"
                           label="Middle Name"
                           onChange={handleChange}
                           required={true}
@@ -184,7 +215,7 @@ const ParticipantBeneficiaryModal = ({ showChildModal, setShowChildModal }) => {
                         <TextField
                           sm={12}
                           type="text"
-                          name="lastName"
+                          name="last_name"
                           label="Last Name"
                           onChange={handleChange}
                           required={true}
@@ -209,17 +240,6 @@ const ParticipantBeneficiaryModal = ({ showChildModal, setShowChildModal }) => {
                       </Grid>
 
                       <Grid item xs={12}>
-                        <TextField
-                          type="number"
-                          name="mobile"
-                          label="Mobile Nubmer"
-                          onChange={handleChange}
-                          required={true}
-                          fullWidth={true}
-                        />
-                      </Grid>
-
-                      <Grid item xs={12}>
                         <FormControl fullWidth>
                           <FormLabel id="demo-radio-buttons-group-label">
                             Civil Status
@@ -231,7 +251,7 @@ const ParticipantBeneficiaryModal = ({ showChildModal, setShowChildModal }) => {
                             onChange={handleChange}
                             name="civil_status"
                           >
-                            <MenuItem value={"ingle"}>Single</MenuItem>
+                            <MenuItem value={"single"}>Single</MenuItem>
                             <MenuItem value={"married"}>Married</MenuItem>
                             <MenuItem value={"divorced"}>Divorced</MenuItem>
                             <MenuItem value={"separated"}>Separated</MenuItem>
@@ -241,17 +261,6 @@ const ParticipantBeneficiaryModal = ({ showChildModal, setShowChildModal }) => {
                           </Select>
                         </FormControl>
                       </Grid>
-
-                      {/* <Grid item xs={12}>
-                        <TextField
-                          type="email"
-                          name="email"
-                          label="Email"
-                          onChange={handleChange}
-                          required={true}
-                          fullWidth={true}
-                        />
-                      </Grid> */}
 
                       <Grid item xs={12}>
                         <FormControl fullWidth>
@@ -278,14 +287,48 @@ const ParticipantBeneficiaryModal = ({ showChildModal, setShowChildModal }) => {
                       </Grid>
 
                       <Grid item xs={12}>
-                        <TextField
-                          type="text"
-                          name="relationship"
-                          onChange={handleChange}
-                          label="Relationship"
-                          required={true}
-                          fullWidth={true}
-                        />
+                        <FormControl fullWidth>
+                          <FormLabel id="demo-simple-select-label">
+                            Mobile Wallet
+                          </FormLabel>
+
+                          <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            onChange={handleChange}
+                            name="mobile"
+                          >
+                            <MenuItem value={"maya"}>Maya</MenuItem>
+                            <MenuItem value={"gcash"}>Gcash</MenuItem>
+                            <MenuItem value={"grabpay"}>GrabPay</MenuItem>
+                            <MenuItem value={"paypal"}>PayPal</MenuItem>
+                            <MenuItem value={"dragonpay"}>DragonPay</MenuItem>
+                            <MenuItem value={"Others"}>Others</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Grid>
+
+                      <Grid item xs={12}>
+                        <FormControl fullWidth>
+                          <FormLabel id="demo-simple-select-label">
+                            Relationship
+                          </FormLabel>
+
+                          <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            onChange={handleChange}
+                            name="relationship"
+                          >
+                            <MenuItem value={"married"}>Married</MenuItem>
+                            <MenuItem value={"living_with_common_law_partner"}>
+                              Living with common-law partner
+                            </MenuItem>
+                            <MenuItem value={"separated"}>Separated</MenuItem>
+                            <MenuItem value={"divorced"}>Divorced</MenuItem>
+                            <MenuItem value={"single"}>Single</MenuItem>
+                          </Select>
+                        </FormControl>
                       </Grid>
 
                       <Grid item xs={12}>
@@ -298,6 +341,99 @@ const ParticipantBeneficiaryModal = ({ showChildModal, setShowChildModal }) => {
                           fullWidth={true}
                         />
                       </Grid>
+
+                      <Grid item xs={12}>
+                        <TextField
+                          type="text"
+                          name="source_of_income"
+                          onChange={handleChange}
+                          label="Source of income"
+                          required={true}
+                          fullWidth={true}
+                        />
+                      </Grid>
+
+                      <Grid item xs={12}>
+                        <FormControl fullWidth>
+                          <FormLabel id="demo-simple-select-label">
+                            Vulnerability
+                          </FormLabel>
+
+                          <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            onChange={handleChange}
+                            name="vulnerability"
+                          >
+                            <MenuItem value={"single_parent"}>
+                              Single Parent
+                            </MenuItem>
+                            <MenuItem value={"child_headed"}>
+                              Child Headed
+                            </MenuItem>
+                            <MenuItem value={"lactating"}>Lactating</MenuItem>
+                            <MenuItem value={"PWD"}>PWD</MenuItem>
+                            <MenuItem value={"senior_citizen"}>
+                              Senior Citizen
+                            </MenuItem>
+                            <MenuItem value={"chronically_II"}>
+                              Chronically II
+                            </MenuItem>
+                            <MenuItem value={"living_along_danger_zones"}>
+                              Living along danger zones
+                            </MenuItem>
+                            <MenuItem value={"none"}>None</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Grid>
+
+                      <Grid item xs={12}>
+                        <FormControl fullWidth>
+                          <FormLabel id="demo-simple-select-label">
+                            Primary ID
+                          </FormLabel>
+
+                          <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            onChange={handleChange}
+                            name="primary_id"
+                          >
+                            <MenuItem value={"passport"}>
+                              Philippine Passport
+                            </MenuItem>
+                            <MenuItem value={"sss"}>
+                              Social Security System (SSS) Card
+                            </MenuItem>
+                            <MenuItem value={"gsis"}>
+                              Government Service Insurance System (GSIS) Card
+                            </MenuItem>
+                            <MenuItem value={"umid"}>
+                              Unified Multi-Purpose Identification (UMID) Card
+                            </MenuItem>
+                            <MenuItem value={"driver_license"}>
+                              Driver's License
+                            </MenuItem>
+                            <MenuItem value={"prc"}>
+                              Professional Regulatory Commission (PRC) ID
+                            </MenuItem>
+                            <MenuItem value={"postalid"}>Postal ID</MenuItem>
+                            <MenuItem value={"studentid"}>Student ID</MenuItem>
+                            <MenuItem value={"others"}>Others</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Grid>
+
+                      <Grid item xs={12}>
+                        <TextField
+                          type="text"
+                          name="id_number"
+                          onChange={handleChange}
+                          label="ID number"
+                          required={true}
+                          fullWidth={true}
+                        />
+                      </Grid>
                     </Grid>
 
                     <br />
@@ -306,9 +442,14 @@ const ParticipantBeneficiaryModal = ({ showChildModal, setShowChildModal }) => {
                       <LoadingButton
                         color="primary"
                         variant="contained"
-                        type="submit"
+                        type={
+                          numberOfBeneficiary === currentPage
+                            ? "submit"
+                            : "reset"
+                        }
                         loading={isLoading}
                         fullWidth
+                        onClick={handleNext}
                       >
                         <Icon>send</Icon>
                         <Span sx={{ pl: 1, textTransform: "capitalize" }}>

@@ -12,6 +12,7 @@ import axios from "../../../utils/axios";
 
 import useAuth from "../../../hooks/useAuth";
 import ProjectsAddModal from "./ProjectsAddModal";
+import AddModal from "./AppActivityLinkModal";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -51,7 +52,9 @@ const ProjectCodeTable = () => {
   const classes = useStyles();
   const { adminCreateUser } = useAuth();
   const [showModal, setShowModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
   const [projectsCodeData, setProjectsCodeData] = useState([]);
+  const [currentId, setCurrentId] = useState("");
 
   const descriptionElementRef = useRef(null);
 
@@ -88,6 +91,19 @@ const ProjectCodeTable = () => {
     if (createProject?.status === 200) {
       fetchAllUsers();
       setShowModal(false);
+    }
+  };
+
+  const handleLinkProject = async (payload) => {
+    const createProject = await axios.post(
+      `${BASE_URL}/activity/addActivityToProject`,
+      payload
+    );
+
+    if (createProject?.status === 200) {
+      fetchAllUsers();
+      setShowAddModal(false);
+      setCurrentId("");
     }
   };
 
@@ -138,6 +154,8 @@ const ProjectCodeTable = () => {
     }
   };
 
+  console.log("currentId", currentId);
+
   return (
     <Container>
       <Box className="breadcrumb" display="flex">
@@ -164,6 +182,8 @@ const ProjectCodeTable = () => {
             projectsCodeData={projectsCodeData}
             handleConfirmUser={handleConfirmUser}
             handleDeleteProjectCode={handleDeleteProjectCode}
+            setCurrentId={setCurrentId}
+            setShowAddModal={setShowAddModal}
           />
         </Grid>
       </Grid>
@@ -172,6 +192,13 @@ const ProjectCodeTable = () => {
         showModal={showModal}
         setShowModal={setShowModal}
         handleCreateProject={handleCreateProject}
+      />
+
+      <AddModal
+        showAddModal={showAddModal}
+        setShowAddModal={setShowAddModal}
+        currentId={currentId}
+        handleLinkProject={handleLinkProject}
       />
     </Container>
   );

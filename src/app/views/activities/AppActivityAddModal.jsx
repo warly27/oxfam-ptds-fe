@@ -1,15 +1,19 @@
-import React, { useState, useRef, useEffect } from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import AppActivityForms from './AppActivityForms';
-import { Typography } from '@material-ui/core';
+import React, { useState, useRef, useEffect } from "react";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import AppActivityForms from "./AppActivityForms";
+import { Typography } from "@material-ui/core";
 
-const AppActivityAddModal = ({ showModal, setShowModal }) => {
-  console.log(showModal + ' from the modal component');
+const AppActivityAddModal = ({
+  showModal,
+  setShowModal,
+  handleCreateActivity,
+}) => {
+  console.log(showModal + " from the modal component");
   const handleClose = () => {
     setShowModal((prev) => !prev);
   };
@@ -35,16 +39,17 @@ const AppActivityAddModal = ({ showModal, setShowModal }) => {
       >
         <DialogTitle id="scroll-dialog-title">
           <Typography variant="h4" color="primary">
-            Create an App User
+            Create an Activity
           </Typography>
         </DialogTitle>
+
         <DialogContent dividers>
           <DialogContentText
             id="scroll-dialog-description"
             ref={descriptionElementRef}
             tabIndex={-1}
           >
-            <AppActivityForms />
+            <AppActivityForms handleCreateActivity={handleCreateActivity} />
           </DialogContentText>
         </DialogContent>
       </Dialog>
