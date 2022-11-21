@@ -10,6 +10,7 @@ import Activities from "./activitydata";
 import axios from "../../utils/axios";
 import AddModal from "./AppActivityLinkModal";
 import ActivityParticipantsModal from "./AppActivityParticipants";
+import CustomizedDialogs from "../mydialogbox/customDialog";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -45,6 +46,9 @@ const AppActivityTable = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showParticipantModal, setShowParticipantModal] = useState(false);
   const [currentId, setCurrentId] = useState("");
+  const [showDialog, setShowDialog] = useState(false);
+  const [responseMessage, setMessageResponse] = useState("");
+  const [hasError, setHasError] = useState(false);
 
   const descriptionElementRef = useRef(null);
 
@@ -83,17 +87,37 @@ const AppActivityTable = () => {
     }
   };
 
-  const handleLinkParticipant = async (payload) => {
-    const createRequest = await axios.post(
-      `${BASE_URL}/partner/addParticipantToActivity`,
-      payload
-    );
+  const handleDeleteActivity = async (payload) => {
+    const deleteRequest = await axios.delete(`${BASE_URL}/activity`, {
+      data: payload,
+    });
 
-    console.log("[createRequest]: ", createRequest);
+    console.log("[deleteRequest]: ", deleteRequest);
 
-    if (createRequest?.status === 200) {
+    if (deleteRequest?.status === 200) {
       fetchAllActivities();
+    }
+  };
+
+  const handleLinkParticipant = async (payload) => {
+    try {
+      const createRequest = await axios.post(
+        `${BASE_URL}/partner/addParticipantToActivity`,
+        payload
+      );
+
+      console.log("[createRequest]: ", createRequest);
+
+      if (createRequest?.status === 200) {
+        fetchAllActivities();
+        setShowAddModal(false);
+        setHasError(false);
+      }
+    } catch (err) {
+      setShowDialog(true);
+      setMessageResponse(err?.message);
       setShowAddModal(false);
+      setHasError(true);
     }
   };
 
@@ -129,6 +153,7 @@ const AppActivityTable = () => {
             setShowAddModal={setShowAddModal}
             setCurrentId={setCurrentId}
             setShowParticipantModal={setShowParticipantModal}
+            handleDeleteActivity={handleDeleteActivity}
           />
         </Grid>
       </Grid>
@@ -150,6 +175,13 @@ const AppActivityTable = () => {
         showParticipantModal={showParticipantModal}
         setShowParticipantModal={setShowParticipantModal}
         currentId={currentId}
+      />
+
+      <CustomizedDialogs
+        showModal={showDialog}
+        setShowModal={setShowDialog}
+        message={responseMessage}
+        type={hasError ? "error" : undefined}
       />
     </Container>
   );

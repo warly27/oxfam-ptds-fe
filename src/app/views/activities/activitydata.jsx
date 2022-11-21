@@ -18,7 +18,7 @@ import AddIcon from "@mui/icons-material/Add";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
 const ActivitiesData = ({
-  handleDeletePartnerCode,
+  handleDeleteActivity,
   setShowAddModal,
   activityList,
   setCurrentId,
@@ -49,7 +49,7 @@ const ActivitiesData = ({
   };
 
   const onClickDelete = (id) => {
-    handleDeletePartnerCode(id);
+    handleDeleteActivity({ id });
   };
 
   // const onClickEdit = (data) => {
@@ -136,8 +136,6 @@ const ActivitiesData = ({
       console.log(rowsDeleted.data);
     },
     renderExpandableRow: (rowData, rowMeta) => {
-      console.log("DATA: " + rowData);
-      console.log("MDATA: ", rowMeta);
       return (
         <>
           <tr>

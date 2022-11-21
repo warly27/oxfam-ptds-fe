@@ -16,9 +16,10 @@ import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
 import Icon from "@mui/material/Icon";
 import axios from "../../utils/axios";
+import useAuth from "../../hooks/useAuth";
 
 import { Span } from "app/components/Typography";
-import { isEmpty } from "lodash";
+import isEmpty from "lodash/isEmpty";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -28,6 +29,7 @@ const AddModal = ({
   handleLinkParticipant,
   currentId,
 }) => {
+  const { user } = useAuth();
   const [projectId, setProjectId] = useState("");
   const [partnerList, setPartnerList] = useState([]);
   const [projectList, setProjectList] = useState([]);
@@ -35,6 +37,8 @@ const AddModal = ({
   const [user_id, setUserId] = useState("");
   const [participantsData, setParticipantsData] = useState([]);
   const [direct_participant_id, setParticipantId] = useState("");
+
+  const isAdmin = user?.role === "admin";
 
   const descriptionElementRef = useRef(null);
 
@@ -127,7 +131,7 @@ const AddModal = ({
       >
         <DialogTitle id="scroll-dialog-title">
           <Typography variant="h4" color="primary">
-            Link Activity to Participant
+            Add Participant to Activiy
           </Typography>
         </DialogTitle>
 
@@ -141,28 +145,30 @@ const AddModal = ({
               <Card style={{ minWidth: 400, maxWidth: 600, margin: "0 auto" }}>
                 <CardContent>
                   <Grid container rowSpacing={2}>
-                    <Grid xs={12} sm={12} item>
-                      <FormControl fullWidth>
-                        <InputLabel id="partner-code-select-label">
-                          User Partner
-                        </InputLabel>
+                    {isAdmin && (
+                      <Grid xs={12} sm={12} item>
+                        <FormControl fullWidth>
+                          <InputLabel id="partner-code-select-label">
+                            User Partner
+                          </InputLabel>
 
-                        <Select
-                          labelId="partner-code-select-label"
-                          id="partner-code-select"
-                          value={user_id}
-                          label="User Partner"
-                          onChange={handleChange}
-                          name="user_id"
-                        >
-                          {partnerList.map((data) => (
-                            <MenuItem
-                              value={data?.user_id}
-                            >{`${data?.first_name} ${data?.last_name}`}</MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </Grid>
+                          <Select
+                            labelId="partner-code-select-label"
+                            id="partner-code-select"
+                            value={user_id}
+                            label="User Partner"
+                            onChange={handleChange}
+                            name="user_id"
+                          >
+                            {partnerList.map((data) => (
+                              <MenuItem
+                                value={data?.user_id}
+                              >{`${data?.first_name} ${data?.last_name}`}</MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                    )}
 
                     <Grid xs={12} sm={12} item>
                       <FormControl fullWidth>

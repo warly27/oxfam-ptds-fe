@@ -141,26 +141,6 @@ const PartnersAddForms = ({
           <CardContent>
             <Grid container rowSpacing={2}>
               <Grid container item spacing={2}>
-                {inputFormElements.slice(3, 4).map((input) => (
-                  <Grid xs={input.xs} sm={input.sm} item>
-                    <TextField
-                      {...input}
-                      defaultValue={currentData[`${input?.name}`]}
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                ))}
-
-                {inputFormElements.slice(5, 6).map((input) => (
-                  <Grid xs={input.xs} sm={input.sm} item>
-                    <TextField
-                      {...input}
-                      defaultValue={currentData[`${input?.name}`]}
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                ))}
-
                 <Grid item xs={12}>
                   <Autocomplete
                     disablePortal
@@ -185,6 +165,26 @@ const PartnersAddForms = ({
                 </Grid>
 
                 {inputFormElements.slice(7, 8).map((input) => (
+                  <Grid xs={input.xs} sm={input.sm} item>
+                    <TextField
+                      {...input}
+                      defaultValue={currentData[`${input?.name}`]}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                ))}
+
+                {inputFormElements.slice(5, 6).map((input) => (
+                  <Grid xs={input.xs} sm={input.sm} item>
+                    <TextField
+                      {...input}
+                      defaultValue={currentData[`${input?.name}`]}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                ))}
+
+                {inputFormElements.slice(3, 4).map((input) => (
                   <Grid xs={input.xs} sm={input.sm} item>
                     <TextField
                       {...input}

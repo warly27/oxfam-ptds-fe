@@ -5,6 +5,7 @@ import { Box, styled, Icon } from "@mui/material";
 import { Breadcrumb } from "app/components";
 import Button from "@mui/material/Button";
 import PartnersAddModal from "./PartnersAddModal";
+import ProjectsLinkModal from "./ProjectsLinkModal";
 
 import PartnersCodeData from "./partnercodedata";
 import axios from "../../../utils/axios";
@@ -39,6 +40,7 @@ const Container = styled("div")(({ theme }) => ({
 const PartnerCodeTable = () => {
   const classes = useStyles();
   const [showModal, setShowModal] = useState(false);
+  const [showLinkModal, setShowLinkModal] = useState(false);
   const [partnersCodeData, setPartnersCodeData] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
   const [currentData, setCurrentData] = useState({});
@@ -129,6 +131,23 @@ const PartnerCodeTable = () => {
     }
   };
 
+  const handleLinkPartnerProject = async (project_id) => {
+    const payload = {
+      project_id,
+      partner_id: currentData?.id,
+    };
+
+    const confirmRequest = await axios.post(
+      `${BASE_URL}/partner/addPartnerToProject`,
+      payload
+    );
+
+    if (confirmRequest?.status === 200) {
+      fetchAllPartners();
+      setShowLinkModal(false);
+    }
+  };
+
   return (
     <Container>
       <Box className="breadcrumb" display="flex">
@@ -145,7 +164,7 @@ const PartnerCodeTable = () => {
           onClick={openModal}
         >
           <Icon>add</Icon>
-          <span>Code</span>
+          <span>Add Partner</span>
         </Button>
       </Box>
 
@@ -157,6 +176,7 @@ const PartnerCodeTable = () => {
             setShowModal={setShowModal}
             setCurrentData={setCurrentData}
             setIsEdit={setIsEdit}
+            setShowLinkModal={setShowLinkModal}
           />
         </Grid>
       </Grid>
@@ -168,6 +188,12 @@ const PartnerCodeTable = () => {
         isEdit={isEdit}
         currentData={currentData}
         handleEditPartnerCode={handleEditPartnerCode}
+      />
+
+      <ProjectsLinkModal
+        showModal={showLinkModal}
+        setShowModal={setShowLinkModal}
+        handleLinkPartnerProject={handleLinkPartnerProject}
       />
     </Container>
   );

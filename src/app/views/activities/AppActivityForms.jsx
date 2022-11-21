@@ -16,6 +16,7 @@ import Grid from "@mui/material/Grid";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import useAuth from "../../hooks/useAuth";
 
 import axios from "../../utils/axios";
 import { isEmpty } from "lodash";
@@ -23,6 +24,7 @@ import { isEmpty } from "lodash";
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const AppActivityForms = ({ handleCreateActivity }) => {
+  const { user } = useAuth();
   const [state, setState] = useState({ date: null });
   const [fund_source, setFundSource] = useState("");
   const [project_code, setProjectCode] = useState("");
@@ -31,6 +33,8 @@ const AppActivityForms = ({ handleCreateActivity }) => {
   const [partnerList, setPartnerList] = useState([]);
 
   const [currentUser, setCurrentUser] = useState({});
+
+  const isAdmin = user?.role === "admin";
 
   const fetchProjectCodeLookup = useCallback(async () => {
     const getAllCodesResult = await axios.get(
@@ -42,7 +46,7 @@ const AppActivityForms = ({ handleCreateActivity }) => {
 
   const fetchAllPartners = useCallback(async () => {
     const getAllUsersResult = await axios.get(
-      `${BASE_URL}/partner/getAllPartners`
+      `${BASE_URL}/partner/getAllPartners?type=activity`
     );
     setPartnerList(getAllUsersResult?.data?.data);
   }, []);
@@ -56,6 +60,8 @@ const AppActivityForms = ({ handleCreateActivity }) => {
       fetchProjectCodeLookup();
     }
   }, [currentUser, fetchProjectCodeLookup]);
+
+  console.log("[user]", user);
 
   const handleChange = (event) => {
     const isFundSource = event.target.name === "fund_source";
@@ -106,28 +112,30 @@ const AppActivityForms = ({ handleCreateActivity }) => {
           <Card style={{ minWidth: 500, margin: "0 auto" }}>
             <CardContent>
               <Grid container spacing={2}>
-                <Grid xs={12} sm={12} item>
-                  <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">
-                      User Partner
-                    </InputLabel>
+                {isAdmin && (
+                  <Grid xs={12} sm={12} item>
+                    <FormControl fullWidth>
+                      <InputLabel id="demo-simple-select-label">
+                        User Partner
+                      </InputLabel>
 
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value={user_id}
-                      label="User Partner"
-                      onChange={handleChange}
-                      name="user_id"
-                    >
-                      {partnerList.map((data) => (
-                        <MenuItem
-                          value={data?.user_id}
-                        >{`${data?.first_name} ${data?.last_name}`}</MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
+                      <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={user_id}
+                        label="User Partner"
+                        onChange={handleChange}
+                        name="user_id"
+                      >
+                        {partnerList.map((data) => (
+                          <MenuItem
+                            value={data?.user_id}
+                          >{`${data?.first_name} ${data?.last_name}`}</MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                )}
 
                 <Grid xs={12} sm={12} item>
                   <FormControl fullWidth>

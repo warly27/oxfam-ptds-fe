@@ -18,7 +18,6 @@ import Icon from "@mui/material/Icon";
 import axios from "../../../utils/axios";
 
 import { Span } from "app/components/Typography";
-import { isEmpty } from "lodash";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -100,7 +99,7 @@ const AddModal = ({
       >
         <DialogTitle id="scroll-dialog-title">
           <Typography variant="h4" color="primary">
-            Link Activity to Participant
+            Add Project to Activity
           </Typography>
         </DialogTitle>
 

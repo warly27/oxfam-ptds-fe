@@ -1,5 +1,5 @@
 import { Span } from "app/components/Typography";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { ValidatorForm } from "react-material-ui-form-validator";
 import { inputFormElements } from "app/components/FormElement";
 import { makeStyles } from "@material-ui/core/styles";
@@ -17,6 +17,9 @@ import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import Icon from "@mui/material/Icon";
+import axios from "../../../utils/axios";
+
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -42,6 +45,19 @@ const ProjectsAddFrom = ({ handleCreateProject }) => {
   const [start_date, setStartDate] = useState(null);
   const [end_date, setEndDate] = useState(null);
   const [type, setType] = useState("");
+  const [partner_id, setPartner_id] = useState("");
+  const [partnersCodeData, setPartnersCodeData] = useState([]);
+
+  const fetchAllPartners = useCallback(async () => {
+    const getPartnersCodeResult = await axios.get(
+      `${BASE_URL}/codes/getAllPartnerCodes`
+    );
+    setPartnersCodeData(getPartnersCodeResult?.data?.data);
+  }, []);
+
+  useEffect(() => {
+    fetchAllPartners();
+  }, [fetchAllPartners]);
 
   const handleChange = (event) => {
     const isTitle = event.target.name === "title";
@@ -83,6 +99,11 @@ const ProjectsAddFrom = ({ handleCreateProject }) => {
     if (isType) {
       setType(event.target.value);
     }
+
+    const isPartnerId = event.target.name === "partner_id";
+    if (isPartnerId) {
+      setPartner_id(event.target.value);
+    }
   };
 
   const handleSubmit = () => {
@@ -110,6 +131,7 @@ const ProjectsAddFrom = ({ handleCreateProject }) => {
       start_date: start_date?.$d,
       end_date: end_date?.$d,
       type,
+      partner_id,
     });
   };
 
@@ -230,6 +252,27 @@ const ProjectsAddFrom = ({ handleCreateProject }) => {
                       )}
                     />
                   </LocalizationProvider>
+                </Grid>
+
+                <Grid xs={12} sm={12} item>
+                  <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-label">
+                      Partner
+                    </InputLabel>
+
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={partner_id}
+                      label="Partner"
+                      name="partner_id"
+                      onChange={handleChange}
+                    >
+                      {partnersCodeData.map((item) => (
+                        <MenuItem value={item?.id}>{item?.name}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                 </Grid>
               </Grid>
 

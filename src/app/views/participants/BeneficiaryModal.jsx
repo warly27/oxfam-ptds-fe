@@ -41,7 +41,9 @@ const BeneficiaryModal = ({
   }, [currentUser]);
 
   useEffect(() => {
-    fetchParticipantsData();
+    if (currentUser) {
+      fetchParticipantsData();
+    }
   }, [currentUser, fetchParticipantsData]);
 
   const getMuiTheme = () =>

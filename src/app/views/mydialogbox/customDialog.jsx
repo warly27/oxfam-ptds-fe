@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import CloseIcon from "@mui/icons-material/Close";
 import Button from "@mui/material/Button";
 import { green } from "@mui/material/colors";
@@ -8,6 +10,7 @@ import MuiDialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/system";
+import { useEffect } from "react";
 
 const DialogTitleRoot = styled(MuiDialogTitle)(({ theme }) => ({
   margin: 0,
@@ -46,7 +49,16 @@ const DialogActions = styled(MuiDialogActions)(({ theme }) => ({
   "&.root": { margin: 0, padding: theme.spacing(1) },
 }));
 
-const CustomizedDialogs = ({ showModal, setShowModal, message }) => {
+const CustomizedDialogs = ({ showModal, setShowModal, message, type }) => {
+  const sampleMessage =
+    "You have successfully sent an App registration. You will be notified in your email within 24hrs";
+
+  const [currentMessage, setCurrentMessage] = useState(sampleMessage);
+
+  useEffect(() => {
+    setCurrentMessage(message);
+  }, [message]);
+
   const handleClose = () => setShowModal(false);
 
   return (
@@ -57,15 +69,11 @@ const CustomizedDialogs = ({ showModal, setShowModal, message }) => {
         open={showModal}
       >
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-          {message === undefined ? "Notification: " : "Warning: "}
+          {type === undefined ? "Notification: " : "Error: "}
         </DialogTitle>
 
         <DialogContent dividers>
-          <Typography gutterBottom>
-            {message === undefined
-              ? "You have successfully sent an App registration. You will be notified in your email within 24hrs"
-              : message}
-          </Typography>
+          <Typography gutterBottom>{currentMessage}</Typography>
         </DialogContent>
 
         <DialogActions>

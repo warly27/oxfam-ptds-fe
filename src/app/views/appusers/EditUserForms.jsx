@@ -15,16 +15,13 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Icon from "@mui/material/Icon";
-
-import OutlinedInput from "@mui/material/OutlinedInput";
 import Chip from "@mui/material/Chip";
 
 import Box from "@mui/material/Box";
 
 import axios from "../../utils/axios";
-import { isEmpty } from "lodash";
-import { defaultTo } from "lodash";
-import { SettingsBackupRestoreOutlined } from "@material-ui/icons";
+import isEmpty from "lodash/isEmpty";
+import defaultTo from "lodash/defaultTo";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -267,10 +264,28 @@ const EditUsersForms = ({ currentUser, handleEditUser }) => {
         return isEmpty(findItem);
       });
 
-      setCurrentAddedProjects((data) => ({
-        [partner_id]: filterAdded,
-        ...data,
-      }));
+      const hasItem = !isEmpty(filterAdded);
+
+      if (hasItem) {
+        setCurrentAddedProjects((data) => ({
+          [partner_id]: filterAdded,
+          ...data,
+        }));
+      }
+
+      const filterDeleted = defaultTo(currentProject, []).filter((data) => {
+        const findItem = event?.target?.value.find((record) => record === data);
+        return isEmpty(findItem);
+      });
+
+      const hasDeletedItem = !isEmpty(filterDeleted);
+
+      if (hasDeletedItem) {
+        setCurrentDeletedProjects((data) => ({
+          [partner_id]: filterDeleted,
+          ...data,
+        }));
+      }
     }
 
     setCurrentSelectedProjects((item) => ({

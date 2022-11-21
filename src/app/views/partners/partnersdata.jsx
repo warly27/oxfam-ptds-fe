@@ -211,8 +211,6 @@ const PartnersData = ({
       console.log(rowsDeleted.data);
     },
     renderExpandableRow: (rowData, rowMeta) => {
-      console.log("DATA: ", rowData);
-      console.log("MDATA: ", rowMeta);
       return (
         <tr>
           <td colSpan={6}>

@@ -153,7 +153,15 @@ const AppUsersForms = ({ handleCreateUser }) => {
             {/* <form> */}
             <Grid container rowSpacing={2}>
               <Grid container item spacing={2}>
-                {inputFormElements.slice(0, 5).map((input) => (
+                {inputFormElements.slice(0, 2).map((input) => (
+                  <Grid xs={input.xs} sm={input.sm} item>
+                    <TextField {...input} onChange={handleChange} />
+                  </Grid>
+                ))}
+              </Grid>
+
+              <Grid container item spacing={2}>
+                {inputFormElements.slice(3, 5).map((input) => (
                   <Grid xs={input.xs} sm={input.sm} item>
                     <TextField {...input} onChange={handleChange} />
                   </Grid>

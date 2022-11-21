@@ -149,6 +149,13 @@ const ParticipantsData = ({
         display: false,
       },
     },
+    {
+      name: "has_beneficiary",
+      label: "has_beneficiary",
+      options: {
+        display: false,
+      },
+    },
   ];
 
   const options = {
@@ -161,8 +168,6 @@ const ParticipantsData = ({
       console.log(rowsDeleted.data);
     },
     renderExpandableRow: (rowData, rowMeta) => {
-      console.log("DATA: " + rowData);
-      console.log("MDATA: " + rowMeta);
       return (
         <>
           <tr>
@@ -196,14 +201,16 @@ const ParticipantsData = ({
                         {daysJs(rowData[11]).format("DD/MM/YYYY")}
                       </TableCell>
 
-                      <TableCell component="th" scope="row" align="center">
-                        <Button
-                          onClick={() => confirm(rowData[0])}
-                          text={<VisibilityIcon />}
-                          size="small"
-                          disabled={rowData[5] === "1"}
-                        />
-                      </TableCell>
+                      {rowData[13] === "yes" && (
+                        <TableCell component="th" scope="row" align="center">
+                          <Button
+                            onClick={() => confirm(rowData[0])}
+                            text={<VisibilityIcon />}
+                            size="small"
+                            disabled={rowData[5] === "1"}
+                          />
+                        </TableCell>
+                      )}
 
                       <TableCell component="th" scope="row" align="center">
                         <Button

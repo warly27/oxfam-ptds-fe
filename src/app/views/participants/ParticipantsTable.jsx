@@ -52,7 +52,7 @@ const ParticipantsTable = () => {
 
   useEffect(() => {
     fetchParticipantsData();
-  }, []);
+  }, [fetchParticipantsData]);
 
   const openModal = () => {
     setShowModal((prev) => !prev);
@@ -86,8 +86,6 @@ const ParticipantsTable = () => {
       fetchParticipantsData();
     }
   };
-
-  console.log("setShowBeneficiaryModal", setShowBeneficiaryModal);
 
   return (
     <Container>

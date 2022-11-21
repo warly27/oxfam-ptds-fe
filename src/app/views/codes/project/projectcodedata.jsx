@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 
 import MUIDataTable from "mui-datatables";
 import {
@@ -12,7 +12,6 @@ import {
 } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Button from "app/components/controls/Button";
-import CheckIcon from "@mui/icons-material/Check";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import dayjs from "dayjs";
 
@@ -51,10 +50,6 @@ const ProjectssCodeData = ({
     setShowAddModal(true);
   };
 
-  const onClickConfirmUser = (email) => {
-    handleConfirmUser(email);
-  };
-
   const onClickDeleteUser = (id, code) => {
     handleDeleteProjectCode(id, code);
   };
@@ -65,18 +60,19 @@ const ProjectssCodeData = ({
       label: "ID",
       options: {
         filter: true,
+        display: false,
       },
     },
     {
-      name: "name",
-      label: "Name",
+      name: "code",
+      label: "Project Code",
       options: {
         filter: true,
       },
     },
     {
-      name: "code",
-      label: "Code",
+      name: "name",
+      label: "Project  Name",
       options: {
         filter: true,
       },
@@ -93,6 +89,27 @@ const ProjectssCodeData = ({
       label: "Description",
       options: {
         filter: true,
+        display: false,
+      },
+    },
+    {
+      name: "start_date",
+      label: "Start date",
+      options: {
+        display: true,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          return <>{dayjs(value).format("MM/DD/YYYY")}</>;
+        },
+      },
+    },
+    {
+      name: "end_date",
+      label: "End date",
+      options: {
+        display: true,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          return <>{dayjs(value).format("MM/DD/YYYY")}</>;
+        },
       },
     },
     {
@@ -100,6 +117,7 @@ const ProjectssCodeData = ({
       label: "Type",
       options: {
         filter: true,
+        display: true,
       },
     },
     {
@@ -137,20 +155,6 @@ const ProjectssCodeData = ({
         display: false,
       },
     },
-    {
-      name: "start_date",
-      label: "Start date",
-      options: {
-        display: false,
-      },
-    },
-    {
-      name: "end_date",
-      label: "End date",
-      options: {
-        display: false,
-      },
-    },
   ];
 
   const options = {
@@ -163,8 +167,6 @@ const ProjectssCodeData = ({
       console.log(rowsDeleted.data);
     },
     renderExpandableRow: (rowData, rowMeta) => {
-      console.log("DATA: " + rowData);
-      console.log("MDATA: " + rowMeta);
       return (
         <>
           <tr>
@@ -175,38 +177,28 @@ const ProjectssCodeData = ({
                     <TableRow>
                       <TableCell component="th" scope="row" align="left">
                         <strong>Portfolio:</strong> {""}
-                        {rowData[6]}
-                      </TableCell>
-
-                      <TableCell component="th" scope="row" align="left">
-                        <strong>Fund source:</strong> {""}
-                        {rowData[7]}
-                      </TableCell>
-
-                      <TableCell component="th" scope="row" align="left">
-                        <strong>Budget:</strong>
-                        {""}
                         {rowData[8]}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="left">
-                        <strong>Created By:</strong>
-                        {""}
+                        <strong>Fund source:</strong> {""}
                         {rowData[9]}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="left">
-                        <strong>Creator Role:</strong> {rowData[10]}
+                        <strong>Budget:</strong>
+
+                        {rowData[10]}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="left">
-                        <strong>Start date:</strong>
-                        {dayjs(rowData[11]).format("MM/DD/YYYY")}
+                        <strong>Created By:</strong>
+
+                        {rowData[11]}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="left">
-                        <strong>End Date:</strong>{" "}
-                        {dayjs(rowData[12]).format("MM/DD/YYYY")}
+                        <strong>Creator Role:</strong> {rowData[12]}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="center">
@@ -251,7 +243,7 @@ const ProjectssCodeData = ({
       <ThemeProvider theme={getMuiTheme}>
         {/* total amount of the current page: {total} */}
         <MUIDataTable
-          title={"Projects Code"}
+          title={"Projects Records"}
           options={options}
           columns={columns}
           data={data}

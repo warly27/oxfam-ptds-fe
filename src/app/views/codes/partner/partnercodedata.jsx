@@ -12,6 +12,7 @@ import Paper from "@material-ui/core/Paper";
 import Button from "app/components/controls/Button";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import AddIcon from "@mui/icons-material/Add";
 
 const PartnersCodeData = ({
   partnersCodeData,
@@ -19,6 +20,7 @@ const PartnersCodeData = ({
   setCurrentData,
   setShowModal,
   setIsEdit,
+  setShowLinkModal,
 }) => {
   const [data, setData] = useState([]);
 
@@ -40,7 +42,8 @@ const PartnersCodeData = ({
     });
 
   const handleClick = (value) => {
-    console.log("value", value?.id);
+    setShowLinkModal(true);
+    setCurrentData({ id: value[0] });
   };
 
   const onClickDeleteUser = (id) => {
@@ -71,20 +74,28 @@ const PartnersCodeData = ({
       label: "Code id",
       options: {
         filter: true,
+        display: false,
       },
     },
     {
       name: "name",
-      label: "Partner Name",
+      label: "Company/Partner Name",
       options: {
         filter: true,
       },
     },
     {
       name: "code",
-      label: "Code",
+      label: "Partner Code",
       options: {
         filter: true,
+      },
+    },
+    {
+      name: "address",
+      label: "Address",
+      options: {
+        display: true,
       },
     },
     {
@@ -92,14 +103,7 @@ const PartnersCodeData = ({
       label: "email",
       options: {
         filter: true,
-        display: false,
-      },
-    },
-    {
-      name: "address",
-      label: "Address",
-      options: {
-        display: false,
+        display: true,
       },
     },
     {
@@ -142,8 +146,6 @@ const PartnersCodeData = ({
       console.log(rowsDeleted.data);
     },
     renderExpandableRow: (rowData, rowMeta) => {
-      console.log("DATA: " + rowData);
-      console.log("MDATA: ", rowMeta);
       return (
         <>
           <tr>
@@ -180,6 +182,15 @@ const PartnersCodeData = ({
                         />
                       </TableCell>
 
+                      {/* <TableCell component="th" scope="row" align="center">
+                        <Button
+                          onClick={() => handleClick(rowData)}
+                          text={<AddIcon />}
+                          size="small"
+                          disabled={rowData[6] === "1"}
+                        />
+                      </TableCell> */}
+
                       <TableCell component="th" scope="row" align="center">
                         <Button
                           onClick={() => onClickDeleteUser(rowData[0])}
@@ -201,19 +212,15 @@ const PartnersCodeData = ({
     //   console.log("rowData", rowData);
     //   handleClick(data[rowMeta?.dataIndex]);
     // },
-    onRowsExpand: (curExpanded, allExpanded) => {
-      console.log("[curExpanded]", curExpanded);
-      console.log("[allExpanded]", allExpanded);
-
-      handleClick();
-    },
+    onRowsExpand: (curExpanded, allExpanded) => {},
   };
+
   return (
     <div className="App">
       <ThemeProvider theme={getMuiTheme}>
         {/* total amount of the current page: {total} */}
         <MUIDataTable
-          title={"Partners Code"}
+          title={"Partners Records"}
           options={options}
           columns={columns}
           data={data}

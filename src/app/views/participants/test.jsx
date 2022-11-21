@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { ThemeProvider, createTheme, List, ListItemText } from '@mui/material';
-import MUIDataTable from 'mui-datatables';
+import React, { useState, useEffect } from "react";
+import { ThemeProvider, createTheme, List, ListItemText } from "@mui/material";
+import MUIDataTable from "mui-datatables";
 import {
   Table,
   TableBody,
@@ -11,7 +11,7 @@ import {
   TextField,
   FormLabel,
   FormGroup,
-} from '@mui/material';
+} from "@mui/material";
 
 const Test = () => {
   const [data, setData] = useState();
@@ -22,7 +22,7 @@ const Test = () => {
         MUIDataTableBodyCell: {
           styleOverrides: {
             root: {
-              backgroundColor: '#e9ffdb',
+              backgroundColor: "#e9ffdb",
             },
           },
         },
@@ -30,9 +30,9 @@ const Test = () => {
     });
 
   useEffect(() => {
-    const accessToken = window.localStorage.getItem('accessToken');
+    const accessToken = window.localStorage.getItem("accessToken");
     console.log(accessToken);
-    const url = 'https://jsonplaceholder.typicode.com/posts';
+    const url = "https://jsonplaceholder.typicode.com/posts";
 
     const getDatas = fetch(url)
       .then((res) => res.json())
@@ -40,11 +40,11 @@ const Test = () => {
         // this.setState({ data: data });
         setData(data);
       })
-      .catch((err) => console.log('error:', err));
+      .catch((err) => console.log("error:", err));
   }, [setData]);
 
   const handleClick = (value) => {
-    console.log('value', value.id);
+    console.log("value", value.id);
     const { id } = value;
     const url = `https://jsonplaceholder.typicode.com/posts/${id}/comments`;
     const getComments = fetch(url)
@@ -53,27 +53,27 @@ const Test = () => {
         // this.setState({ comments: data });
         console.log(data);
       })
-      .catch((err) => console.log('error:', err));
+      .catch((err) => console.log("error:", err));
   };
 
   const columns = [
     {
-      name: 'userId',
-      label: 'User Id',
+      name: "userId",
+      label: "User Id",
       options: {
         filter: true,
       },
     },
     {
-      name: 'title',
-      label: 'Title',
+      name: "title",
+      label: "Title",
       options: {
         filter: true,
       },
     },
     {
-      name: 'body',
-      label: 'Body',
+      name: "body",
+      label: "Body",
       options: {
         display: false,
       },
@@ -82,7 +82,7 @@ const Test = () => {
 
   const options = {
     filter: true,
-    selectableRows: 'none',
+    selectableRows: "none",
     // responsive: 'scrollMaxHeight',
     expandableRows: true,
     onRowsDelete: (rowsDeleted, dataRows) => {
@@ -90,13 +90,11 @@ const Test = () => {
       console.log(rowsDeleted.data);
     },
     renderExpandableRow: (rowData, rowMeta) => {
-      console.log('DATA: ' + rowData);
-      console.log('MDATA: ' + rowMeta);
       return (
         <tr>
           <td colSpan={4}>
             <TableContainer>
-              <Table style={{ margin: '0 auto' }}>
+              <Table style={{ margin: "0 auto" }}>
                 <TableHead>
                   <TableCell align="left">Body</TableCell>
                   {/* <TableCell align="right">Color</TableCell>
@@ -118,11 +116,11 @@ const Test = () => {
       );
     },
     onRowsClick: (rowData, rowMeta) => {
-      console.log('rowData', rowData);
+      console.log("rowData", rowData);
       handleClick(data[rowMeta.dataIndex]);
     },
     onRowsExpand: (curExpanded, allExpanded) => {
-      console.log('rowExpand', curExpanded, allExpanded[0]);
+      console.log("rowExpand", curExpanded, allExpanded[0]);
       handleClick(data[allExpanded[0].dataIndex]);
     },
   };
@@ -130,7 +128,12 @@ const Test = () => {
     <div className="App">
       <ThemeProvider theme={getMuiTheme}>
         {/* total amount of the current page: {total} */}
-        <MUIDataTable title={'Participants'} options={options} columns={columns} data={data} />
+        <MUIDataTable
+          title={"Participants"}
+          options={options}
+          columns={columns}
+          data={data}
+        />
       </ThemeProvider>
     </div>
   );

@@ -172,7 +172,7 @@ const ProjectCodeTable = () => {
           onClick={openModal}
         >
           <Icon>add</Icon>
-          <span>Code</span>
+          <span>Add Project</span>
         </Button>
       </Box>
 

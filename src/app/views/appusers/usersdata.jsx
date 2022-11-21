@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 
 import MUIDataTable from "mui-datatables";
 import {
@@ -56,10 +56,6 @@ const UsersData = ({
     handleDeleteUser(cognitoId, email);
   };
 
-  const confirm = (value) => {
-    console.log(value);
-  };
-
   const columns = [
     {
       name: "id",
@@ -73,18 +69,19 @@ const UsersData = ({
       label: "AWS ID",
       options: {
         filter: true,
+        display: false,
       },
     },
     {
       name: "first_name",
-      label: "Name",
+      label: "First name",
       options: {
         filter: true,
       },
     },
     {
       name: "last_name",
-      label: " ",
+      label: "Last name",
       options: {
         filter: true,
       },
@@ -99,9 +96,6 @@ const UsersData = ({
     {
       name: "role",
       label: "Role",
-      options: {
-        display: false,
-      },
     },
     {
       name: "status",
@@ -143,8 +137,6 @@ const UsersData = ({
       console.log(rowsDeleted.data);
     },
     renderExpandableRow: (rowData, rowMeta) => {
-      console.log("DATA: " + rowData);
-      console.log("MDATA: " + rowMeta);
       return (
         <>
           <tr>

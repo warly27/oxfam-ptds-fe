@@ -1,20 +1,16 @@
-import React, { useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import PartnersAddForms from "./PartnersAddForms";
+import ProjectsLinkForm from "./ProjectsLinkForm";
 import { Typography } from "@material-ui/core";
 
-const AppPartnerCodeAddModal = ({
+const ProjectsLinkModal = ({
   showModal,
   setShowModal,
-  handleCreatePartner,
-  currentData,
-  isEdit,
-  handleEditPartnerCode,
+  handleLinkPartnerProject,
 }) => {
-  console.log(showModal + " from the modal component");
   const handleClose = () => {
     setShowModal((prev) => !prev);
   };
@@ -29,6 +25,8 @@ const AppPartnerCodeAddModal = ({
     }
   }, [showModal]);
 
+  console.log("[showModal]", showModal);
+
   return (
     <div>
       <Dialog
@@ -40,7 +38,7 @@ const AppPartnerCodeAddModal = ({
       >
         <DialogTitle id="scroll-dialog-title">
           <Typography variant="h4" color="primary">
-            {`${isEdit ? "Edit" : "Create"} Partner Record`}
+            Link Partner Project
           </Typography>
         </DialogTitle>
 
@@ -50,11 +48,8 @@ const AppPartnerCodeAddModal = ({
             ref={descriptionElementRef}
             tabIndex={-1}
           >
-            <PartnersAddForms
-              handleCreatePartner={handleCreatePartner}
-              currentData={currentData}
-              isEdit={isEdit}
-              handleEditPartnerCode={handleEditPartnerCode}
+            <ProjectsLinkForm
+              handleLinkPartnerProject={handleLinkPartnerProject}
             />
           </DialogContentText>
         </DialogContent>
@@ -63,4 +58,4 @@ const AppPartnerCodeAddModal = ({
   );
 };
 
-export default AppPartnerCodeAddModal;
+export default ProjectsLinkModal;
