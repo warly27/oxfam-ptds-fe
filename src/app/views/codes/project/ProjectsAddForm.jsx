@@ -201,7 +201,7 @@ const ProjectsAddFrom = ({ handleCreateProject }) => {
                 </FormControl>
               </Grid>
 
-              <Grid xs={12} sm={12} item>
+              {/* <Grid xs={12} sm={12} item>
                 <FormControl fullWidth>
                   <InputLabel id="demo-simple-select-label">
                     Project Fund Source
@@ -219,6 +219,22 @@ const ProjectsAddFrom = ({ handleCreateProject }) => {
                     <MenuItem value={"marcos"}>Marcos</MenuItem>
                   </Select>
                 </FormControl>
+              </Grid> */}
+
+              <Grid container item spacing={1}>
+                <Grid xs={12} sm={12} item>
+                  <TextField
+                    name="fundSource"
+                    placeholder="Enter project fund source"
+                    label="Project Fund Source"
+                    variant="outlined"
+                    fullWidth={true}
+                    required={true}
+                    xs={12}
+                    sm={12}
+                    onChange={handleChange}
+                  />
+                </Grid>
               </Grid>
 
               <Grid container item spacing={1}>

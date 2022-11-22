@@ -98,7 +98,38 @@ const JwtLogin = () => {
 
           <Grid item sm={6} xs={12}>
             <ContentBox>
-              <h3>Participant Tracking Database System</h3>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  width: "100%",
+                }}
+              >
+                <div
+                  style={{
+                    textAlign: "center",
+                    fontSize: 30,
+                    fontWeight: 600,
+                    lineHeight: 1.2,
+                  }}
+                >
+                  Participant Tracking
+                </div>
+
+                <div
+                  style={{
+                    textAlign: "center",
+                    fontSize: 30,
+                    fontWeight: 600,
+                    lineHeight: 1.2,
+                    marginBottom: "8px",
+                  }}
+                >
+                  Database System
+                </div>
+              </div>
+
               <Formik
                 onSubmit={handleFormSubmit}
                 initialValues={initialValues}

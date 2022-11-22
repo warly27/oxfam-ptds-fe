@@ -201,14 +201,14 @@ const ProjectssCodeData = ({
                         <strong>Creator Role:</strong> {rowData[12]}
                       </TableCell>
 
-                      <TableCell component="th" scope="row" align="center">
+                      {/* <TableCell component="th" scope="row" align="center">
                         <Button
                           onClick={() => handleClick(rowData[0])}
                           text={<AddIcon />}
                           size="small"
                           disabled={rowData[5] === "1"}
                         />
-                      </TableCell>
+                      </TableCell> */}
 
                       <TableCell component="th" scope="row" align="center">
                         <Button

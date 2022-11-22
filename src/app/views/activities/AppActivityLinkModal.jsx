@@ -15,8 +15,10 @@ import CardContent from "@mui/material/CardContent";
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
 import Icon from "@mui/material/Icon";
+import TextField from "@mui/material/TextField";
 import axios from "../../utils/axios";
 import useAuth from "../../hooks/useAuth";
+import Autocomplete from "@mui/material/Autocomplete";
 
 import { Span } from "app/components/Typography";
 import isEmpty from "lodash/isEmpty";
@@ -36,7 +38,7 @@ const AddModal = ({
   const [currentUser, setCurrentUser] = useState({});
   const [user_id, setUserId] = useState("");
   const [participantsData, setParticipantsData] = useState([]);
-  const [direct_participant_id, setParticipantId] = useState("");
+  const [direct_participant_id, setParticipantId] = useState(null);
 
   const isAdmin = user?.role === "admin";
 
@@ -88,10 +90,10 @@ const AddModal = ({
   };
 
   const handleChange = (event) => {
-    const isParticipant = event.target.name === "participant";
-    if (isParticipant) {
-      setParticipantId(event.target.value);
-    }
+    // const isParticipant = event.target.name === "participant";
+    // if (isParticipant) {
+    //   setParticipantId(event.target.value);
+    // }
 
     const isProjectCode = event.target.name === "projectCode";
     if (isProjectCode) {
@@ -112,13 +114,28 @@ const AddModal = ({
   const handleSubmit = () => {
     handleLinkParticipant({
       user_id,
-      direct_participant_id,
+      direct_participant_id: direct_participant_id?.id,
       activity_id: currentId,
       beneficiary_added: "no",
       indirect_participant_id: "",
       project_id: projectId,
     });
+
+    // console.log("[payload]", {
+    //   user_id,
+    //   direct_participant_id,
+    //   activity_id: currentId,
+    //   beneficiary_added: "no",
+    //   indirect_participant_id: "",
+    //   project_id: projectId,
+    // });
   };
+
+  const handleAutoCompleteChange = (_event, value) => {
+    setParticipantId(value);
+  };
+
+  console.log("[participantsData]", participantsData);
 
   return (
     <div>
@@ -193,27 +210,33 @@ const AddModal = ({
                       </FormControl>
                     </Grid>
 
-                    <Grid xs={12} sm={12} item>
-                      <FormControl fullWidth>
-                        <InputLabel id="partner-code-select-label">
-                          Participant
-                        </InputLabel>
-
-                        <Select
-                          labelId="partner-code-select-label"
-                          id="partner-code-select"
-                          value={direct_participant_id}
-                          label="Participant"
-                          onChange={handleChange}
-                          name="participant"
-                        >
-                          {participantsData.map((data) => (
-                            <MenuItem
-                              value={data?.id}
-                            >{`${data?.first_name} ${data?.last_name}`}</MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
+                    <Grid item xs={12}>
+                      <Autocomplete
+                        disablePortal
+                        id="direct_participant_id"
+                        options={participantsData}
+                        fullWidth={true}
+                        name="direct_participant_id"
+                        value={direct_participant_id}
+                        onChange={handleAutoCompleteChange}
+                        getOptionLabel={(option) =>
+                          `${option.first_name} ${option.last_name}`
+                        }
+                        renderOption={(props, option) => (
+                          <li
+                            {...props}
+                          >{`${option.first_name} ${option.last_name}`}</li>
+                        )}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            type="text"
+                            name="direct_participant_id"
+                            label="Participant"
+                            fullWidth={true}
+                          />
+                        )}
+                      />
                     </Grid>
 
                     <Grid container item spacing={1}>
