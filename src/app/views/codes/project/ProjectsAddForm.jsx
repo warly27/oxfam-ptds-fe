@@ -1,5 +1,5 @@
 import { Span } from "app/components/Typography";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, forwardRef } from "react";
 import { ValidatorForm } from "react-material-ui-form-validator";
 import { inputFormElements } from "app/components/FormElement";
 import { makeStyles } from "@material-ui/core/styles";
@@ -16,23 +16,17 @@ import TextField from "@mui/material/TextField";
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
-import Icon from "@mui/material/Icon";
 import axios from "../../../utils/axios";
 
-const BASE_URL = process.env.REACT_APP_BASE_URL;
+import MuiAlert from "@mui/material/Alert";
+import Snackbar from "@mui/material/Snackbar";
+import { isEmpty } from "lodash";
 
-const useStyles = makeStyles((theme) => ({
-  container: {
-    display: "flex",
-    flexWrap: "wrap",
-  },
-  textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: 250,
-    padding: "10px 5px",
-  },
-}));
+const Alert = forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const ProjectsAddFrom = ({ handleCreateProject }) => {
   const [name, setName] = useState("");
@@ -47,6 +41,9 @@ const ProjectsAddFrom = ({ handleCreateProject }) => {
   const [type, setType] = useState("");
   const [partner_id, setPartner_id] = useState("");
   const [partnersCodeData, setPartnersCodeData] = useState([]);
+
+  const [hasError, setHasError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const fetchAllPartners = useCallback(async () => {
     const getPartnersCodeResult = await axios.get(
@@ -107,18 +104,22 @@ const ProjectsAddFrom = ({ handleCreateProject }) => {
   };
 
   const handleSubmit = () => {
-    console.log("[payload]:", {
-      name,
-      code,
-      description,
-      title,
-      portfolio,
-      budget,
-      fund_source,
-      start_date: start_date?.$d,
-      end_date: end_date?.$d,
-      type,
-    });
+    const hasStartDate = !isEmpty(start_date);
+
+    if (!hasStartDate) {
+      setHasError(true);
+      setErrorMessage("Start date is required!");
+
+      return;
+    }
+
+    const hasEndDate = !isEmpty(end_date);
+    if (!hasEndDate) {
+      setHasError(true);
+      setErrorMessage("End date is required!");
+
+      return;
+    }
 
     handleCreateProject({
       name,
@@ -143,13 +144,9 @@ const ProjectsAddFrom = ({ handleCreateProject }) => {
     setEndDate(date);
   };
 
-  // const handleChange = (event) => {
-  //   setFundSource(event.target.value);
-  // };
-
-  // const handleTypeChange = (event) => {
-  //   setType(event.target.value);
-  // };
+  const handleCloseError = () => {
+    setHasError(false);
+  };
 
   return (
     <div>
@@ -174,7 +171,7 @@ const ProjectsAddFrom = ({ handleCreateProject }) => {
               </Grid>
 
               <Grid container item spacing={1}>
-                {inputFormElements.slice(14, 19).map((input) => (
+                {inputFormElements.slice(14, 18).map((input) => (
                   <Grid xs={input.xs} sm={input.sm} item>
                     <TextField {...input} onChange={handleChange} />
                   </Grid>
@@ -184,10 +181,33 @@ const ProjectsAddFrom = ({ handleCreateProject }) => {
               <Grid xs={12} sm={12} item>
                 <FormControl fullWidth>
                   <InputLabel id="demo-simple-select-label">
+                    Project Protfoilio
+                  </InputLabel>
+
+                  <Select
+                    required={true}
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={portfolio}
+                    label="Project Protfoilio"
+                    name="portfolio"
+                    onChange={handleChange}
+                  >
+                    <MenuItem value={"resilience"}>Resilience</MenuItem>
+                    <MenuItem value={"gender_justice"}>Gender Justice</MenuItem>
+                    <MenuItem value={"humanitarian"}>Humanitarian</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid xs={12} sm={12} item>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">
                     Project Type
                   </InputLabel>
 
                   <Select
+                    required={true}
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     value={type}
@@ -200,26 +220,6 @@ const ProjectsAddFrom = ({ handleCreateProject }) => {
                   </Select>
                 </FormControl>
               </Grid>
-
-              {/* <Grid xs={12} sm={12} item>
-                <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">
-                    Project Fund Source
-                  </InputLabel>
-
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={fund_source}
-                    label="Project Fund Source"
-                    name="fundSource"
-                    onChange={handleChange}
-                  >
-                    <MenuItem value={"duterte"}>Duterte</MenuItem>
-                    <MenuItem value={"marcos"}>Marcos</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid> */}
 
               <Grid container item spacing={1}>
                 <Grid xs={12} sm={12} item>
@@ -239,35 +239,41 @@ const ProjectsAddFrom = ({ handleCreateProject }) => {
 
               <Grid container item spacing={1}>
                 <Grid xs={12} sm={6} item>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker
-                      disablePast
-                      label="Start Date"
-                      openTo="day"
-                      views={["year", "month", "day"]}
-                      value={start_date}
-                      onChange={handleStartDateChange}
-                      renderInput={(params) => (
-                        <TextField {...params} fullWidth={true} />
-                      )}
-                    />
-                  </LocalizationProvider>
+                  <FormControl fullWidth>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DatePicker
+                        disablePast
+                        label="Start Date"
+                        openTo="day"
+                        views={["year", "month", "day"]}
+                        value={start_date}
+                        onChange={handleStartDateChange}
+                        required={true}
+                        renderInput={(params) => (
+                          <TextField {...params} fullWidth={true} />
+                        )}
+                      />
+                    </LocalizationProvider>
+                  </FormControl>
                 </Grid>
 
                 <Grid xs={12} sm={6} item>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker
-                      disablePast
-                      label="End Date"
-                      openTo="day"
-                      views={["year", "month", "day"]}
-                      value={end_date}
-                      onChange={handleEndDateChange}
-                      renderInput={(params) => (
-                        <TextField {...params} fullWidth={true} />
-                      )}
-                    />
-                  </LocalizationProvider>
+                  <FormControl fullWidth>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DatePicker
+                        disablePast
+                        label="End Date"
+                        openTo="day"
+                        views={["year", "month", "day"]}
+                        value={end_date}
+                        onChange={handleEndDateChange}
+                        required={true}
+                        renderInput={(params) => (
+                          <TextField {...params} fullWidth={true} />
+                        )}
+                      />
+                    </LocalizationProvider>
+                  </FormControl>
                 </Grid>
 
                 <Grid xs={12} sm={12} item>
@@ -282,6 +288,7 @@ const ProjectsAddFrom = ({ handleCreateProject }) => {
                       value={partner_id}
                       label="Partner"
                       name="partner_id"
+                      required={true}
                       onChange={handleChange}
                     >
                       {partnersCodeData.map((item) => (
@@ -305,6 +312,16 @@ const ProjectsAddFrom = ({ handleCreateProject }) => {
           </CardContent>
         </Card>
       </ValidatorForm>
+
+      <Snackbar
+        open={hasError}
+        autoHideDuration={3000}
+        onClose={handleCloseError}
+      >
+        <Alert severity="error" sx={{ width: "100%" }}>
+          {errorMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
