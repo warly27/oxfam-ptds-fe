@@ -2,13 +2,10 @@ import React, { useState } from "react";
 
 import { Span } from "app/components/Typography";
 import { ValidatorForm } from "react-material-ui-form-validator";
-import { inputFormElements } from "app/components/FormElement";
 
-import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import Icon from "@mui/material/Icon";
 import Button from "@mui/material/Button";
 
 import Grid from "@mui/material/Grid";
@@ -98,7 +95,7 @@ const IndicatorAddForms = ({ handleCreatePartner }) => {
                     variant="outlined"
                     color="primary"
                   >
-                    Reset
+                    Clear
                   </Button>
 
                   <LoadingButton
@@ -107,7 +104,6 @@ const IndicatorAddForms = ({ handleCreatePartner }) => {
                     type="submit"
                     loading={isLoading}
                   >
-                    <Icon>send</Icon>
                     <Span sx={{ pl: 1, textTransform: "capitalize" }}>
                       Submit
                     </Span>

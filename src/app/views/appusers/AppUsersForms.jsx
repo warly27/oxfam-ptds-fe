@@ -249,7 +249,7 @@ const AppUsersForms = ({ handleCreateUser }) => {
                     color="primary"
                     onClick={handleReset}
                   >
-                    Reset
+                    Clear
                   </Button>
 
                   <LoadingButton
@@ -258,7 +258,6 @@ const AppUsersForms = ({ handleCreateUser }) => {
                     type="submit"
                     loading={isLoading}
                   >
-                    <Icon>send</Icon>
                     <Span sx={{ pl: 1, textTransform: "capitalize" }}>
                       Submit
                     </Span>

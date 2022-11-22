@@ -99,7 +99,6 @@ const ProjectsLinkFrom = ({ handleLinkPartnerProject }) => {
                     variant="contained"
                     type="submit"
                   >
-                    <Icon>send</Icon>
                     <Span sx={{ pl: 1, textTransform: "capitalize" }}>
                       Submit
                     </Span>

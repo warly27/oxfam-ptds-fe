@@ -490,16 +490,6 @@ const EditUsersForms = ({ currentUser, handleEditUser }) => {
 
               <Grid container item>
                 <Grid item xs={12} align="right">
-                  {/* <Button
-                    style={margin}
-                    type="reset"
-                    variant="outlined"
-                    color="primary"
-                    onClick={handleReset}
-                  >
-                    Reset
-                  </Button> */}
-
                   <LoadingButton
                     color="primary"
                     variant="contained"
@@ -507,7 +497,6 @@ const EditUsersForms = ({ currentUser, handleEditUser }) => {
                     loading={isLoading}
                     fullWidth
                   >
-                    <Icon>send</Icon>
                     <Span sx={{ pl: 1, textTransform: "capitalize" }}>
                       Edit
                     </Span>

@@ -1,24 +1,19 @@
-import React, { useRef, useEffect, useState, useCallback } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { Button, Checkbox, Icon } from "@mui/material";
 import { Span } from "app/components/Typography";
 import { ValidatorForm } from "react-material-ui-form-validator";
 
 import Grid from "@mui/material/Grid";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import TextField from "@mui/material/TextField";
-import RadioGroup from "@mui/material/RadioGroup";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
-import Radio from "@mui/material/Radio";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import Autocomplete from "@mui/material/Autocomplete";
 
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -26,7 +21,6 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
 import LoadingButton from "@mui/lab/LoadingButton";
 
-import isEmpty from "lodash/isEmpty";
 import dayjs from "dayjs";
 
 const ParticipantBeneficiaryModal = ({
@@ -451,7 +445,6 @@ const ParticipantBeneficiaryModal = ({
                         fullWidth
                         onClick={handleNext}
                       >
-                        <Icon>send</Icon>
                         <Span sx={{ pl: 1, textTransform: "capitalize" }}>
                           ADD
                         </Span>

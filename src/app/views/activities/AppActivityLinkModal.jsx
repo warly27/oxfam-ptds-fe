@@ -14,7 +14,6 @@ import Select from "@mui/material/Select";
 import CardContent from "@mui/material/CardContent";
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
-import Icon from "@mui/material/Icon";
 import TextField from "@mui/material/TextField";
 import axios from "../../utils/axios";
 import useAuth from "../../hooks/useAuth";
@@ -120,15 +119,6 @@ const AddModal = ({
       indirect_participant_id: "",
       project_id: projectId,
     });
-
-    // console.log("[payload]", {
-    //   user_id,
-    //   direct_participant_id,
-    //   activity_id: currentId,
-    //   beneficiary_added: "no",
-    //   indirect_participant_id: "",
-    //   project_id: projectId,
-    // });
   };
 
   const handleAutoCompleteChange = (_event, value) => {
@@ -247,7 +237,6 @@ const AddModal = ({
                           variant="contained"
                           type="submit"
                         >
-                          <Icon>send</Icon>
                           <Span sx={{ pl: 1, textTransform: "capitalize" }}>
                             Submit
                           </Span>

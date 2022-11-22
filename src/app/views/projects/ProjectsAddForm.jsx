@@ -10,7 +10,6 @@ import CardContent from "@mui/material/CardContent";
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
-import Icon from "@mui/material/Icon";
 
 const ProjectsAddFrom = ({
   partnerList,
@@ -94,7 +93,6 @@ const ProjectsAddFrom = ({
                     variant="contained"
                     type="submit"
                   >
-                    <Icon>send</Icon>
                     <Span sx={{ pl: 1, textTransform: "capitalize" }}>
                       Submit
                     </Span>

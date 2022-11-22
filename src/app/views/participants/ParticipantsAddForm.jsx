@@ -167,7 +167,7 @@ const ParticipantsAddForm = ({
 
   useEffect(() => {
     fetchRegionData();
-  }, []);
+  }, [fetchRegionData]);
 
   useEffect(() => {
     if (!isEmpty(region)) {
@@ -817,7 +817,6 @@ const ParticipantsAddForm = ({
                 type="submit"
                 loading={isLoading}
               >
-                <Icon>send</Icon>
                 <Span sx={{ pl: 1, textTransform: "capitalize" }}>Submit</Span>
               </LoadingButton>
             </Grid>

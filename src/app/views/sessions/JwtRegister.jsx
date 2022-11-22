@@ -308,6 +308,7 @@ const JwtRegister = () => {
                         I have read and agree to the terms of service.
                       </Paragraph>
                     </FlexBox>
+
                     <LoadingButton
                       type="submit"
                       color="success"
@@ -317,6 +318,7 @@ const JwtRegister = () => {
                     >
                       Regiser
                     </LoadingButton>
+
                     <Paragraph>
                       Already have an account?
                       <NavLink

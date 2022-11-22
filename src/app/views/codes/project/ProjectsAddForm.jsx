@@ -295,7 +295,6 @@ const ProjectsAddFrom = ({ handleCreateProject }) => {
               <Grid container item spacing={1}>
                 <Grid item xs={12} align="right">
                   <Button color="primary" variant="contained" type="submit">
-                    <Icon>send</Icon>
                     <Span sx={{ pl: 1, textTransform: "capitalize" }}>
                       Submit
                     </Span>

@@ -191,7 +191,6 @@ const SimpleForm = () => {
         </Grid>
 
         <Button color="primary" variant="contained" type="submit">
-          <Icon>send</Icon>
           <Span sx={{ pl: 1, textTransform: "capitalize" }}>Submit</Span>
         </Button>
       </ValidatorForm>

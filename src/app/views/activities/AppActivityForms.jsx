@@ -8,7 +8,6 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import Icon from "@mui/material/Icon";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
@@ -220,10 +219,10 @@ const AppActivityForms = ({ handleCreateActivity }) => {
                     variant="outlined"
                     color="primary"
                   >
-                    Reset
+                    Clear
                   </Button>
+
                   <Button color="primary" variant="contained" type="submit">
-                    <Icon>send</Icon>
                     <Span sx={{ pl: 1, textTransform: "capitalize" }}>
                       Submit
                     </Span>
