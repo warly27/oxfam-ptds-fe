@@ -182,6 +182,7 @@ const AppUsersForms = ({ handleCreateUser }) => {
                       label="Project Fund Source"
                       onChange={handleChange}
                       name="fundSource"
+                      required
                     >
                       <MenuItem value={"admin"}>Admin</MenuItem>
                       <MenuItem value={"partner"}>Partner</MenuItem>

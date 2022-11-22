@@ -237,6 +237,8 @@ const ProjectssCodeData = ({
       console.log("[curExpanded]", curExpanded);
       console.log("[allExpanded]", allExpanded);
     },
+    print: false,
+    download: false,
   };
   return (
     <div className="App">

@@ -239,6 +239,8 @@ const ParticipantsData = ({
 
       handleClick();
     },
+    print: false,
+    download: false,
   };
   return (
     <div className="App">

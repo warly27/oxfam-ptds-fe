@@ -173,7 +173,7 @@ const AppUsersTable = () => {
       <Box className="breadcrumb" display="flex">
         <Breadcrumb
           routeSegments={[
-            { name: "App Users", path: "/appusers" },
+            { name: "PTDS Users", path: "/appusers" },
             { name: "Records" },
           ]}
         />
@@ -184,7 +184,7 @@ const AppUsersTable = () => {
           onClick={openModal}
         >
           <Icon>add</Icon>
-          <span>Users</span>
+          <span>Add New User</span>
         </Button>
       </Box>
 

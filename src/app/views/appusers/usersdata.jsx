@@ -129,6 +129,7 @@ const UsersData = ({
 
   const options = {
     filter: true,
+
     selectableRows: "none",
     // responsive: 'scrollMaxHeight',
     expandableRows: true,
@@ -225,12 +226,15 @@ const UsersData = ({
 
       handleClick();
     },
+    print: false,
+    download: false,
   };
+
   return (
     <div className="App">
       <ThemeProvider theme={getMuiTheme}>
         <MUIDataTable
-          title={"App Users"}
+          title={"PTDS Users"}
           options={options}
           columns={columns}
           data={data}

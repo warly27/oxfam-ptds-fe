@@ -186,6 +186,8 @@ const IndicatorsCodeData = ({ indicatorsCodeData, handleDeleteUser }) => {
 
       handleClick();
     },
+    print: false,
+    download: false,
   };
   return (
     <div className="App">
