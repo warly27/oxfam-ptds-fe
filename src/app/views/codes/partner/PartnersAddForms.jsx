@@ -147,6 +147,7 @@ const PartnersAddForms = ({
                     id="company"
                     options={partnerNameLookup}
                     fullWidth={true}
+                    required={true}
                     name="company"
                     value={companyName || currentName}
                     onChange={handleChangeAutoComplete}
@@ -156,7 +157,7 @@ const PartnersAddForms = ({
                         type="text"
                         name="company"
                         onChange={handleAutoCompleteName}
-                        label="Company name"
+                        label="Partner Mame"
                         required={true}
                         fullWidth={true}
                       />
@@ -170,6 +171,7 @@ const PartnersAddForms = ({
                       {...input}
                       defaultValue={currentData[`${input?.name}`]}
                       onChange={handleChange}
+                      label="Partner Address"
                     />
                   </Grid>
                 ))}
@@ -180,6 +182,8 @@ const PartnersAddForms = ({
                       {...input}
                       defaultValue={currentData[`${input?.name}`]}
                       onChange={handleChange}
+                      label="Partner Contact Number"
+                      required={false}
                     />
                   </Grid>
                 ))}
@@ -190,6 +194,8 @@ const PartnersAddForms = ({
                       {...input}
                       defaultValue={currentData[`${input?.name}`]}
                       onChange={handleChange}
+                      label="Partner Email"
+                      required={false}
                     />
                   </Grid>
                 ))}
@@ -200,11 +206,11 @@ const PartnersAddForms = ({
                   <FormControl fullWidth>
                     <TextField
                       name="companyWebsite"
-                      placeholder="Enter Company website"
-                      label="Company Website"
+                      placeholder="Enter Partner website"
+                      label="Partner Website"
                       variant="outlined"
                       fullWidth={true}
-                      required={true}
+                      // required={true}
                       xs={12}
                       sm={6}
                       defaultValue={currentData["companyWebsite"]}

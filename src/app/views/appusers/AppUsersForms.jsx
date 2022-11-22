@@ -2,15 +2,6 @@ import React, { useEffect, useState, useCallback } from "react";
 import { Span } from "app/components/Typography";
 import { ValidatorForm } from "react-material-ui-form-validator";
 import { inputFormElements } from "app/components/FormElement";
-// import {
-// Grid,
-// TextField,
-// Button,
-// Card,
-// CardContent,
-// Typography,
-// Icon,
-// } from "@material-ui/core";
 
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -22,7 +13,6 @@ import Button from "@mui/material/Button";
 import LoadingButton from "@mui/lab/LoadingButton";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
-import Icon from "@mui/material/Icon";
 
 import axios from "../../utils/axios";
 
@@ -61,7 +51,7 @@ const AppUsersForms = ({ handleCreateUser }) => {
 
   useEffect(() => {
     fetchPartnerCodeLookup();
-  }, []);
+  }, [fetchPartnerCodeLookup]);
 
   useEffect(() => {
     if (partnerId) {
@@ -184,9 +174,10 @@ const AppUsersForms = ({ handleCreateUser }) => {
                       name="fundSource"
                       required
                     >
-                      <MenuItem value={"admin"}>Admin</MenuItem>
-                      <MenuItem value={"partner"}>Partner</MenuItem>
-                      <MenuItem value={"melsa"}>Melsa</MenuItem>
+                      <MenuItem value={"admin"}>A1 - Admin</MenuItem>
+                      <MenuItem value={"partner"}>A2 - MELSA</MenuItem>
+                      <MenuItem value={"melsa"}>A3 - Partner</MenuItem>
+                      <MenuItem value={"viewer"}>A4 - View Only</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>

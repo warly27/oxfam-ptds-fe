@@ -64,8 +64,8 @@ export const inputFormElements = [
   },
   {
     name: "company",
-    placeholder: "Enter company name",
-    label: "Company Name",
+    placeholder: "Enter Partner name",
+    label: "Partner Name",
     variant: "outlined",
     fullWidth: true,
     required: true,
@@ -74,8 +74,8 @@ export const inputFormElements = [
   },
   {
     name: "companyAddress",
-    placeholder: "Enter company address",
-    label: "Company address",
+    placeholder: "Enter Partner address",
+    label: "Partner address",
     variant: "outlined",
     fullWidth: true,
     required: true,
@@ -84,8 +84,8 @@ export const inputFormElements = [
   },
   {
     name: "companyWebsite",
-    placeholder: "Enter company website",
-    label: "Company Website",
+    placeholder: "Enter Partner website",
+    label: "Partner Website",
     variant: "outlined",
     fullWidth: true,
     required: false,

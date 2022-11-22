@@ -79,7 +79,7 @@ const PartnersCodeData = ({
     },
     {
       name: "name",
-      label: "Company/Partner Name",
+      label: "Partner Name",
       options: {
         filter: true,
       },
