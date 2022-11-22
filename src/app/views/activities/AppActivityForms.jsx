@@ -170,6 +170,29 @@ const AppActivityForms = ({ handleCreateActivity }) => {
                   />
                 </Grid>
 
+                <Grid xs={12} sm={12} item>
+                  <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-label">Type</InputLabel>
+
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={fund_source}
+                      label="activity_type"
+                      onChange={handleChange}
+                      name="type"
+                      required={true}
+                    >
+                      <MenuItem value={"activity_based"}>
+                        Activity-Based
+                      </MenuItem>
+                      <MenuItem value={"financial_inclusion"}>
+                        Financial Inclusion
+                      </MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+
                 <Grid item xs={12} sm={12}>
                   <TextField
                     type="text"

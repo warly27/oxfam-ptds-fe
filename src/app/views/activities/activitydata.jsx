@@ -13,7 +13,7 @@ import Button from "app/components/controls/Button";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 import days from "dayjs";
-import AddIcon from "@mui/icons-material/Add";
+import GroupAddIcon from "@mui/icons-material/GroupAdd";
 
 import VisibilityIcon from "@mui/icons-material/Visibility";
 
@@ -80,6 +80,7 @@ const ActivitiesData = ({
       label: "ID",
       options: {
         filter: true,
+        display: false,
       },
     },
     {
@@ -111,6 +112,10 @@ const ActivitiesData = ({
       options: {
         display: false,
       },
+    },
+    {
+      name: "project_code",
+      label: "Project",
     },
     {
       name: "creator_id",
@@ -161,7 +166,7 @@ const ActivitiesData = ({
                       <TableCell component="th" scope="row" align="center">
                         <Button
                           onClick={() => handleClick(rowData[0])}
-                          text={<AddIcon />}
+                          text={<GroupAddIcon />}
                           size="small"
                           disabled={rowData[6] === "1"}
                         />
@@ -209,7 +214,7 @@ const ActivitiesData = ({
       <ThemeProvider theme={getMuiTheme}>
         {/* total amount of the current page: {total} */}
         <MUIDataTable
-          title={"Activities"}
+          title={"Activities Records"}
           options={options}
           columns={columns}
           data={data}

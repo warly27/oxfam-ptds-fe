@@ -103,7 +103,7 @@ const ParticipantsTable = () => {
           onClick={openModal}
         >
           <Icon>add</Icon>
-          <span>Participants</span>
+          <span>Add New Participant</span>
         </Button>
       </Box>
 

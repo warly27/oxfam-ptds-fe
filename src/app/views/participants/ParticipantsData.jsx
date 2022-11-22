@@ -62,54 +62,64 @@ const ParticipantsData = ({
       name: "id",
       label: "Id",
       options: {
+        display: false,
+      },
+    },
+    {
+      name: "last_name",
+      label: "Last name",
+      options: {
         filter: true,
       },
     },
     {
       name: "first_name",
-      label: "Name",
+      label: "First name",
       options: {
         filter: true,
+      },
+    },
+    {
+      name: "age",
+      label: "Age",
+    },
+    {
+      name: "gender",
+      label: "Sex",
+    },
+    {
+      name: "address",
+      label: "Address",
+      options: {
+        customBodyRender: (_value, _meta, _uValue) => (
+          <>{`${_meta?.rowData[16]} ${_meta?.rowData[17]}  ${_meta?.rowData[18]}`}</>
+        ),
+      },
+    },
+    {
+      name: "type",
+      label: "Type",
+      options: {
+        customBodyRender: (_value, _meta, _uValue) => <>Direct Beneficiary</>,
       },
     },
     {
       name: "email",
       label: "email",
       options: {
-        filter: true,
+        display: false,
       },
     },
     {
       name: "contact_number",
       label: "Mobile no.",
       options: {
-        display: true,
-      },
-    },
-    {
-      name: "age",
-      label: "Age",
-      options: {
-        display: true,
-      },
-    },
-    {
-      name: "address",
-      label: "Address",
-      options: {
-        display: true,
+        display: false,
       },
     },
     {
       name: "dob",
       label: "Birthday",
-      options: {
-        display: false,
-      },
-    },
-    {
-      name: "gender",
-      label: "Gender",
       options: {
         display: false,
       },
@@ -156,6 +166,27 @@ const ParticipantsData = ({
         display: false,
       },
     },
+    {
+      name: "house_number",
+      label: "house_number",
+      options: {
+        display: false,
+      },
+    },
+    {
+      name: "municipality",
+      label: "municipality",
+      options: {
+        display: false,
+      },
+    },
+    {
+      name: "province",
+      label: "province",
+      options: {
+        display: false,
+      },
+    },
   ];
 
   const options = {
@@ -178,30 +209,26 @@ const ParticipantsData = ({
                     <TableRow>
                       <TableCell component="th" scope="row" align="left">
                         <strong>Date of birth: </strong>
-                        {rowData[6]}
+                        {rowData[9]}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="left">
-                        <strong>Gender:</strong> {rowData[7]}
-                      </TableCell>
-
-                      <TableCell component="th" scope="row" align="left">
-                        <strong>Civil Status: </strong> {rowData[8]}
+                        <strong>Civil Status: </strong> {rowData[10]}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="left">
                         <strong>With Disability:</strong>{" "}
-                        {rowData[9] === ""
+                        {rowData[11] === ""
                           ? "None"
                           : rowData[9].replaceAll("_", " ")}
                       </TableCell>
 
                       <TableCell component="th" scope="row" align="left">
                         <strong>Approved:</strong>{" "}
-                        {daysJs(rowData[11]).format("DD/MM/YYYY")}
+                        {daysJs(rowData[12]).format("DD/MM/YYYY")}
                       </TableCell>
 
-                      {rowData[13] === "yes" && (
+                      {rowData[15] === "yes" && (
                         <TableCell component="th" scope="row" align="center">
                           <Button
                             onClick={() => confirm(rowData[0])}
@@ -247,7 +274,7 @@ const ParticipantsData = ({
       <ThemeProvider theme={getMuiTheme}>
         {/* total amount of the current page: {total} */}
         <MUIDataTable
-          title={"App Participants"}
+          title={"Participants Records"}
           options={options}
           columns={columns}
           data={data}
