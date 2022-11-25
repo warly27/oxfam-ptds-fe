@@ -40,6 +40,7 @@ const ProjectsAddFrom = ({ handleCreateProject }) => {
   const [end_date, setEndDate] = useState(null);
   const [type, setType] = useState("");
   const [partner_id, setPartner_id] = useState("");
+  const [project_status, setProjectStatus] = useState("");
   const [partnersCodeData, setPartnersCodeData] = useState([]);
 
   const [hasError, setHasError] = useState(false);
@@ -97,6 +98,11 @@ const ProjectsAddFrom = ({ handleCreateProject }) => {
       setType(event.target.value);
     }
 
+    const isStatus = event.target.name === "project_status";
+    if (isStatus) {
+      setProjectStatus(event.target.value);
+    }
+
     const isPartnerId = event.target.name === "partner_id";
     if (isPartnerId) {
       setPartner_id(event.target.value);
@@ -133,6 +139,7 @@ const ProjectsAddFrom = ({ handleCreateProject }) => {
       end_date: end_date?.$d,
       type,
       partner_id,
+      status: project_status,
     });
   };
 
@@ -147,6 +154,8 @@ const ProjectsAddFrom = ({ handleCreateProject }) => {
   const handleCloseError = () => {
     setHasError(false);
   };
+
+  const margin = { margin: "0 5px" };
 
   return (
     <div>
@@ -171,7 +180,7 @@ const ProjectsAddFrom = ({ handleCreateProject }) => {
               </Grid>
 
               <Grid container item spacing={1}>
-                {inputFormElements.slice(14, 18).map((input) => (
+                {inputFormElements.slice(14, 17).map((input) => (
                   <Grid xs={input.xs} sm={input.sm} item>
                     <TextField {...input} onChange={handleChange} />
                   </Grid>
@@ -222,22 +231,6 @@ const ProjectsAddFrom = ({ handleCreateProject }) => {
               </Grid>
 
               <Grid container item spacing={1}>
-                <Grid xs={12} sm={12} item>
-                  <TextField
-                    name="fundSource"
-                    placeholder="Enter project fund source"
-                    label="Project Fund Source"
-                    variant="outlined"
-                    fullWidth={true}
-                    required={true}
-                    xs={12}
-                    sm={12}
-                    onChange={handleChange}
-                  />
-                </Grid>
-              </Grid>
-
-              <Grid container item spacing={1}>
                 <Grid xs={12} sm={6} item>
                   <FormControl fullWidth>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -277,6 +270,52 @@ const ProjectsAddFrom = ({ handleCreateProject }) => {
                 </Grid>
 
                 <Grid xs={12} sm={12} item>
+                  <TextField
+                    name="fundSource"
+                    placeholder="Enter project fund source"
+                    label="Project Fund Source"
+                    variant="outlined"
+                    fullWidth={true}
+                    required={true}
+                    xs={12}
+                    sm={12}
+                    onChange={handleChange}
+                  />
+                </Grid>
+
+                <Grid container item spacing={1}>
+                  {inputFormElements.slice(17, 18).map((input) => (
+                    <Grid xs={input.xs} sm={input.sm} item>
+                      <TextField {...input} onChange={handleChange} />
+                    </Grid>
+                  ))}
+                </Grid>
+
+                <Grid xs={12} sm={12} item>
+                  <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-label">
+                      Project Status
+                    </InputLabel>
+
+                    <Select
+                      required={true}
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={project_status}
+                      label="Project Status"
+                      name="project_status"
+                      onChange={handleChange}
+                    >
+                      <MenuItem value={"not_yet_started"}>
+                        Not yet started
+                      </MenuItem>
+                      <MenuItem value={"in_progress"}>In progress</MenuItem>
+                      <MenuItem value={"completed"}>Completed</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+
+                <Grid xs={12} sm={12} item>
                   <FormControl fullWidth>
                     <InputLabel id="demo-simple-select-label">
                       Partner
@@ -301,6 +340,15 @@ const ProjectsAddFrom = ({ handleCreateProject }) => {
 
               <Grid container item spacing={1}>
                 <Grid item xs={12} align="right">
+                  <Button
+                    style={margin}
+                    type="reset"
+                    variant="outlined"
+                    color="primary"
+                  >
+                    Clear
+                  </Button>
+
                   <Button color="primary" variant="contained" type="submit">
                     <Span sx={{ pl: 1, textTransform: "capitalize" }}>
                       Submit

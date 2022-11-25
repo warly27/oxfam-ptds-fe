@@ -238,8 +238,8 @@ const ProjectssCodeData = ({
       console.log("[allExpanded]", allExpanded);
     },
     print: false,
-    download: false,
   };
+
   return (
     <div className="App">
       <ThemeProvider theme={getMuiTheme}>
