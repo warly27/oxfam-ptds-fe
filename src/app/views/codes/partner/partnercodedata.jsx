@@ -214,7 +214,6 @@ const PartnersCodeData = ({
     // },
     onRowsExpand: (curExpanded, allExpanded) => {},
     print: false,
-    download: false,
   };
 
   return (
