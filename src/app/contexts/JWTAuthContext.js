@@ -59,7 +59,14 @@ export const AuthProvider = ({ children }) => {
       password,
     });
 
-    console.log(response.data);
+    return response;
+  };
+
+  const verifyLoginOtp = async (data) => {
+    const response = await axios.post(`${BASE_URL}/auth/login/verify`, data);
+
+    console.log("[response.data]", response.data);
+
     const { accessToken, user } = response.data;
 
     setUser(user);
@@ -169,6 +176,7 @@ export const AuthProvider = ({ children }) => {
         logout,
         register,
         adminCreateUser,
+        verifyLoginOtp,
       }}
     >
       {children}

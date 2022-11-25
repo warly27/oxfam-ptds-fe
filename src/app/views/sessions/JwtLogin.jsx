@@ -1,13 +1,17 @@
+import { useState, useEffect } from "react";
 import { LoadingButton } from "@mui/lab";
-import { Card, Checkbox, Grid, TextField } from "@mui/material";
+import { Card, Checkbox, Grid, TextField, Button } from "@mui/material";
 import { Box, styled, useTheme } from "@mui/system";
 import { Paragraph } from "app/components/Typography";
 import useAuth from "app/hooks/useAuth";
 import { Formik } from "formik";
-import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import CustomizedDialogs from "../mydialogbox/customDialog";
+
+import axios from "../../utils/axios";
+
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const FlexBox = styled(Box)(() => ({ display: "flex", alignItems: "center" }));
 
@@ -56,20 +60,99 @@ const JwtLogin = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [message, setModalMessage] = useState();
-  const { login } = useAuth();
+  const [isValidated, setIsValidated] = useState(false);
+  const [isResend, setIsResend] = useState(false);
+  const [message, setModalMessage] = useState("");
+  const [session, setSession] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [user_id, setUserId] = useState("");
+  const [counter, setCounter] = useState(300);
+
+  const { login, verifyLoginOtp } = useAuth();
+
+  useEffect(() => {
+    if (isResend) {
+      if (counter > 0) {
+        setTimeout(() => setCounter(counter - 1), 1000);
+      }
+
+      if (counter === 0) {
+        setIsResend(false);
+        setCounter(300);
+      }
+    }
+  }, [counter, isResend]);
 
   const handleFormSubmit = async (values) => {
     setLoading(true);
     try {
-      const response = await login(values.email, values.password);
+      if (!isValidated) {
+        const response = await login(values.email, values.password);
 
-      console.log("[response]", response);
+        setModalMessage(undefined);
+        setLoading(false);
 
-      navigate("/");
-      setModalMessage(undefined);
+        const isSuccess = response?.status === 200;
+
+        if (isSuccess) {
+          setSession(response?.data?.session);
+          setUserId(response?.data?.user_id);
+          setEmail(values.email);
+          setPassword(values.password);
+          setIsValidated(isSuccess);
+        }
+      }
+
+      if (isValidated) {
+        const payload = {
+          session,
+          confirmation_code: values.code,
+          user_id,
+        };
+
+        const response = await verifyLoginOtp(payload);
+
+        console.log("[response]", response);
+
+        navigate("/");
+
+        setModalMessage(undefined);
+        setLoading(false);
+        setSession("");
+        setUserId("");
+        setEmail("");
+        setPassword("");
+        setIsValidated(false);
+      }
     } catch (e) {
       setModalMessage(e.message);
+      setLoading(false);
+      setShowModal(true);
+      setIsValidated(false);
+      setSession("");
+      setUserId("");
+      setEmail("");
+      setPassword("");
+    }
+  };
+
+  const handleResendOTP = async () => {
+    try {
+      const resendOtp = await axios.post(`${BASE_URL}/auth/login`, {
+        email,
+        password,
+      });
+
+      const isSuccess = resendOtp.status === 200;
+
+      if (isSuccess) {
+        setSession(resendOtp?.data?.session);
+        setUserId(resendOtp?.data?.user_id);
+        setIsResend(true);
+      }
+    } catch (err) {
+      setModalMessage(err.message);
       setLoading(false);
       setShowModal(true);
     }
@@ -144,79 +227,100 @@ const JwtLogin = () => {
                   handleSubmit,
                 }) => (
                   <form onSubmit={handleSubmit}>
-                    <TextField
-                      fullWidth
-                      size="small"
-                      type="email"
-                      name="email"
-                      label="Email"
-                      variant="outlined"
-                      onBlur={handleBlur}
-                      value={values.email}
-                      onChange={handleChange}
-                      helperText={touched.email && errors.email}
-                      error={Boolean(errors.email && touched.email)}
-                      sx={{ mb: 3 }}
-                    />
-
-                    <TextField
-                      fullWidth
-                      size="small"
-                      name="password"
-                      type="password"
-                      label="Password"
-                      variant="outlined"
-                      onBlur={handleBlur}
-                      value={values.password}
-                      onChange={handleChange}
-                      helperText={touched.password && errors.password}
-                      error={Boolean(errors.password && touched.password)}
-                      sx={{ mb: 1.5 }}
-                    />
-
-                    <FlexBox justifyContent="space-between">
-                      <FlexBox gap={1}>
-                        <Checkbox
+                    {!isValidated && (
+                      <>
+                        <TextField
+                          fullWidth
                           size="small"
-                          name="remember"
+                          type="email"
+                          name="email"
+                          label="Email"
+                          variant="outlined"
+                          onBlur={handleBlur}
+                          value={values.email}
                           onChange={handleChange}
-                          checked={values.remember}
-                          sx={{ padding: 0 }}
+                          helperText={touched.email && errors.email}
+                          error={Boolean(errors.email && touched.email)}
+                          sx={{ mb: 3 }}
                         />
 
-                        <Paragraph>Remember Me</Paragraph>
-                      </FlexBox>
+                        <TextField
+                          fullWidth
+                          size="small"
+                          name="password"
+                          type="password"
+                          label="Password"
+                          variant="outlined"
+                          onBlur={handleBlur}
+                          value={values.password}
+                          onChange={handleChange}
+                          helperText={touched.password && errors.password}
+                          error={Boolean(errors.password && touched.password)}
+                          sx={{ mb: 1.5 }}
+                        />
 
-                      <NavLink
-                        to="/forgot-password"
-                        style={{ color: theme.palette.primary.main }}
-                      >
-                        Forgot password?
-                      </NavLink>
-                    </FlexBox>
+                        <FlexBox justifyContent="space-between">
+                          <FlexBox gap={1}>
+                            <Checkbox
+                              size="small"
+                              name="remember"
+                              onChange={handleChange}
+                              checked={values.remember}
+                              sx={{ padding: 0 }}
+                            />
+
+                            <Paragraph>Remember Me</Paragraph>
+                          </FlexBox>
+
+                          <NavLink
+                            to="/forgot-password"
+                            style={{ color: theme.palette.primary.main }}
+                          >
+                            Forgot password?
+                          </NavLink>
+                        </FlexBox>
+                      </>
+                    )}
+
+                    {isValidated && (
+                      <>
+                        <h3>Check your email for OTP</h3>
+
+                        <TextField
+                          fullWidth
+                          type="text"
+                          name="code"
+                          label="OTP"
+                          variant="outlined"
+                          onBlur={handleBlur}
+                          value={values.code}
+                          onChange={handleChange}
+                          helperText={touched.code && errors.code}
+                          error={Boolean(errors.code && touched.code)}
+                          sx={{ mb: 1, mt: 1, textAlign: "center" }}
+                        />
+
+                        <Button
+                          fullWidth
+                          variant="text"
+                          onClick={handleResendOTP}
+                          disabled={isResend}
+                        >
+                          Resend OTP {isResend && <>{`(${counter})`}</>}
+                        </Button>
+                      </>
+                    )}
 
                     <LoadingButton
                       type="submit"
                       color="success"
                       loading={loading}
                       variant="contained"
+                      fullWidth
                       sx={{ my: 2 }}
                     >
-                      Login
+                      {isValidated ? "Confirm" : "Login"}
                     </LoadingButton>
-
-                    {/* <Paragraph>
-                      Don't have an account?
-                      <NavLink
-                        to="/signup"
-                        style={{
-                          color: theme.palette.primary.main,
-                          marginLeft: 5,
-                        }}
-                      >
-                        Register
-                      </NavLink>
-                    </Paragraph> */}
                   </form>
                 )}
               </Formik>
