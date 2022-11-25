@@ -227,7 +227,6 @@ const UsersData = ({
       handleClick();
     },
     print: false,
-    download: false,
   };
 
   return (

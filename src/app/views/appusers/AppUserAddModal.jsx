@@ -57,7 +57,7 @@ const AppUserAddModal = ({
     >
       <Box sx={style}>
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          {isEdit ? "Edit" : "Create"} an App User
+          {isEdit ? "Edit User Account" : "Create New User Account"}
         </Typography>
 
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
