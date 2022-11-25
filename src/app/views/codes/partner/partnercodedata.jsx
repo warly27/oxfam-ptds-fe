@@ -70,8 +70,7 @@ const PartnersCodeData = ({
       name: "id",
       label: "Code id",
       options: {
-        filter: false,
-        display: false
+        filter: true,
       },
     },
     {
@@ -92,8 +91,7 @@ const PartnersCodeData = ({
       name: "email",
       label: "email",
       options: {
-        filter: false,
-        display: false
+        filter: true,
       },
     },
     {
@@ -107,16 +105,14 @@ const PartnersCodeData = ({
       name: "website",
       label: "Website",
       options: {
-        filter: false,
-        display: false
+        display: false,
       },
     },
     {
       name: "contact_number",
       label: "Contact No.",
       options: {
-        filter: false,
-        display: false
+        display: false,
       },
     },
     {
@@ -155,7 +151,7 @@ const PartnersCodeData = ({
                 <Table>
                   <TableBody>
                     <TableRow>
-                      {/* <TableCell component="th" scope="row" align="left">
+                      <TableCell component="th" scope="row" align="left">
                         <strong>Website: </strong>
                         {rowData[5]}
                       </TableCell>
@@ -163,7 +159,7 @@ const PartnersCodeData = ({
                       <TableCell component="th" scope="row" align="left">
                         <strong>Contact number: </strong>
                         {rowData[6]}
-                      </TableCell> */}
+                      </TableCell>
 
                       <TableCell component="th" scope="row" align="left">
                         <strong>Created By: </strong>
