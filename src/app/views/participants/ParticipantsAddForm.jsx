@@ -232,7 +232,6 @@ const ParticipantsAddForm = ({
     console.log("[beneficiariesData]", beneficiariesData);
 
     handleCreateParticipant({
-      email,
       first_name: firstName,
       last_name: lastName,
       middle_name: middleName,
@@ -451,17 +450,6 @@ const ParticipantsAddForm = ({
                     )}
                   />
                 </LocalizationProvider>
-              </Grid>
-
-              <Grid item xs={12}>
-                <TextField
-                  type="email"
-                  name="email"
-                  label="Email"
-                  onChange={handleChange}
-                  required={true}
-                  fullWidth={true}
-                />
               </Grid>
 
               <Grid item xs={12}>

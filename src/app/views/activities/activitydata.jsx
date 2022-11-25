@@ -85,14 +85,14 @@ const ActivitiesData = ({
     },
     {
       name: "title",
-      label: "Title",
+      label: "Activity Title",
       options: {
         filter: true,
       },
     },
     {
-      name: "description",
-      label: "Description",
+      name: "venue",
+      label: "Venue",
       options: {
         filter: true,
       },
@@ -108,8 +108,10 @@ const ActivitiesData = ({
       },
     },
     {
-      name: "venue",
+      name: "description",
+      label: "Description",
       options: {
+        filter: true,
         display: false,
       },
     },
@@ -150,7 +152,7 @@ const ActivitiesData = ({
                   <TableBody>
                     <TableRow>
                       <TableCell component="th" scope="row" align="left">
-                        <strong>Venue: </strong>
+                        <strong>Description: </strong>
                         {rowData[4]}
                       </TableCell>
 
@@ -207,7 +209,6 @@ const ActivitiesData = ({
       console.log("[allExpanded]", allExpanded);
     },
     print: false,
-    download: false,
   };
   return (
     <div className="App">

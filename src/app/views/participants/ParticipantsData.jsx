@@ -88,19 +88,19 @@ const ParticipantsData = ({
       label: "Sex",
     },
     {
+      name: "type",
+      label: "Type",
+      options: {
+        customBodyRender: (_value, _meta, _uValue) => <>Direct Beneficiary</>,
+      },
+    },
+    {
       name: "address",
       label: "Address",
       options: {
         customBodyRender: (_value, _meta, _uValue) => (
           <>{`${_meta?.rowData[16]} ${_meta?.rowData[17]}  ${_meta?.rowData[18]}`}</>
         ),
-      },
-    },
-    {
-      name: "type",
-      label: "Type",
-      options: {
-        customBodyRender: (_value, _meta, _uValue) => <>Direct Beneficiary</>,
       },
     },
     {
@@ -267,8 +267,8 @@ const ParticipantsData = ({
       handleClick();
     },
     print: false,
-    download: false,
   };
+
   return (
     <div className="App">
       <ThemeProvider theme={getMuiTheme}>

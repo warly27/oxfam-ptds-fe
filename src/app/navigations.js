@@ -15,6 +15,11 @@ export const navigations = [
     path: "/participants/records",
     icon: "people_outline",
   },
+  {
+    name: "Reports",
+    path: "/reports",
+    icon: "assessment",
+  },
 ];
 
 export const melsa_navigations = [
@@ -26,21 +31,26 @@ export const melsa_navigations = [
   // { label: "Tool management", type: "label" },
   { name: "Partners", path: "/partners/code", icon: "people" },
   { name: "Projects", path: "/projects/code", icon: "assignment" },
+  { name: "Activities", path: "/activity/records", icon: "settings" },
   {
     name: "Participants",
     path: "/participants/records",
     icon: "people_outline",
   },
-  { name: "Activities", path: "/activity/records", icon: "settings" },
+  {
+    name: "Reports",
+    path: "/reports",
+    icon: "assessment",
+  },
 ];
 
 export const partners_navigations = [
   { label: "Records", type: "label" },
   { name: "Projects", path: "/projects/records", icon: "assignment" },
+  { name: "Activities", path: "/activity/records", icon: "settings" },
   {
     name: "Participants",
     path: "/participants/records",
     icon: "people_outline",
   },
-  { name: "Activities", path: "/activity/records", icon: "settings" },
 ];
