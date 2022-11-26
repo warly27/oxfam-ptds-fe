@@ -157,7 +157,7 @@ const PartnersAddForms = ({
                         type="text"
                         name="company"
                         onChange={handleAutoCompleteName}
-                        label="Partner Mame"
+                        label="Partner Name"
                         required={true}
                         fullWidth={true}
                       />

@@ -10,9 +10,9 @@ import Button from "@mui/material/Button";
 import PartnersCodeData from "./projectcodedata";
 import axios from "../../../utils/axios";
 
-import useAuth from "../../../hooks/useAuth";
 import ProjectsAddModal from "./ProjectsAddModal";
 import AddModal from "./AppActivityLinkModal";
+import { isEmpty } from "lodash";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
@@ -50,11 +50,12 @@ const Container = styled("div")(({ theme }) => ({
 
 const ProjectCodeTable = () => {
   const classes = useStyles();
-  const { adminCreateUser } = useAuth();
   const [showModal, setShowModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [projectsCodeData, setProjectsCodeData] = useState([]);
   const [currentId, setCurrentId] = useState("");
+  const [currentData, setCurrentData] = useState({});
+  const [isEdit, setIsEdit] = useState(false);
 
   const descriptionElementRef = useRef(null);
 
@@ -65,9 +66,23 @@ const ProjectCodeTable = () => {
     setProjectsCodeData(getPartnersCodeResult?.data.data);
   }, []);
 
+  const fetchCurrentData = useCallback(async () => {
+    const getPartnersCodeResult = await axios.get(
+      `${BASE_URL}/codes/project/details?id=${currentId}`
+    );
+
+    setCurrentData(getPartnersCodeResult?.data.data);
+  }, [currentId]);
+
   useEffect(() => {
     fetchAllUsers();
   }, [fetchAllUsers]);
+
+  useEffect(() => {
+    if (!isEmpty(currentId) && isEdit) {
+      fetchCurrentData();
+    }
+  }, [fetchCurrentData, currentId, isEdit]);
 
   useEffect(() => {
     if (showModal) {
@@ -122,22 +137,6 @@ const ProjectCodeTable = () => {
     }
   };
 
-  const handleDeleteUser = async (cognitoId, email) => {
-    const payload = {
-      cognito_id: cognitoId,
-      email,
-    };
-
-    const deleteRequest = await axios.post(
-      `${BASE_URL}/users/deleteUser`,
-      payload
-    );
-
-    if (deleteRequest?.status === 200) {
-      fetchAllUsers();
-    }
-  };
-
   const handleDeleteProjectCode = async (id, code) => {
     const payload = {
       id,
@@ -151,6 +150,16 @@ const ProjectCodeTable = () => {
 
     if (deleteRequest?.status === 200) {
       fetchAllUsers();
+    }
+  };
+
+  const handleEditProject = async (payload) => {
+    const editRequest = await axios.patch(`${BASE_URL}/codes/project`, payload);
+
+    if (editRequest?.status === 200) {
+      fetchAllUsers();
+      setShowModal(false);
+      setIsEdit(false);
     }
   };
 
@@ -184,6 +193,8 @@ const ProjectCodeTable = () => {
             handleDeleteProjectCode={handleDeleteProjectCode}
             setCurrentId={setCurrentId}
             setShowAddModal={setShowAddModal}
+            setShowModal={setShowModal}
+            setIsEdit={setIsEdit}
           />
         </Grid>
       </Grid>
@@ -192,6 +203,11 @@ const ProjectCodeTable = () => {
         showModal={showModal}
         setShowModal={setShowModal}
         handleCreateProject={handleCreateProject}
+        currentData={currentData}
+        setCurrentId={setCurrentId}
+        setCurrentData={setCurrentData}
+        isEdit={isEdit}
+        handleEditProject={handleEditProject}
       />
 
       <AddModal

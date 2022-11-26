@@ -16,6 +16,7 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import dayjs from "dayjs";
 
 import AddIcon from "@mui/icons-material/Add";
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
 
 const ProjectssCodeData = ({
   projectsCodeData,
@@ -23,6 +24,8 @@ const ProjectssCodeData = ({
   handleDeleteProjectCode,
   setCurrentId,
   setShowAddModal,
+  setShowModal,
+  setIsEdit,
 }) => {
   const [data, setData] = useState([]);
 
@@ -52,6 +55,12 @@ const ProjectssCodeData = ({
 
   const onClickDeleteUser = (id, code) => {
     handleDeleteProjectCode(id, code);
+  };
+
+  const onClickEdit = (id) => {
+    setCurrentId(id);
+    setShowModal(true);
+    setIsEdit(true);
   };
 
   const columns = [
@@ -121,8 +130,8 @@ const ProjectssCodeData = ({
       },
     },
     {
-      name: "portfoliio",
-      label: "Portfoliio",
+      name: "portfolio",
+      label: "Portfolio",
       options: {
         display: false,
       },
@@ -209,6 +218,15 @@ const ProjectssCodeData = ({
                           disabled={rowData[5] === "1"}
                         />
                       </TableCell> */}
+
+                      <TableCell component="th" scope="row" align="center">
+                        <Button
+                          onClick={() => onClickEdit(rowData[0])}
+                          text={<ModeEditIcon />}
+                          size="small"
+                          disabled={rowData[6] === "1"}
+                        />
+                      </TableCell>
 
                       <TableCell component="th" scope="row" align="center">
                         <Button

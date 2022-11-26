@@ -6,11 +6,24 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import ProjectsAddFrom from "./ProjectsAddForm";
+import ProjectsEditForm from "./ProjectsEditForm";
 import { Typography } from "@material-ui/core";
+import { isEmpty } from "lodash";
 
-const ProjectsAddModal = ({ showModal, setShowModal, handleCreateProject }) => {
+const ProjectsAddModal = ({
+  showModal,
+  setShowModal,
+  handleCreateProject,
+  setCurrentId,
+  setCurrentData,
+  isEdit,
+  currentData,
+  handleEditProject,
+}) => {
   const handleClose = () => {
     setShowModal((prev) => !prev);
+    setCurrentId("");
+    setCurrentData({});
   };
 
   const descriptionElementRef = useRef(null);
@@ -34,7 +47,7 @@ const ProjectsAddModal = ({ showModal, setShowModal, handleCreateProject }) => {
       >
         <DialogTitle id="scroll-dialog-title">
           <Typography variant="h4" color="primary">
-            Create a Project
+            {isEdit ? "Edit Project" : "Create a Project"}
           </Typography>
         </DialogTitle>
         <DialogContent dividers>
@@ -43,7 +56,18 @@ const ProjectsAddModal = ({ showModal, setShowModal, handleCreateProject }) => {
             ref={descriptionElementRef}
             tabIndex={-1}
           >
-            <ProjectsAddFrom handleCreateProject={handleCreateProject} />
+            {!isEdit && (
+              <ProjectsAddFrom handleCreateProject={handleCreateProject} />
+            )}
+
+            {isEdit && !isEmpty(currentData) && (
+              <ProjectsEditForm
+                currentData={currentData}
+                handleEditProject={handleEditProject}
+              />
+            )}
+
+            {isEdit && isEmpty(currentData) && <> Loading... </>}
           </DialogContentText>
         </DialogContent>
       </Dialog>

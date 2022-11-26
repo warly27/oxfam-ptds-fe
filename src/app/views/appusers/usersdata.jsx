@@ -62,6 +62,7 @@ const UsersData = ({
       label: "ID",
       options: {
         filter: true,
+        display: false,
       },
     },
     {
