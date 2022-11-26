@@ -7,15 +7,25 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import AppActivityForms from "./AppActivityForms";
 import { Typography } from "@material-ui/core";
+import { isEmpty } from "lodash";
+
+import EditActivityForms from "./EditActivityForms";
 
 const AppActivityAddModal = ({
   showModal,
   setShowModal,
   handleCreateActivity,
+  currentData,
+  isEdit,
+  handleEditActivity,
+  setIsEdit,
+  setCurrentData,
 }) => {
   console.log(showModal + " from the modal component");
   const handleClose = () => {
     setShowModal((prev) => !prev);
+    setIsEdit(false);
+    setCurrentData({});
   };
 
   const descriptionElementRef = useRef(null);
@@ -39,7 +49,7 @@ const AppActivityAddModal = ({
       >
         <DialogTitle id="scroll-dialog-title">
           <Typography variant="h4" color="primary">
-            Create an Activity
+            {isEdit ? "Edit Activity" : "Create an Activity"}
           </Typography>
         </DialogTitle>
 
@@ -49,7 +59,18 @@ const AppActivityAddModal = ({
             ref={descriptionElementRef}
             tabIndex={-1}
           >
-            <AppActivityForms handleCreateActivity={handleCreateActivity} />
+            {!isEdit && isEmpty(currentData) && (
+              <AppActivityForms handleCreateActivity={handleCreateActivity} />
+            )}
+
+            {isEdit && !isEmpty(currentData) && (
+              <EditActivityForms
+                handleEditActivity={handleEditActivity}
+                currentData={currentData}
+              />
+            )}
+
+            {isEdit && isEmpty(currentData) && <> Loading... </>}
           </DialogContentText>
         </DialogContent>
       </Dialog>

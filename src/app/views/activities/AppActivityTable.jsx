@@ -49,6 +49,8 @@ const AppActivityTable = () => {
   const [showDialog, setShowDialog] = useState(false);
   const [responseMessage, setMessageResponse] = useState("");
   const [hasError, setHasError] = useState(false);
+  const [currentData, setCurrentData] = useState({});
+  const [isEdit, setIsEdit] = useState(false);
 
   const descriptionElementRef = useRef(null);
 
@@ -96,6 +98,19 @@ const AppActivityTable = () => {
 
     if (deleteRequest?.status === 200) {
       fetchAllActivities();
+    }
+  };
+
+  const handleEditActivity = async (payload) => {
+    const editRequest = await axios.patch(`${BASE_URL}/activity/edit`, payload);
+
+    console.log("[editRequest]: ", editRequest);
+
+    if (editRequest?.status === 200) {
+      fetchAllActivities();
+      setShowModal(false);
+      setIsEdit(false);
+      setCurrentData({});
     }
   };
 
@@ -154,6 +169,9 @@ const AppActivityTable = () => {
             setCurrentId={setCurrentId}
             setShowParticipantModal={setShowParticipantModal}
             handleDeleteActivity={handleDeleteActivity}
+            setCurrentData={setCurrentData}
+            setIsEdit={setIsEdit}
+            setShowModal={setShowModal}
           />
         </Grid>
       </Grid>
@@ -162,6 +180,11 @@ const AppActivityTable = () => {
         showModal={showModal}
         setShowModal={setShowModal}
         handleCreateActivity={handleCreateActivity}
+        isEdit={isEdit}
+        setIsEdit={setIsEdit}
+        currentData={currentData}
+        setCurrentData={setCurrentData}
+        handleEditActivity={handleEditActivity}
       />
 
       <AddModal

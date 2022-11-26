@@ -22,12 +22,13 @@ import { isEmpty } from "lodash";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-const AppActivityForms = ({ handleCreateActivity }) => {
+const EditActivityForms = ({ handleEditActivity, currentData }) => {
   const { user } = useAuth();
   const [state, setState] = useState({ date: null });
   const [fund_source, setFundSource] = useState("");
   const [project_code, setProjectCode] = useState("");
   const [user_id, setUserId] = useState("");
+  const [type, setType] = useState("");
   const [projectCodeLookup, setProjectCodeLookup] = useState([]);
   const [partnerList, setPartnerList] = useState([]);
 
@@ -60,7 +61,30 @@ const AppActivityForms = ({ handleCreateActivity }) => {
     }
   }, [currentUser, fetchProjectCodeLookup]);
 
-  console.log("[user]", user);
+  useEffect(() => {
+    setState(currentData);
+    setUserId(currentData?.user_id);
+    setFundSource(currentData?.project_id);
+    setCurrentUser(
+      partnerList.find((data) => data?.user_id === currentData?.user_id)
+    );
+    setType(currentData?.type);
+
+    setProjectCode(
+      projectCodeLookup.find(
+        (item) => item?.project_id === currentData?.project_id
+      )?.project_code
+    );
+  }, [
+    currentData,
+    partnerList,
+    setState,
+    setUserId,
+    setFundSource,
+    setCurrentUser,
+    setProjectCode,
+    projectCodeLookup,
+  ]);
 
   const handleChange = (event) => {
     const isFundSource = event.target.name === "fund_source";
@@ -84,17 +108,33 @@ const AppActivityForms = ({ handleCreateActivity }) => {
       return;
     }
 
+    const isType = event.target.name === "type";
+    if (isType) {
+      setType(event.target.value);
+
+      return;
+    }
+
     setState({ ...state, [event.target.name]: event.target.value });
   };
 
   const handleSubmit = () => {
-    console.log("[state]", state);
-
-    handleCreateActivity({
+    console.log("[payload]", {
       ...state,
       project_id: fund_source,
       user_id,
       project_code,
+      type,
+      id: currentData?.id,
+    });
+
+    handleEditActivity({
+      ...state,
+      project_id: fund_source,
+      user_id,
+      project_code,
+      type,
+      id: currentData?.id,
     });
   };
 
@@ -103,8 +143,6 @@ const AppActivityForms = ({ handleCreateActivity }) => {
   };
 
   const margin = { margin: "0 5px" };
-
-  console.log("[state]: ", state);
 
   return (
     <div>
@@ -169,6 +207,7 @@ const AppActivityForms = ({ handleCreateActivity }) => {
                     label="Title"
                     required={true}
                     fullWidth={true}
+                    value={state?.title}
                   />
                 </Grid>
 
@@ -179,11 +218,11 @@ const AppActivityForms = ({ handleCreateActivity }) => {
                     <Select
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
-                      value={state?.type}
                       label="activity_type"
                       onChange={handleChange}
                       name="type"
                       required={true}
+                      value={type}
                     >
                       <MenuItem value={"activity_based"}>
                         Activity-Based
@@ -203,6 +242,7 @@ const AppActivityForms = ({ handleCreateActivity }) => {
                     label="Description"
                     required={true}
                     fullWidth={true}
+                    value={state?.description}
                   />
                 </Grid>
 
@@ -230,6 +270,7 @@ const AppActivityForms = ({ handleCreateActivity }) => {
                     label="Venue"
                     required={true}
                     fullWidth={true}
+                    value={state?.venue}
                   />
                 </Grid>
               </Grid>
@@ -262,4 +303,4 @@ const AppActivityForms = ({ handleCreateActivity }) => {
   );
 };
 
-export default AppActivityForms;
+export default EditActivityForms;

@@ -11,6 +11,7 @@ import {
 import Paper from "@material-ui/core/Paper";
 import Button from "app/components/controls/Button";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
 
 import days from "dayjs";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
@@ -23,6 +24,9 @@ const ActivitiesData = ({
   activityList,
   setCurrentId,
   setShowParticipantModal,
+  setIsEdit,
+  setCurrentData,
+  setShowModal,
 }) => {
   const [data, setData] = useState([]);
 
@@ -52,22 +56,26 @@ const ActivitiesData = ({
     handleDeleteActivity({ id });
   };
 
-  // const onClickEdit = (data) => {
-  //   console.log("[data]: ", data);
+  const onClickEdit = (data) => {
+    console.log("[data]: ", data);
 
-  //   const currentData = {
-  //     email: data[3],
-  //     companyWebsite: data[5],
-  //     phone: data[6],
-  //     partnerCode: data[2],
-  //     company: data[1],
-  //     companyAddress: data[4],
-  //     id: data[0],
-  //   };
+    const currentData = {
+      description: data[4],
+      title: data[1],
+      project_id: data[8],
+      venue: data[2],
+      date: data[3].props.children,
+      user_id: data[6],
+      type: data[9],
+      id: data[0],
+    };
 
-  //   setCurrentData(currentData);
-  //   setShowModal(true);
-  // };
+    console.log("[currentData]: ", currentData);
+
+    setCurrentData(currentData);
+    setShowModal(true);
+    setIsEdit(true);
+  };
 
   const onClickView = (id) => {
     setCurrentId(id);
@@ -131,6 +139,18 @@ const ActivitiesData = ({
         display: false,
       },
     },
+    {
+      name: "project_id",
+      options: {
+        display: false,
+      },
+    },
+    {
+      name: "type",
+      options: {
+        display: false,
+      },
+    },
   ];
 
   const options = {
@@ -169,6 +189,15 @@ const ActivitiesData = ({
                         <Button
                           onClick={() => handleClick(rowData[0])}
                           text={<GroupAddIcon />}
+                          size="small"
+                          disabled={rowData[6] === "1"}
+                        />
+                      </TableCell>
+
+                      <TableCell component="th" scope="row" align="center">
+                        <Button
+                          onClick={() => onClickEdit(rowData)}
+                          text={<ModeEditIcon />}
                           size="small"
                           disabled={rowData[6] === "1"}
                         />
