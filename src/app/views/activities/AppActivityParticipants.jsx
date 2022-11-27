@@ -1,6 +1,8 @@
 import React, { useState, useCallback, useEffect } from "react";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
+import Button from "app/components/controls/Button";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { Typography } from "@material-ui/core";
 import MUIDataTable from "mui-datatables";
 import { ThemeProvider, createTheme } from "@mui/material";
@@ -29,9 +31,11 @@ const ActivityParticipantsModal = ({
   showParticipantModal,
   setShowParticipantModal,
   currentId,
+  setCurrentId,
+  handleDeleteParticipants,
 }) => {
-  // const [beneficiaryList, setBeneficiaryList] = useState([]);
   const [participantsList, setParticipantsList] = useState([]);
+  const [deletedList, setDeletedList] = useState([]);
 
   const fetchParticipantsData = useCallback(async () => {
     const getAllUsersResult = await axios.get(
@@ -62,6 +66,18 @@ const ActivityParticipantsModal = ({
 
   const handleClose = () => {
     setShowParticipantModal((prev) => !prev);
+    setCurrentId("");
+    setDeletedList([]);
+  };
+
+  const handleDelete = (value) => {
+    setDeletedList((list) => [...list, value[0]]);
+    setParticipantsList((list) => list.filter((item) => item.id === value[0]));
+  };
+
+  const handleSave = () => {
+    handleDeleteParticipants({ ids: deletedList });
+    setDeletedList([]);
   };
 
   const columns = [
@@ -70,6 +86,7 @@ const ActivityParticipantsModal = ({
       label: "ID",
       options: {
         filter: true,
+        display: false,
       },
     },
     {
@@ -164,6 +181,23 @@ const ActivityParticipantsModal = ({
         display: false,
       },
     },
+    {
+      name: "action",
+      label: " ",
+      options: {
+        customBodyRender: (value, tableMeta, updateValue) => {
+          console.log("[tableMeta]", tableMeta);
+          return (
+            <Button
+              onClick={() => handleDelete(tableMeta?.rowData)}
+              sx={{ bgcolor: "white", minWidth: "50px" }}
+              text={<DeleteOutlineIcon />}
+              size="small"
+            />
+          );
+        },
+      },
+    },
   ];
 
   const options = {
@@ -192,6 +226,22 @@ const ActivityParticipantsModal = ({
               columns={columns}
               data={participantsList}
             />
+
+            {!isEmpty(deletedList) && (
+              <Button
+                sx={{
+                  mt: 2,
+                  mb: 2,
+                  ml: "35%",
+                  right: "0px",
+                  position: "relative",
+                  width: 200,
+                }}
+                color="primary"
+                text="Save"
+                onClick={() => handleSave()}
+              />
+            )}
           </ThemeProvider>
         </Typography>
       </Box>

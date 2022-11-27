@@ -127,12 +127,39 @@ const AppActivityTable = () => {
         fetchAllActivities();
         setShowAddModal(false);
         setHasError(false);
+        setCurrentId("");
       }
     } catch (err) {
+      console.log("[err]", err);
       setShowDialog(true);
       setMessageResponse(err?.message);
       setShowAddModal(false);
       setHasError(true);
+      setCurrentId("");
+    }
+  };
+
+  const handleDeleteParticipants = async (payload) => {
+    try {
+      const patchRequest = await axios.patch(
+        `${BASE_URL}/activity/participants`,
+        payload
+      );
+
+      console.log("[patchRequest]: ", patchRequest);
+
+      if (patchRequest?.status === 200) {
+        fetchAllActivities();
+        setShowParticipantModal(false);
+        setHasError(false);
+        setCurrentId("");
+      }
+    } catch (err) {
+      setShowDialog(true);
+      setMessageResponse(err?.message);
+      setShowParticipantModal(false);
+      setHasError(true);
+      setCurrentId("");
     }
   };
 
@@ -198,6 +225,8 @@ const AppActivityTable = () => {
         showParticipantModal={showParticipantModal}
         setShowParticipantModal={setShowParticipantModal}
         currentId={currentId}
+        setCurrentId={setCurrentId}
+        handleDeleteParticipants={handleDeleteParticipants}
       />
 
       <CustomizedDialogs

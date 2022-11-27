@@ -82,10 +82,17 @@ const AddModal = ({
         descriptionElement.focus();
       }
     }
+
+    if (!showAddModal) {
+      handleClose();
+    }
   }, [showAddModal]);
 
   const handleClose = () => {
-    setShowAddModal((prev) => !prev);
+    setUserId("");
+    setProjectId("");
+    setParticipantId(null);
+    setShowAddModal(false);
   };
 
   const handleChange = (event) => {
